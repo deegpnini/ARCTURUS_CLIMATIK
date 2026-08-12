@@ -1,142 +1,213 @@
 # ============================================================
-# ARCTURUS CLIMATIK — MODELO RESIDUAL (v2.0)
+# ARCTURUS CLIMATIK — MODELO RESIDUAL v2.1
+# ============================================================
+# Prevê o residual ΔT = T_t - T_{t-1}
+# Avalia skill vs persistência
 # ============================================================
 
-import pandas as pd
-import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-import joblib
+import argparse
+import os
 import warnings
+from pathlib import Path
+
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.model_selection import TimeSeriesSplit
+
 warnings.filterwarnings("ignore")
 
-print("🚀 ARCTURUS CLIMATIK — MODELO RESIDUAL (v2.0)")
-print("="*60)
 
-# ============================================================
-# CONFIGURAÇÕES
-# ============================================================
-DATA_PATH = "dados/arcturus_climatik_final_limpo.csv"
-MODEL_PATH = "modelos/modelo_residual.pkl"
+def load_data(csv_path: str) -> pd.DataFrame:
+    """Carrega e ordena o dataset."""
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(
+            f"Arquivo não encontrado: {csv_path}\n"
+            "Ajuste o caminho com --data ou coloque o CSV no local esperado."
+        )
 
-import os
-os.makedirs("modelos", exist_ok=True)
+    df = pd.read_csv(csv_path)
+    df["data_hora"] = pd.to_datetime(df["data_hora"])
+    df = df.sort_values(["id_estacao_final", "data_hora"]).reset_index(drop=True)
+    print(f"✅ Dataset carregado: {len(df):,} registros")
+    return df
 
-# ============================================================
-# CARREGAR DADOS
-# ============================================================
-print("\n📂 Carregando dados...")
 
-if not os.path.exists(DATA_PATH):
-    print(f"⚠️ Arquivo não encontrado: {DATA_PATH}")
-    print("   Usando fallback: /content/arcturus_climatik_final_limpo.csv")
-    DATA_PATH = "/content/arcturus_climatik_final_limpo.csv"
+def create_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Cria lags, residual e features temporais."""
+    print("🔧 Criando features...")
 
-df = pd.read_csv(DATA_PATH)
-df["data_hora"] = pd.to_datetime(df["data_hora"])
-df = df.sort_values(["id_estacao_final", "data_hora"])
+    # Lags por estação
+    df["temp_lag_1"] = df.groupby("id_estacao_final")["temperatura"].shift(1)
+    df["temp_lag_3"] = df.groupby("id_estacao_final")["temperatura"].shift(3)
+    df["temp_lag_6"] = df.groupby("id_estacao_final")["temperatura"].shift(6)
+    df["temp_lag_12"] = df.groupby("id_estacao_final")["temperatura"].shift(12)
 
-print(f"✅ {df.shape[0]:,} registros")
+    # Alvo: residual
+    df["residual"] = df["temperatura"] - df["temp_lag_1"]
 
-# ============================================================
-# FEATURES E ALVO
-# ============================================================
-print("\n🔧 Criando features...")
+    # Features temporais cíclicas
+    df["hora"] = df["data_hora"].dt.hour
+    df["mes"] = df["data_hora"].dt.month
+    df["dia_semana"] = df["data_hora"].dt.dayofweek
 
-df['temp_lag_1'] = df.groupby('id_estacao_final')['temperatura'].shift(1)
-df['temp_lag_3'] = df.groupby('id_estacao_final')['temperatura'].shift(3)
-df['temp_lag_6'] = df.groupby('id_estacao_final')['temperatura'].shift(6)
-df['temp_lag_12'] = df.groupby('id_estacao_final')['temperatura'].shift(12)
+    df["hora_sin"] = np.sin(2 * np.pi * df["hora"] / 24)
+    df["hora_cos"] = np.cos(2 * np.pi * df["hora"] / 24)
+    df["mes_sin"] = np.sin(2 * np.pi * df["mes"] / 12)
+    df["mes_cos"] = np.cos(2 * np.pi * df["mes"] / 12)
 
-df['residual'] = df['temperatura'] - df['temp_lag_1']
+    # Umidade (imputação simples + flag)
+    if "umidade" in df.columns:
+        df["umidade_imputada"] = df.groupby("id_estacao_final")["umidade"].transform(
+            lambda x: x.fillna(x.mean())
+        )
+        df["umidade_flag"] = df["umidade"].isna().astype(int)
+    else:
+        df["umidade_imputada"] = 0.0
+        df["umidade_flag"] = 0
 
-df['hora'] = df['data_hora'].dt.hour
-df['mes'] = df['data_hora'].dt.month
-df['dia_semana'] = df['data_hora'].dt.dayofweek
+    # Remove linhas sem residual válido
+    df = df.dropna(subset=["temperatura", "temp_lag_1", "residual"]).copy()
+    print(f"✅ Após limpeza: {len(df):,} registros")
+    return df
 
-df['hora_sin'] = np.sin(2 * np.pi * df['hora'] / 24)
-df['hora_cos'] = np.cos(2 * np.pi * df['hora'] / 24)
-df['mes_sin'] = np.sin(2 * np.pi * df['mes'] / 12)
-df['mes_cos'] = np.cos(2 * np.pi * df['mes'] / 12)
 
-df['umidade_imputada'] = df.groupby('id_estacao_final')['umidade'].transform(lambda x: x.fillna(x.mean()))
-df['umidade_flag'] = df['umidade'].isna().astype(int)
+def get_feature_columns() -> list:
+    """
+    Features usadas no modelo.
+    Importante: temp_lag_1 NÃO entra aqui.
+    Ele só é usado para reconstruir a temperatura final.
+    """
+    return [
+        "hora_sin",
+        "hora_cos",
+        "mes_sin",
+        "mes_cos",
+        "dia_semana",
+        "temp_lag_3",
+        "temp_lag_6",
+        "temp_lag_12",
+        "umidade_imputada",
+        "umidade_flag",
+    ]
 
-df = df.dropna(subset=['temperatura', 'temp_lag_1', 'residual'])
-print(f"✅ Limpo: {df.shape[0]:,} registros")
 
-# ============================================================
-# SPLIT TEMPORAL
-# ============================================================
-print("\n📊 Split temporal...")
+def evaluate(y_true, y_pred, y_pers):
+    """Calcula métricas e skill score."""
+    rmse_model = np.sqrt(mean_squared_error(y_true, y_pred))
+    mae_model = mean_absolute_error(y_true, y_pred)
+    rmse_pers = np.sqrt(mean_squared_error(y_true, y_pers))
+    mae_pers = mean_absolute_error(y_true, y_pers)
 
-df_train = df[df['data_hora'] < '2026-01-01']
-df_test = df[df['data_hora'] >= '2026-01-01']
+    skill_rmse = 1 - (rmse_model / rmse_pers)
+    skill_mae = 1 - (mae_model / mae_pers)
 
-print(f"  Treino: {df_train.shape[0]:,}")
-print(f"  Teste: {df_test.shape[0]:,}")
+    return {
+        "rmse_model": rmse_model,
+        "mae_model": mae_model,
+        "rmse_pers": rmse_pers,
+        "mae_pers": mae_pers,
+        "skill_rmse": skill_rmse,
+        "skill_mae": skill_mae,
+    }
 
-# ============================================================
-# FEATURES
-# ============================================================
-feature_cols = [
-    'hora_sin', 'hora_cos', 'mes_sin', 'mes_cos', 'dia_semana',
-    'temp_lag_3', 'temp_lag_6', 'temp_lag_12',
-    'umidade_imputada', 'umidade_flag'
-]
 
-X_train = df_train[feature_cols].fillna(0)
-y_train = df_train['residual']
+def main(args):
+    print("🚀 ARCTURUS CLIMATIK — MODELO RESIDUAL v2.1")
+    print("=" * 60)
 
-X_test = df_test[feature_cols].fillna(0)
-y_test = df_test['residual']
+    # 1. Dados
+    df = load_data(args.data)
+    df = create_features(df)
 
-y_pers = df_test['temp_lag_1'].values
-y_true = df_test['temperatura'].values
+    feature_cols = get_feature_columns()
 
-# ============================================================
-# TREINAMENTO
-# ============================================================
-print("\n🧠 Treinando Random Forest residual...")
+    # 2. Split temporal simples (treino < 2026, teste >= 2026)
+    train = df[df["data_hora"] < "2026-01-01"]
+    test = df[df["data_hora"] >= "2026-01-01"]
 
-rf = RandomForestRegressor(
-    n_estimators=150,
-    max_depth=12,
-    min_samples_leaf=5,
-    n_jobs=-1,
-    random_state=42
-)
-rf.fit(X_train, y_train)
+    print(f"\n📊 Split temporal:")
+    print(f"  Treino: {len(train):,} registros")
+    print(f"  Teste : {len(test):,} registros")
 
-# ============================================================
-# AVALIAÇÃO
-# ============================================================
-print("\n📊 Avaliando...")
+    X_train = train[feature_cols].fillna(0)
+    y_train = train["residual"]
+    X_test = test[feature_cols].fillna(0)
 
-residual_pred = rf.predict(X_test)
-temp_pred = y_pers + residual_pred
+    # 3. Modelo
+    print("\n🧠 Treinando Random Forest...")
+    model = RandomForestRegressor(
+        n_estimators=args.n_estimators,
+        max_depth=args.max_depth,
+        min_samples_leaf=5,
+        random_state=42,
+        n_jobs=-1,
+    )
+    model.fit(X_train, y_train)
 
-rmse_model = np.sqrt(mean_squared_error(y_true, temp_pred))
-mae_model = mean_absolute_error(y_true, temp_pred)
+    # 4. Predição
+    residual_pred = model.predict(X_test)
+    temp_pred = test["temp_lag_1"].values + residual_pred
+    y_true = test["temperatura"].values
+    y_pers = test["temp_lag_1"].values
 
-rmse_pers = np.sqrt(mean_squared_error(y_true, y_pers))
-mae_pers = mean_absolute_error(y_true, y_pers)
+    # 5. Métricas
+    metrics = evaluate(y_true, temp_pred, y_pers)
 
-skill_rmse = 1 - (rmse_model / rmse_pers)
-skill_mae = 1 - (mae_model / mae_pers)
+    print("\n📊 RESULTADOS (conjunto de teste 2026):")
+    print(f"  RMSE Modelo      : {metrics["rmse_model"]:.3f} °C")
+    print(f"  RMSE Persistência: {metrics["rmse_pers"]:.3f} °C")
+    print(f"  MAE  Modelo      : {metrics["mae_model"]:.3f} °C")
+    print(f"  MAE  Persistência: {metrics["mae_pers"]:.3f} °C")
+    print(f"  Skill RMSE       : {metrics["skill_rmse"]:.3f}")
+    print(f"  Skill MAE        : {metrics["skill_mae"]:.3f}")
 
-print(f"\n📊 RESULTADOS:")
-print(f"  RMSE modelo: {rmse_model:.3f}°C")
-print(f"  RMSE persistência: {rmse_pers:.3f}°C")
-print(f"  Skill RMSE: {skill_rmse:.3f}")
-print(f"  Skill MAE: {skill_mae:.3f}")
+    # 6. Salvar modelo
+    if args.save_model:
+        output_dir = Path(args.output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        model_path = output_dir / "modelo_residual.joblib"
+        joblib.dump(model, model_path)
+        print(f"\n💾 Modelo salvo em: {model_path}")
 
-# ============================================================
-# SALVAR MODELO
-# ============================================================
-joblib.dump(rf, MODEL_PATH)
-print(f"\n✅ Modelo salvo: {MODEL_PATH}")
+    print("\n" + "=" * 60)
+    print("✅ MODELO RESIDUAL CONCLUÍDO")
+    print("=" * 60)
 
-print("\n" + "="*60)
-print("✅ MODELO RESIDUAL CONCLUÍDO")
-print("="*60)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="ARCTURUS CLIMATIK - Modelo Residual")
+    parser.add_argument(
+        "--data",
+        type=str,
+        default="arcturus_climatik_final_limpo.csv",
+        help="Caminho para o CSV consolidado",
+    )
+    parser.add_argument(
+        "--n_estimators",
+        type=int,
+        default=200,
+        help="Número de árvores",
+    )
+    parser.add_argument(
+        "--max_depth",
+        type=int,
+        default=12,
+        help="Profundidade máxima das árvores",
+    )
+    parser.add_argument(
+        "--save_model",
+        action="store_true",
+        help="Salva o modelo treinado em .joblib",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="models",
+        help="Pasta para salvar o modelo",
+    )
+
+    args = parser.parse_args()
+    main(args)
