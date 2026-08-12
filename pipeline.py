@@ -1,16 +1,11 @@
+# ============================================================
+# ARCTURUS CLIMATIK — PIPELINE SIMPLIFICADO
+# ============================================================
 
-# ============================================================
-# ARCTURUS CLIMATIK — PIPELINE COMPLETO
-# ============================================================
 import pandas as pd
-import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import TimeSeriesSplit
-
 print("🚀 ARCTURUS CLIMATIK — PIPELINE")
 print("="*60)
 
-# Carregar dados
-df = pd.read_csv("dados/dados.csv")
+# Carregar dados (exemplo)
+df = pd.read_csv("dados/amostra_dados.csv") if os.path.exists("dados/amostra_dados.csv") else pd.DataFrame()
 print(f"✅ {len(df)} registros carregados")
