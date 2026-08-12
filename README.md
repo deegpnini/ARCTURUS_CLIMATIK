@@ -28,7 +28,7 @@ O modelo principal prevê o **residual** (ΔT = Tₜ − Tₜ₋₁), reduzindo 
 > Skill = 1 − (erro_modelo / erro_persistência).
 > Valores positivos indicam ganho real sobre o baseline de persistência.
 
-**Observação:** Skill de ~0.20 é moderado. O modelo ainda é fortemente influenciado pela persistência. Melhorias dependem da inclusão de variáveis físicas adicionais (pressão, vento, precipitação, etc.).
+**Observação:** Skill de ~0.20 é moderado. O modelo ainda é fortemente influenciado pela persistência.
 
 ---
 
