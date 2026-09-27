@@ -83,3 +83,41 @@ modulos/sismico/*.pkl
 modulos/sentinel/
 modulos/audio/
 modulos/visual/
+
+# --- ARQUIVOS DE TESTE (nunca subir) ---
+Eu consigo prever um evento que nunca vi?
+Eu consigo reproduzir uma chuva que já apareceu no treinamento?
+o que aconteceu antes?
+o que aconteceu rio acima?
+extrair
+treinar
+*.bak_*
+
+# --- BLOQUEIOS ADICIONAIS ---
+*.db
+*.sqlite
+*.sqlite3
+*.tif
+*.tiff
+*.nc
+*.mp3
+*.srt
+*.mp4
+*.avi
+*.mov
+*.geojson
+*.cbm
+*.pyc
+*.pyo
+*.pyd
+.env.*
+*.env
+token.json
+secrets.json
+credentials.json
+*.bak
+*.old
+*.orig
+*.bak_*
+backup_*
+_bak_*
