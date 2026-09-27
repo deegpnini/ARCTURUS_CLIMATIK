@@ -1,0 +1,35 @@
+============================================================
+🏛️ ARCTURUS v5.7 — RELATÓRIO FINAL
+============================================================
+
+Data: 2026-06-25 04:21:48
+Total: 182 artigos
+Features: 9
+
+MÉTRICAS (teste):
+  Recall: 60.71%
+  Precisão: 58.62%
+  F1-Score: 0.596
+  Acurácia: 58.18%
+  AUC: 0.667
+
+MATRIZ DE CONFUSÃO:
+  TP: 17, FP: 12
+  FN: 11, TN: 15
+
+VALIDAÇÃO CRUZADA (5-fold):
+  recall: 64.68% ± 10.84%
+  precision: 67.61% ± 3.33%
+  f1: 65.36% ± 5.58%
+  roc_auc: 70.39% ± 4.40%
+
+IMPORTÂNCIA DAS FEATURES:
+  avg_word_length: 0.2194
+  avg_sentence_len: 0.1241
+  entropy: 0.1200
+  word_count: 0.1176
+  num_sentences: 0.1094
+  repetition_rate: 0.1092
+  rare_ratio: 0.0988
+  lexical_diversity: 0.0944
+  suspeitas_count: 0.0071

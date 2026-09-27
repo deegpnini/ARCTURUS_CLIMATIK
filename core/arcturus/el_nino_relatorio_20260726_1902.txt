@@ -1,0 +1,33 @@
+
+RELATÓRIO ARCTURUS CLIMATIK — EL NIÑO 2026
+
+DATA: 26/07/2026 19:02
+STATUS: 🔴 EL NIÑO ATIVO
+
+1. CENÁRIO OCEÂNICO
+   - Anomalia de temperatura (Niño 3.4): 2.15°C
+   - Anomalia máxima: 2.20°C
+   - Anomalia mínima: 0.80°C
+
+2. IMPACTOS NO BRASIL
+   - Total de municípios em emergência: 240
+   - Prejuízos totais estimados: R$ 5,958 milhões
+   - Regiões mais afetadas: Norte (R$ 3,5 bi), Nordeste (R$ 1,2 bi)
+
+3. REGIÃO SUL (SC, RS, PR)
+   - Municípios em emergência: 122
+   - Destaque: RS com 69 municípios, SC com 53
+   - Prejuízos estimados: R$ 128 milhões
+
+4. RECOMENDAÇÕES
+   - Manter monitoramento contínuo do Atlântico Sul
+   - Preparação para eventos extremos (chuvas, secas)
+   - Validação de dados por múltiplas fontes
+
+5. FONTES
+   - NOAA (National Oceanic and Atmospheric Administration)
+   - INMET (Instituto Nacional de Meteorologia)
+   - CEMADEN (Centro Nacional de Monitoramento)
+   - CNM (Confederação Nacional de Municípios)
+
+N.E.X.U.S OIKOS — ONDE A DÚVIDA VIRA INVESTIGAÇÃO

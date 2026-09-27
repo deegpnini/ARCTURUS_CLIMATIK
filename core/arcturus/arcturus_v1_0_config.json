@@ -1,0 +1,49 @@
+{
+  "versao": "1.0",
+  "data": "2026-07-19",
+  "dataset": {
+    "total_eventos": 83244,
+    "alto_eventos": 4856,
+    "features": [
+      "profundidade_km",
+      "latitude",
+      "longitude",
+      "proximidade_falha"
+    ]
+  },
+  "modelo": {
+    "tipo": "RandomForestClassifier",
+    "n_estimators": 100,
+    "max_depth": 8,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "performance": {
+    "f1_alto": 0.2916923076923077,
+    "accuracy": 0.5311854307817981,
+    "cv_folds": 5,
+    "matriz_confusao": [
+      [
+        26039,
+        14509,
+        5109
+      ],
+      [
+        11856,
+        15572,
+        5303
+      ],
+      [
+        1125,
+        1124,
+        2607
+      ]
+    ]
+  },
+  "metodologia": {
+    "vazamento_removido": true,
+    "clusterizacao_utilizada": false,
+    "validacao": "5-fold StratifiedKFold"
+  },
+  "observacoes": "\n        - O modelo final utiliza apenas features geofisicas (profundidade_km, latitude, longitude, proximidade_falha)\n        - Features de cluster foram removidas apos analise de vazamento e teste pareado inconclusivo\n        - O F1(ALTO) real e 0.292 ± 0.005\n        - A inflacao anterior (F1=0.492 e 0.362) foi causada por vazamento de cluster\n        - O modelo e defensavel para producao com a ressalva de que o ganho dos clusters e inconclusivo\n    "
+}

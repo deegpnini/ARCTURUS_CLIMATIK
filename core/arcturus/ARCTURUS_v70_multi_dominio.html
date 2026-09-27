@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCTURUS v9.0 — Scientific Integrity Screening</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #050D14;
+            --bg-surface: #0A1628;
+            --bg-card: #0F1E33;
+            --cyan: #00E5FF;
+            --cyan-glow: rgba(0,229,255,0.12);
+            --red: #FF3B5C;
+            --red-dim: rgba(255,59,92,0.12);
+            --green: #00D97E;
+            --green-dim: rgba(0,217,126,0.12);
+            --text-primary: #E8EFF6;
+            --text-muted: #5A7A96;
+            --border: rgba(0,229,255,0.08);
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 24px;
+            background: rgba(5,13,20,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--cyan);
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .logo-dot {
+            width: 8px; height: 8px;
+            background: var(--cyan);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        .nav-badge {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--cyan);
+            background: var(--cyan-glow);
+            border: 1px solid rgba(0,229,255,0.15);
+            border-radius: 4px;
+            padding: 2px 10px;
+        }
+        .nav-links { display: flex; gap: 24px; list-style: none; }
+        .nav-links a {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--cyan); }
+
+        /* ===== HERO — EEG SIGNATURE ===== */
+        .hero {
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--cyan);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .hero-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 24px; height: 1px;
+            background: var(--cyan);
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .hero-title .highlight { color: var(--cyan); }
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 420px;
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+        .hero-stats {
+            display: flex; gap: 32px;
+            margin-bottom: 32px;
+        }
+        .hero-stat .value {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--cyan);
+            line-height: 1;
+        }
+        .hero-stat .label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px;
+            background: var(--cyan);
+            color: var(--bg-primary);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,229,255,0.3);
+        }
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+            text-decoration: none;
+        }
+        .btn-ghost:hover { color: var(--cyan); border-color: var(--cyan); }
+
+        /* ===== CANVAS EEG ===== */
+        .eeg-container {
+            position: relative;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            overflow: hidden;
+            height: 320px;
+        }
+        .eeg-container canvas {
+            width: 100%; height: 100%;
+            display: block;
+        }
+        .eeg-label {
+            position: absolute; bottom: 16px; left: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+        .eeg-status {
+            position: absolute; top: 16px; right: 20px;
+            display: flex; align-items: center; gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--green);
+        }
+        .eeg-status::before {
+            content: '';
+            display: block;
+            width: 6px; height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse-dot 1.8s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* ===== DEMO ===== */
+        .demo-section { padding: 60px 0; }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        .input-area {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .input-area label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .input-area textarea {
+            width: 100%;
+            min-height: 160px;
+            margin-top: 8px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-area textarea:focus { border-color: var(--cyan); }
+        .input-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .btn-sm {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: var(--font-body);
+        }
+        .btn-sm:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        .result-area {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 380px;
+        }
+        .result-empty {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100%; min-height: 320px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .result-empty .icon { font-size: 2rem; opacity: 0.3; margin-bottom: 12px; }
+
+        .score-display {
+            text-align: center; padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .score-number {
+            font-family: var(--font-display);
+            font-size: 3.6rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .score-bar { height: 4px; background: var(--bg-primary); border-radius: 99px; overflow: hidden; margin: 12px 0; }
+        .score-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
+        .verdict { font-weight: 600; margin-top: 8px; }
+
+        .shap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+        .shap-item {
+            display: flex; justify-content: space-between;
+            padding: 6px 12px;
+            background: var(--bg-primary);
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+        }
+        .shap-item .pos { color: var(--cyan); }
+        .shap-item .neg { color: var(--text-muted); }
+
+        /* ===== METRICS ===== */
+        .metrics-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 16px; margin: 40px 0;
+        }
+        .metric-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .metric-card .value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--cyan);
+            line-height: 1;
+        }
+        .metric-card .label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ===== VALIDATION ===== */
+        .validation-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 16px; margin: 24px 0;
+        }
+        .val-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        .val-card .header {
+            display: flex; justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .val-card .source {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .val-card .score {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .val-card .desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+        .val-card .verdict { font-family: var(--font-mono); font-size: 0.65rem; margin-top: 8px; }
+        .val-card .legit .score { color: var(--green); }
+        .val-card .suspect .score { color: var(--red); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        footer .doi {
+            font-family: var(--font-mono);
+            color: var(--cyan);
+            font-size: 0.7rem;
+        }
+        footer .quote {
+            font-family: var(--font-mono);
+            color: var(--cyan);
+            opacity: 0.5;
+            margin-top: 12px;
+            font-style: italic;
+            font-size: 0.7rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+            .demo-grid { grid-template-columns: 1fr; }
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+            .validation-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a class="logo" href="#">
+        <span class="logo-dot"></span>
+        ARCTURUS
+        <span class="nav-badge">v9.0</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#demo">Análise</a></li>
+        <li><a href="#metrics">Métricas</a></li>
+        <li><a href="#validation">Validação</a></li>
+    </ul>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <p class="hero-eyebrow">Scientific Integrity Screening</p>
+            <h1 class="hero-title">
+                Leitura de<br>
+                <span class="highlight">Sinais</span> Científicos
+            </h1>
+            <p class="hero-sub">
+                ARCTURUS analisa abstracts e detecta padrões de papermills com
+                explicabilidade total via SHAP. Publicado com DOI.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="value">91.84%</div>
+                    <div class="label">AUC-ROC</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="value">87.21%</div>
+                    <div class="label">Recall</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="value">699</div>
+                    <div class="label">Amostras</div>
+                </div>
+            </div>
+            <div>
+                <a class="btn-primary" href="#demo">Analisar Abstract →</a>
+                <a class="btn-ghost" href="https://github.com/deegpnini/arcturus-integrity" target="_blank">GitHub</a>
+                <a class="btn-ghost" href="https://doi.org/10.5281/zenodo.21015524" target="_blank">DOI</a>
+            </div>
+        </div>
+        <div class="eeg-container">
+            <canvas id="eegCanvas"></canvas>
+            <span class="eeg-label">ARCTURUS · Leitura de Sinais</span>
+            <span class="eeg-status">ONLINE</span>
+        </div>
+    </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo" class="demo-section">
+    <div class="container">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:600;margin-bottom:24px;">Analisar Abstract</h2>
+        <div class="demo-grid">
+            <div class="input-area">
+                <label for="abstractInput">Cole o abstract</label>
+                <textarea id="abstractInput" placeholder="Cole aqui o abstract de um artigo científico..."></textarea>
+                <div class="input-actions">
+                    <button class="btn-primary" style="padding:8px 20px;font-size:0.8rem;" onclick="analisar()">🔍 Analisar</button>
+                    <button class="btn-sm" onclick="carregarExemplo('usp')">USP</button>
+                    <button class="btn-sm" onclick="carregarExemplo('papermill')">Papermill</button>
+                    <button class="btn-sm" onclick="limpar()">Limpar</button>
+                </div>
+            </div>
+            <div class="result-area" id="resultPanel">
+                <div class="result-empty" id="resultEmpty">
+                    <div class="icon">◎</div>
+                    <p>O resultado aparecerá aqui.<br>Cole um abstract e clique em Analisar.</p>
+                </div>
+                <div id="resultContent" style="display:none;">
+                    <div class="score-display">
+                        <div class="score-number" id="scoreNum" style="color:var(--cyan);">0</div>
+                        <div class="score-bar"><div class="score-bar-fill" id="scoreBar" style="width:0%;"></div></div>
+                        <div class="verdict" id="verdictText"></div>
+                    </div>
+                    <div style="margin-top:16px;">
+                        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);letter-spacing:0.06em;margin-bottom:8px;">CONTRIBUIÇÃO POR FEATURE (SHAP)</div>
+                        <div class="shap-grid" id="shapGrid"></div>
+                    </div>
+                    <div style="margin-top:12px;font-size:0.7rem;color:var(--text-muted);">
+                        <span id="flagsText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics" style="padding:40px 0;">
+    <div class="container">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:600;margin-bottom:8px;">Performance</h2>
+        <p style="color:var(--text-muted);margin-bottom:24px;">Validação cruzada com 699 artigos biomédicos</p>
+        <div class="metrics-grid">
+            <div class="metric-card"><div class="value">91.84%</div><div class="label">AUC-ROC</div></div>
+            <div class="metric-card"><div class="value">87.21%</div><div class="label">Recall</div></div>
+            <div class="metric-card"><div class="value">84.81%</div><div class="label">F1-Score</div></div>
+            <div class="metric-card"><div class="value">0.533</div><div class="label">Threshold</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- VALIDATION -->
+<section id="validation" style="padding:40px 0;background:var(--bg-surface);">
+    <div class="container">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:600;margin-bottom:8px;">Validação Externa</h2>
+        <p style="color:var(--text-muted);margin-bottom:24px;">Benchmark com 4 abstracts controlados</p>
+        <div class="validation-grid">
+            <div class="val-card legit"><div class="header"><span class="source">Fasciite PRP</span><span class="score">37.7</span></div><div class="desc">RCT legítimo com dados reais</div><div class="verdict" style="color:var(--green);">✓ Baixo Risco</div></div>
+            <div class="val-card legit"><div class="header"><span class="source">PDAC scRNA-seq</span><span class="score">35.0</span></div><div class="desc">Single-cell legítimo de alta complexidade</div><div class="verdict" style="color:var(--green);">✓ Baixo Risco</div></div>
+            <div class="val-card suspect"><div class="header"><span class="source">Sintético vazio</span><span class="score">73.3</span></div><div class="desc">Papermill puro sem dados reais</div><div class="verdict" style="color:var(--red);">⚠ Alto Risco</div></div>
+            <div class="val-card legit"><div class="header"><span class="source">IL-6 misto</span><span class="score">35.0</span></div><div class="desc">Dados reais + linguagem inflada</div><div class="verdict" style="color:var(--cyan);">◉ Zona Cinzenta</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>
+        <span class="doi">DOI: 10.5281/zenodo.21015524</span>
+    </p>
+    <p style="margin-top:4px;">
+        <a href="https://github.com/deegpnini/arcturus-integrity" style="color:var(--cyan);text-decoration:none;">GitHub</a> ·
+        <a href="https://deegpnini.github.io/arcturus-integrity/" style="color:var(--cyan);text-decoration:none;">Demo</a>
+    </p>
+    <div class="quote">"Tecnologia com alma, dados com propósito, código com coração."</div>
+    <p style="margin-top:8px;font-size:0.65rem;">ARCTURUS v9.0 · Hebron · Balneário Rincão, SC</p>
+</footer>
+
+<script>
+// ===== CANVAS EEG =====
+const canvas = document.getElementById('eegCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width - 40;
+    canvas.height = rect.height - 40;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+let phase = 0;
+let freq = 2.5;
+let amp = 1.2;
+let targetFreq = 2.5;
+let targetAmp = 1.2;
+
+function drawEEG() {
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Fundo
+    ctx.fillStyle = '#0A1628';
+    ctx.fillRect(0, 0, w, h);
+
+    // Grade sutil
+    ctx.strokeStyle = 'rgba(0,229,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < w; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+    }
+
+    // Linha de sinal
+    ctx.beginPath();
+    const midY = h / 2;
+    let x = 0;
+    const step = 1;
+    const samples = [];
+
+    // Smooth transition
+    freq += (targetFreq - freq) * 0.02;
+    amp += (targetAmp - amp) * 0.02;
+
+    while (x < w) {
+        const t = x / w;
+        const value = Math.sin(t * freq * Math.PI * 2 + phase) *
+                      (1 + 0.3 * Math.sin(t * freq * 0.5 + phase * 0.7)) *
+                      amp * 0.4 * h;
+        const yPos = midY + value;
+        samples.push({x, y: yPos});
+        x += step;
+    }
+
+    // Gradiente da linha
+    for (let i = 0; i < samples.length - 1; i++) {
+        const p = samples[i];
+        const q = samples[i+1];
+        const alpha = 0.6 + 0.4 * (i / samples.length);
+        ctx.strokeStyle = `rgba(0,229,255,${alpha})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.stroke();
+
+        // Brilho sutil
+        if (i % 3 === 0) {
+            ctx.strokeStyle = `rgba(0,229,255,${alpha * 0.15})`;
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
+        }
+    }
+
+    // Pontos de "spike"
+    for (let i = 0; i < samples.length; i += 30 + Math.floor(Math.random() * 20)) {
+        const p = samples[i];
+        const spikeHeight = 6 + Math.random() * 12;
+        if (Math.random() > 0.7) {
+            ctx.strokeStyle = `rgba(0,229,255,0.2)`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y - spikeHeight);
+            ctx.lineTo(p.x, p.y + spikeHeight);
+            ctx.stroke();
+        }
+    }
+
+    // Frequência da linha central
+    ctx.strokeStyle = 'rgba(0,229,255,0.05)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 8]);
+    ctx.beginPath();
+    ctx.moveTo(0, midY);
+    ctx.lineTo(w, midY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    phase += 0.02;
+
+    requestAnimationFrame(drawEEG);
+}
+
+drawEEG();
+
+// ===== ANÁLISE =====
+function extractFeatures(text) {
+    const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+    const n = words.length;
+    if (n === 0) return null;
+
+    const freqMap = {};
+    words.forEach(w => freqMap[w] = (freqMap[w] || 0) + 1);
+    const unique = Object.keys(freqMap).length;
+    const lexDiv = unique / n;
+    const repRate = 1 - lexDiv;
+    const entropy = -Object.values(freqMap).map(v => v/n).reduce((s, p) => s + p * Math.log2(p + 1e-10), 0);
+    const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 0);
+    const avgSentLen = sentences.length > 0 ? words.length / sentences.length : 0;
+
+    const suspTokens = ['novel','innovative','significant','unprecedented','cutting-edge','state-of-the-art','groundbreaking'];
+    const tokenHits = words.filter(w => suspTokens.includes(w)).length;
+    const papermillIdx = Math.min((tokenHits * 2) / Math.max(n / 50, 1), 1);
+
+    const pVals = (text.match(/p\s*[=<>]\s*0\.\d+|p\s*[=<>]\s*\d+\.\d+e?-?\d*/gi) || []).length;
+    const ci = (text.match(/95%?\s*CI|confidence interval|IC\s*95/gi) || []).length;
+    const effects = (text.match(/OR|HR|RR|AUC|SMD|WMD\s*=?\s*\d+\.?\d*/gi) || []).length;
+    const statSub = pVals + ci + effects;
+
+    return {
+        word_count: n,
+        repetition_rate: repRate,
+        lexical_diversity: lexDiv,
+        avg_sentence_len: avgSentLen,
+        entropy: entropy,
+        papermill_index: papermillIdx,
+        stat_substance: statSub,
+        p_value_count: pVals,
+        ci_count: ci,
+        effect_size_count: effects
+    };
+}
+
+function calcScore(f) {
+    let score = 0;
+    score += f.repetition_rate * 35;
+    score += f.papermill_index * 30;
+    score += (1 - f.lexical_diversity) * 20;
+    if (f.avg_sentence_len < 10) score += 8;
+    if (f.entropy < 3.5) score += 7;
+
+    // Correção por substância estatística
+    if (f.stat_substance >= 4) score *= 0.75;
+    else if (f.stat_substance >= 2) score *= 0.88;
+    if (f.stat_substance === 0 && f.papermill_index > 0.3) score *= 1.3;
+    if (f.stat_substance >= 2 && f.papermill_index > 0.2) score = Math.max(score, 35);
+
+    return Math.min(Math.round(score), 100);
+}
+
+function detectFlags(f) {
+    const flags = [];
+    if (f.repetition_rate > 0.25) flags.push('Alta repetição');
+    if (f.lexical_diversity < 0.55) flags.push('Baixa diversidade lexical');
+    if (f.papermill_index > 0.1) flags.push('Linguagem de papermill');
+    if (f.avg_sentence_len < 12) flags.push('Sentenças simples');
+    if (f.entropy < 3.5) flags.push('Baixa entropia');
+    if (flags.length === 0) flags.push('Nenhum sinal crítico');
+    return flags;
+}
+
+function getShap(f, score) {
+    const items = [
+        {name: 'repetition_rate', val: f.repetition_rate * 35},
+        {name: 'papermill_index', val: f.papermill_index * 30},
+        {name: 'lexical_diversity', val: (1 - f.lexical_diversity) * 20},
+    ];
+    const maxVal = Math.max(...items.map(i => Math.abs(i.val)), 1);
+    return items.map(i => ({
+        name: i.name,
+        val: i.val,
+        pct: Math.round((i.val / maxVal) * 100)
+    })).sort((a,b) => b.val - a.val);
+}
+
+function analisar() {
+    const text = document.getElementById('abstractInput').value.trim();
+    if (text.length < 30) { alert('Cole um abstract com pelo menos 30 caracteres.'); return; }
+
+    const f = extractFeatures(text);
+    if (!f) return;
+
+    const score = calcScore(f);
+    const flags = detectFlags(f);
+    const shap = getShap(f, score);
+
+    // Atualizar EEG
+    targetFreq = 1.5 + (score / 100) * 3;
+    targetAmp = 0.6 + (score / 100) * 1.2;
+
+    document.getElementById('resultEmpty').style.display = 'none';
+    document.getElementById('resultContent').style.display = 'block';
+
+    const scoreNum = document.getElementById('scoreNum');
+    scoreNum.textContent = score;
+    scoreNum.style.color = score >= 60 ? 'var(--red)' : score >= 35 ? 'var(--cyan)' : 'var(--green)';
+
+    document.getElementById('scoreBar').style.width = score + '%';
+    document.getElementById('scoreBar').style.background = score >= 60 ? 'var(--red)' : score >= 35 ? 'var(--cyan)' : 'var(--green)';
+
+    const verdict = document.getElementById('verdictText');
+    if (score >= 60) { verdict.textContent = '⚠ Alto Risco — Revisão Prioritária'; verdict.style.color = 'var(--red)'; }
+    else if (score >= 35) { verdict.textContent = '◉ Risco Moderado — Zona Cinzenta'; verdict.style.color = 'var(--cyan)'; }
+    else { verdict.textContent = '✓ Baixo Risco — Sem Sinais Críticos'; verdict.style.color = 'var(--green)'; }
+
+    const grid = document.getElementById('shapGrid');
+    grid.innerHTML = shap.map(item => `
+        <div class="shap-item">
+            <span>${item.name}</span>
+            <span class="${item.val > 0 ? 'pos' : 'neg'}">${item.val > 0 ? '+' : ''}${item.val.toFixed(1)}</span>
+        </div>
+    `).join('');
+
+    document.getElementById('flagsText').textContent = '🚩 ' + flags.join(' · ');
+}
+
+function carregarExemplo(tipo) {
+    const exemplos = {
+        usp: 'O câncer de mama é uma das principais causas de morte entre as mulheres, representando cerca de 25% de novos casos anuais no Brasil e no mundo. Os carcinomas ductais in situ (DCIS) representam a forma mais comum de câncer de mama não invasivo. Considerando que os DCIS geralmente se iniciam nas células epiteliais que revestem os dutos, foram desenvolvidas neste estudo nanoemulsões (NE) bioadesivas e nanopartículas poliméricas (NP) termossensíveis a base de pNIPAM para administração intraductal do quimioterápico piplartina.',
+        papermill: 'This novel study demonstrates the significant and unprecedented effectiveness of our innovative approach to the treatment of diabetic retinopathy using advanced machine learning techniques. To the best of our knowledge, this is the first study to investigate this important research gap. Our comprehensive analysis shows promising and robust results. The novel findings suggest that our cutting-edge methodology achieves state-of-the-art performance. Further studies are needed to confirm these groundbreaking results.'
+    };
+    document.getElementById('abstractInput').value = exemplos[tipo] || '';
+    analisar();
+}
+
+function limpar() {
+    document.getElementById('abstractInput').value = '';
+    document.getElementById('resultEmpty').style.display = 'flex';
+    document.getElementById('resultContent').style.display = 'none';
+    targetFreq = 2.5;
+    targetAmp = 1.2;
+}
+</script>
+</body>
+</html>

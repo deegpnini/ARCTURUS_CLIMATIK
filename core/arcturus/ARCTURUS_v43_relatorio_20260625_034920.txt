@@ -1,0 +1,24 @@
+============================================================
+🏛️ ARCTURUS v4.3 — RELATÓRIO OFICIAL
+============================================================
+
+Data: 2026-06-25 03:49:20
+Base: ARCTURUS_v40_anomalias.csv
+Total de artigos: 48
+Casos: 18
+Controles: 30
+
+Threshold: 1.2
+
+MÉTRICAS:
+  Recall: 77.78%
+  Precisão: 53.85%
+  F1-Score: 0.636
+  Acurácia: 66.67%
+  AUC: 0.667
+
+MATRIZ DE CONFUSÃO:
+  TP: 14
+  FP: 12
+  FN: 4
+  TN: 18

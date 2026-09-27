@@ -1,0 +1,19 @@
+============================================================
+ARCTURUS v6.1.1 — RELATÓRIO
+============================================================
+
+Dataset: ARCTURUS_v611_dataset_20260625_044401.csv
+Total: 165 artigos
+Casos: 92
+Controles: 73
+
+VALIDAÇÃO CRUZADA (5-fold):
+  recall: 94.56% ± 3.52%
+  precision: 96.73% ± 4.42%
+  f1: 95.58% ± 3.35%
+  roc_auc: 98.77% ± 1.25%
+
+EVOLUÇÃO:
+  v5.7 (182 artigos): 64.74%
+  v6.0 (261 artigos): 68.30%
+  v6.1.1 (165 artigos): 94.56%

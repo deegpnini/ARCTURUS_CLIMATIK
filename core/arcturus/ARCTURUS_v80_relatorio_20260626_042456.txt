@@ -1,0 +1,24 @@
+============================================================
+ARCTURUS v8.0 — RELATÓRIO
+============================================================
+
+Total: 605 artigos
+Casos: 293
+Controles: 312
+
+VALIDAÇÃO CRUZADA (5-fold):
+  recall: 63.14% ± 6.64%
+  precision: 60.66% ± 4.12%
+  f1: 61.76% ± 4.73%
+  roc_auc: 64.06% ± 6.11%
+
+IMPORTÂNCIA DAS FEATURES:
+  avg_sentence_len: 0.1415
+  word_count: 0.1364
+  avg_word_length: 0.1260
+  num_sentences: 0.1219
+  entropy: 0.1155
+  rare_ratio: 0.0998
+  repetition_rate: 0.0891
+  lexical_diversity: 0.0853
+  papermill_index: 0.0845

@@ -1,0 +1,42 @@
+============================================================
+ARCTURUS v6.0 — RELATORIO FINAL
+============================================================
+
+Data:     2026-06-25 04:35:29
+Dataset:  ARCTURUS_v60_dataset_20260625_042839.csv
+Total:    261 artigos
+  Casos:     92
+  Controles: 169
+Features: ['word_count', 'repetition_rate', 'avg_word_length', 'num_sentences', 'entropy', 'lexical_diversity', 'rare_ratio', 'avg_sentence_len']
+
+VALIDACAO CRUZADA (5-fold):
+  recall: 68.30% +/- 13.16%
+  precision: 71.23% +/- 6.79%
+  f1: 69.41% +/- 9.77%
+  roc_auc: 87.81% +/- 2.68%
+
+METRICAS SPLIT 70/30:
+  Recall:    71.43%
+  Precisao:  80.00%
+  F1-Score:  0.755
+  Acuracia:  83.54%
+  AUC:       0.935
+
+MATRIZ DE CONFUSAO:
+  TP: 20  FP: 5
+  FN: 8  TN: 46
+
+IMPORTANCIA DAS FEATURES:
+  avg_word_length: 0.1726
+  lexical_diversity: 0.1600
+  repetition_rate: 0.1434
+  rare_ratio: 0.1276
+  avg_sentence_len: 0.1053
+  word_count: 0.1043
+  num_sentences: 0.0952
+  entropy: 0.0915
+
+COMPARACAO:
+  v5.7 Recall (CV): 64.74%
+  v6.0 Recall (CV): 68.30% +/- 13.16%
+  Delta: +3.6 pp

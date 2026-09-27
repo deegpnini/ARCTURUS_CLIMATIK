@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCTURUS — Scientific Integrity Screening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ─────────────────────────────────────────────── */
+  :root {
+    --navy:      #0B1929;
+    --navy-mid:  #112240;
+    --navy-light:#1E3A5F;
+    --steel:     #2A4A6B;
+    --ice:       #F0F4F8;
+    --white:     #FFFFFF;
+    --amber:     #F59E0B;
+    --amber-dim: #92610A;
+    --green:     #10B981;
+    --green-dim: #065F46;
+    --red:       #EF4444;
+    --muted:     #8BA3BC;
+    --border:    rgba(139,163,188,0.18);
+    --glow:      rgba(245,158,11,0.12);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--ice);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ────────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(11,25,41,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.12em;
+    color: var(--amber);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--white); }
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── HERO ───────────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 8rem 2.5rem 5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hero-text { max-width: 520px; }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 1.4rem;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: var(--amber);
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 420px;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 1.8rem;
+    background: var(--amber);
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245,158,11,0.35);
+  }
+
+  /* ── RADAR ──────────────────────────────────────────────── */
+  .radar-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+  .radar-svg {
+    width: 100%; height: 100%;
+    animation: radar-spin 8s linear infinite;
+  }
+  @keyframes radar-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .radar-pulse {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    animation: pulse-out 3s ease-out infinite;
+  }
+  @keyframes pulse-out {
+    0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+    70%  { box-shadow: 0 0 0 40px rgba(245,158,11,0); }
+    100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+  }
+  .radar-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+  }
+  .radar-center-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .radar-center-score {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  /* ── SEÇÕES ─────────────────────────────────────────────── */
+  section { padding: 6rem 2.5rem; }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .section-desc {
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 3rem;
+    line-height: 1.75;
+  }
+
+  /* ── DEMO ───────────────────────────────────────────────── */
+  #demo { background: var(--navy-mid); }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  .demo-input-wrap {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .demo-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  #abstract-input {
+    width: 100%;
+    min-height: 260px;
+    padding: 1.2rem;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--ice);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #abstract-input:focus {
+    border-color: var(--amber);
+  }
+  #abstract-input::placeholder { color: var(--steel); }
+  .demo-actions {
+    display: flex; gap: 0.8rem;
+  }
+  .btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: var(--amber);
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.88rem;
+    border: none; border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(245,158,11,0.3);
+  }
+  .btn-secondary {
+    padding: 0.75rem 1.2rem;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--white); border-color: var(--muted); }
+
+  /* ── RESULT PANEL ───────────────────────────────────────── */
+  .result-panel {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .result-placeholder {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.8rem; color: var(--steel); text-align: center;
+  }
+  .result-placeholder-icon {
+    font-size: 2.5rem; opacity: 0.4;
+  }
+  .result-placeholder p {
+    font-size: 0.85rem; line-height: 1.5;
+  }
+  .score-gauge { text-align: center; }
+  .score-number {
+    font-family: var(--font-mono);
+    font-size: 3.5rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .score-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+  .score-bar-wrap {
+    height: 6px;
+    background: var(--navy-mid);
+    border-radius: 99px;
+    margin: 1rem 0 0.4rem;
+    overflow: hidden;
+  }
+  .score-bar {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .verdict-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 99px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .verdict-high   { background: rgba(239,68,68,0.15);  color: #F87171; }
+  .verdict-medium { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .verdict-low    { background: rgba(16,185,129,0.15); color: var(--green); }
+
+  .feat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .feat-item {
+    display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .feat-name {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .feat-val {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--ice);
+    font-weight: 500;
+  }
+  .flags-list {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .flag {
+    padding: 0.25rem 0.7rem;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 4px;
+    font-size: 0.72rem;
+    color: var(--amber);
+    font-family: var(--font-mono);
+  }
+  .hidden { display: none; }
+
+  /* ── MÉTRICAS ───────────────────────────────────────────── */
+  #metricas { background: var(--navy); }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .metric-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--amber);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s ease;
+  }
+  .metric-card.visible::before { transform: scaleX(1); }
+  .metric-value {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .metric-name {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .metric-detail {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--amber);
+  }
+
+  .cm-wrap {
+    display: flex; gap: 3rem; align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .cm-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    gap: 4px;
+  }
+  .cm-header {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.3rem 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .cm-cell {
+    width: 90px; height: 80px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+  }
+  .cm-cell .cm-n { font-size: 1.6rem; font-weight: 500; }
+  .cm-cell .cm-lbl { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.08em; }
+  .cm-tp { background: rgba(16,185,129,0.2);  color: var(--green); }
+  .cm-tn { background: rgba(16,185,129,0.12); color: var(--green); }
+  .cm-fp { background: rgba(239,68,68,0.15);  color: #F87171; }
+  .cm-fn { background: rgba(239,68,68,0.1);   color: #F87171; }
+  .cm-notes { max-width: 360px; }
+  .cm-notes p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .cm-notes strong { color: var(--ice); }
+
+  /* ── METODOLOGIA ────────────────────────────────────────── */
+  #metodologia { background: var(--navy-mid); }
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .method-card {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem;
+  }
+  .method-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+  .method-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+  .method-text {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .method-tag {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--glow);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── FEATURES ───────────────────────────────────────────── */
+  #features { background: var(--navy); }
+  .feat-importance-list {
+    display: flex; flex-direction: column; gap: 0.8rem;
+    max-width: 600px;
+  }
+  .fi-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 60px;
+    align-items: center;
+    gap: 1rem;
+  }
+  .fi-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .fi-bar-wrap {
+    height: 6px;
+    background: var(--navy-mid);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .fi-bar {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 99px;
+    width: 0;
+    transition: width 1s cubic-bezier(0.16,1,0.3,1);
+  }
+  .fi-pct {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--amber);
+    text-align: right;
+  }
+
+  /* ── ROADMAP ────────────────────────────────────────────── */
+  #roadmap { background: var(--navy-mid); }
+  .roadmap-list {
+    display: flex; flex-direction: column; gap: 0;
+    position: relative;
+    padding-left: 2rem;
+  }
+  .roadmap-list::before {
+    content: '';
+    position: absolute; left: 6px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+  .roadmap-item {
+    position: relative;
+    padding: 0 0 2.5rem 2rem;
+  }
+  .roadmap-item::before {
+    content: '';
+    position: absolute; left: -1.95rem; top: 8px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--navy-mid);
+    border: 2px solid var(--border);
+  }
+  .roadmap-item.done::before {
+    background: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 0 8px rgba(16,185,129,0.4);
+  }
+  .roadmap-item.active::before {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 8px rgba(245,158,11,0.5);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.5); }
+    50%       { box-shadow: 0 0 16px rgba(245,158,11,0.8); }
+  }
+  .roadmap-version {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+  }
+  .roadmap-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+  .roadmap-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────── */
+  footer {
+    background: var(--navy);
+    border-top: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+  .footer-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .footer-author {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--steel);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── DIVIDER ────────────────────────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 7rem; }
+    .radar-wrap { max-width: 280px; }
+    .demo-grid { grid-template-columns: 1fr; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .method-grid { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 7rem 1.2rem 4rem; }
+    section { padding: 4rem 1.2rem; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .fi-row { grid-template-columns: 120px 1fr 50px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>ARC</span>TURUS</a>
+  <ul class="nav-links">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#metricas">Métricas</a></li>
+    <li><a href="#metodologia">Metodologia</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">v7.0 · Validado Externamente</p>
+    <h1 class="hero-title">
+      Triagem de<br>
+      <em>Integridade</em><br>
+      Científica
+    </h1>
+    <p class="hero-sub">
+      ARCTURUS analisa abstracts científicos e calcula um score de risco
+      para detecção de má conduta — desenvolvido com dados reais do
+      OpenAlex e validado externamente com artigos retratados.
+    </p>
+    <a class="hero-cta" href="#demo">
+      Analisar um abstract
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- RADAR -->
+  <div class="radar-wrap">
+    <div class="radar-pulse"></div>
+    <svg class="radar-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="190" stroke="#1E3A5F" stroke-width="1"/>
+      <circle cx="200" cy="200" r="140" stroke="#1E3A5F" stroke-width="1"/>
+      <circle cx="200" cy="200" r="90"  stroke="#1E3A5F" stroke-width="1"/>
+      <circle cx="200" cy="200" r="40"  stroke="#1E3A5F" stroke-width="1.5"/>
+      <line x1="200" y1="10"  x2="200" y2="390" stroke="#1E3A5F" stroke-width="1"/>
+      <line x1="10"  y1="200" x2="390" y2="200" stroke="#1E3A5F" stroke-width="1"/>
+      <line x1="55"  y1="55"  x2="345" y2="345" stroke="#1E3A5F" stroke-width="0.5" stroke-dasharray="4 6"/>
+      <line x1="345" y1="55"  x2="55"  y2="345" stroke="#1E3A5F" stroke-width="0.5" stroke-dasharray="4 6"/>
+      <path d="M200 200 L200 10 A190 190 0 0 1 380 200 Z" fill="url(#sweep)" opacity="0.6"/>
+      <circle cx="200" cy="200" r="5" fill="#F59E0B"/>
+      <circle cx="290" cy="130" r="4" fill="#EF4444" opacity="0.9">
+        <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="150" cy="280" r="3" fill="#F59E0B" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.1;0.7" dur="3.3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="310" cy="270" r="5" fill="#EF4444" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="150" r="2.5" fill="#10B981" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.7s" repeatCount="indefinite"/>
+      </circle>
+      <defs>
+        <linearGradient id="sweep" x1="200" y1="200" x2="390" y2="10" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#F59E0B" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="radar-center">
+      <div class="radar-center-label">Risk Score</div>
+      <div class="radar-center-score" id="hero-score">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="section-inner">
+    <p class="section-label">Ferramenta</p>
+    <h2 class="section-title">Analisar Abstract</h2>
+    <p class="section-desc">
+      Cole o abstract de um artigo científico abaixo. O ARCTURUS extrai
+      9 features textuais e calcula o score de risco em tempo real.
+    </p>
+
+    <div class="demo-grid">
+      <div class="demo-input-wrap">
+        <label class="demo-label" for="abstract-input">Abstract do artigo</label>
+        <textarea id="abstract-input"
+          placeholder="Cole aqui o abstract do artigo para análise...&#10;&#10;Exemplo: 'This study investigates the novel application of...'"></textarea>
+        <div class="demo-actions">
+          <button class="btn-primary" onclick="analisar()">Analisar →</button>
+          <button class="btn-secondary" onclick="carregarExemplo()">Exemplo retratado</button>
+          <button class="btn-secondary" onclick="limpar()">Limpar</button>
+        </div>
+      </div>
+
+      <div class="result-panel" id="result-panel">
+        <div class="result-placeholder" id="result-placeholder">
+          <div class="result-placeholder-icon">◎</div>
+          <p>O resultado aparecerá aqui.<br>Cole um abstract e clique em Analisar.</p>
+        </div>
+
+        <div class="hidden" id="result-content">
+          <div class="score-gauge">
+            <div class="score-number" id="res-score">—</div>
+            <div class="score-label">Score de Risco (0–100)</div>
+            <div class="score-bar-wrap">
+              <div class="score-bar" id="res-bar"></div>
+            </div>
+            <div id="res-verdict" class="verdict-badge" style="margin-top:0.5rem"></div>
+          </div>
+
+          <hr class="divider" style="margin:1rem 0">
+
+          <div>
+            <div class="demo-label" style="margin-bottom:0.6rem">Features extraídas</div>
+            <div class="feat-grid" id="res-features"></div>
+          </div>
+
+          <div id="flags-section" class="hidden">
+            <div class="demo-label" style="margin-bottom:0.5rem">Sinais detectados</div>
+            <div class="flags-list" id="res-flags"></div>
+          </div>
+
+          <p style="font-size:0.72rem;color:var(--steel);line-height:1.5;margin-top:0.5rem">
+            ⚠ Score indicativo. Revisão humana obrigatória. Não substitui análise editorial.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTRICAS -->
+<section id="metricas">
+  <div class="section-inner">
+    <p class="section-label">Validação v7.0</p>
+    <h2 class="section-title">Performance do Modelo</h2>
+    <p class="section-desc">
+      Resultados da validação cruzada interna (5-fold) e do hold-out externo
+      com 57 artigos nunca vistos durante o treinamento.
+    </p>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">87%</div>
+        <div class="metric-name">Recall (CV interno)</div>
+        <div class="metric-detail">± 6.59%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">79%</div>
+        <div class="metric-name">Recall (hold-out externo)</div>
+        <div class="metric-detail">Gap de 7.5 pp</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">80%</div>
+        <div class="metric-name">F1-Score (CV)</div>
+        <div class="metric-detail">± 2.59%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">285</div>
+        <div class="metric-name">Artigos no dataset</div>
+        <div class="metric-detail">193 casos · 92 controles</div>
+      </div>
+    </div>
+
+    <div class="cm-wrap">
+      <div>
+        <div class="demo-label" style="margin-bottom:1rem">Matriz de Confusão — Hold-out</div>
+        <div class="cm-grid">
+          <div></div>
+          <div class="cm-header">PREV: CASO</div>
+          <div class="cm-header">PREV: CONTROLE</div>
+          <div class="cm-header" style="writing-mode:horizontal-tb;text-align:right;padding-right:0.5rem">REAL: CASO</div>
+          <div class="cm-cell cm-tp"><span class="cm-n">31</span><span class="cm-lbl">TP</span></div>
+          <div class="cm-cell cm-fn"><span class="cm-n">8</span><span class="cm-lbl">FN</span></div>
+          <div class="cm-header" style="writing-mode:horizontal-tb;text-align:right;padding-right:0.5rem">REAL: CONTROLE</div>
+          <div class="cm-cell cm-fp"><span class="cm-n">12</span><span class="cm-lbl">FP</span></div>
+          <div class="cm-cell cm-tn"><span class="cm-n">6</span><span class="cm-lbl">TN</span></div>
+        </div>
+      </div>
+      <div class="cm-notes">
+        <p><strong>31 verdadeiros positivos</strong> — artigos retratados corretamente sinalizados.</p>
+        <p><strong>8 falsos negativos</strong> — casos reais que passaram pelo filtro. Análise manual em andamento para identificar padrões.</p>
+        <p><strong>12 falsos positivos</strong> — artigos legítimos sinalizados como risco. Taxa esperada em sistemas de triagem de primeira passagem.</p>
+        <p style="font-size:0.78rem;color:var(--steel)">Hold-out: 57 artigos (39 casos, 18 controles). Seed fixo 2024. Separado antes de qualquer treinamento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METODOLOGIA -->
+<section id="metodologia">
+  <div class="section-inner">
+    <p class="section-label">Como funciona</p>
+    <h2 class="section-title">Metodologia</h2>
+    <p class="section-desc">Pipeline transparente e reproduzível — do dado bruto ao score final.</p>
+
+    <div class="method-grid">
+      <div class="method-card">
+        <div class="method-icon">📡</div>
+        <div class="method-title">Coleta de Dados</div>
+        <div class="method-text">Artigos retratados coletados via OpenAlex API com filtro <code style="color:var(--amber);font-size:0.8rem">is_retracted:true</code> excluindo avisos de retração. Controles pareados por área e período (2018–2023).</div>
+        <div class="method-tag">OpenAlex · Crossref</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🧠</div>
+        <div class="method-title">Feature Engineering</div>
+        <div class="method-text">9 features textuais extraídas do abstract: comprimento, diversidade lexical, entropia de Shannon, taxa de repetição, comprimento de sentenças e o <em style="color:var(--amber)">papermill_index</em> — combinação ponderada de sinais suspeitos.</div>
+        <div class="method-tag">9 features · papermill_index</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🌲</div>
+        <div class="method-title">Modelo</div>
+        <div class="method-text">Random Forest com 200 árvores e class_weight='balanced'. Sem escalonamento — RF é invariante a transformações monotônicas. Validação cruzada 5-fold estratificada.</div>
+        <div class="method-tag">Random Forest · 5-fold CV</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🔒</div>
+        <div class="method-title">Hold-out Externo</div>
+        <div class="method-text">57 artigos separados antes de qualquer treinamento com seed fixo 2024. Nunca vistos pelo modelo durante desenvolvimento. Usados uma única vez para avaliação final.</div>
+        <div class="method-tag">57 artigos · seed 2024</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">⚖️</div>
+        <div class="method-title">Limitações Declaradas</div>
+        <div class="method-text">285 artigos é dataset pequeno. Especificidade baixa (falsos positivos). Features textuais simples não capturam fraude sofisticada. Escopo atual: 9 áreas biomédicas em inglês.</div>
+        <div class="method-tag">Triagem · Não diagnóstico</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">📖</div>
+        <div class="method-title">Código Aberto</div>
+        <div class="method-text">Pipeline completo disponível para reprodução. Dataset de treino baseado em abstracts públicos via OpenAlex. Preprint em preparação para OSF Preprints.</div>
+        <div class="method-tag">Open Source · OSF Preprint</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <p class="section-label">Interpretabilidade</p>
+    <h2 class="section-title">Importância das Features</h2>
+    <p class="section-desc">Contribuição de cada feature para as decisões do modelo (Gini importance). Features estruturais dominam — o modelo aprende padrões de escrita, não tópicos.</p>
+    <div class="feat-importance-list" id="fi-list"></div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-inner">
+    <p class="section-label">Evolução</p>
+    <h2 class="section-title">Roadmap</h2>
+    <p class="section-desc">Do protótipo ao produto — cada versão com validação honesta.</p>
+    <div class="roadmap-list">
+      <div class="roadmap-item done">
+        <div class="roadmap-version">v4.2 — v6.3</div>
+        <div class="roadmap-title">Prova de Conceito</div>
+        <div class="roadmap-desc">Dataset inicial de 48 artigos → expansão para 285. Feature engineering, correção de bugs, pipeline de coleta via OpenAlex.</div>
+      </div>
+      <div class="roadmap-item done">
+        <div class="roadmap-version">v7.0 · Atual</div>
+        <div class="roadmap-title">Validação Externa</div>
+        <div class="roadmap-desc">Hold-out de 57 artigos separado antes do treino. Gap de 7.5 pp entre CV interno e externo. Generalização confirmada.</div>
+      </div>
+      <div class="roadmap-item active">
+        <div class="roadmap-version">v8.0 · Em desenvolvimento</div>
+        <div class="roadmap-title">Preprint + Embeddings</div>
+        <div class="roadmap-desc">Publicação no OSF Preprints. Dataset expandido para 500 artigos. Implementação de Sentence Transformers para análise semântica profunda.</div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-version">v9.0 · Planejado</div>
+        <div class="roadmap-title">API Pública</div>
+        <div class="roadmap-desc">Endpoint REST para submissão de DOIs. Dashboard Streamlit com explicabilidade SHAP. Análise de rede de coautoria.</div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-version">v10.0 · Futuro</div>
+        <div class="roadmap-title">Produto Comercial</div>
+        <div class="roadmap-desc">SaaS para editoras e instituições. Plano Starter e Pro. Auditoria institucional. Parceria com Retraction Watch.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ARCTURUS</div>
+  <div class="footer-sub">Scientific Integrity Risk Screening · v7.0</div>
+  <div class="footer-author">Desenvolvido por Helyton Renato Gonçalves Ronchi · Balneário Rincão, SC, Brasil</div>
+  <div class="footer-author" style="margin-top:0.3rem">"A verdade vem dos dados. Não das métricas."</div>
+</footer>
+
+<script>
+const FEATURE_IMPORTANCES = [
+  { name: 'num_sentences',    pct: 16.57 },
+  { name: 'avg_sentence_len', pct: 15.72 },
+  { name: 'word_count',       pct: 12.50 },
+  { name: 'avg_word_length',  pct: 11.44 },
+  { name: 'lexical_diversity',pct: 10.80 },
+  { name: 'repetition_rate',  pct: 10.20 },
+  { name: 'rare_ratio',       pct:  9.40 },
+  { name: 'entropy',          pct:  6.00 },
+  { name: 'papermill_index',  pct:  7.37 },
+];
+
+const fiList = document.getElementById('fi-list');
+FEATURE_IMPORTANCES.forEach(f => {
+  const row = document.createElement('div');
+  row.className = 'fi-row';
+  row.innerHTML = `
+    <span class="fi-name">${f.name}</span>
+    <div class="fi-bar-wrap"><div class="fi-bar" data-pct="${f.pct}"></div></div>
+    <span class="fi-pct">${f.pct}%</span>
+  `;
+  fiList.appendChild(row);
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.fi-bar').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+      document.querySelectorAll('.metric-card').forEach(c => c.classList.add('visible'));
+    }
+  });
+}, { threshold: 0.3 });
+
+const featSection = document.getElementById('features');
+if (featSection) observer.observe(featSection);
+const metricSection = document.getElementById('metricas');
+if (metricSection) observer.observe(metricSection);
+
+function extrairFeatures(text) {
+  const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+  const n = words.length;
+  if (n === 0) return null;
+
+  const freq = {};
+  words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+  const unique = Object.keys(freq).length;
+
+  const probs = Object.values(freq).map(v => v / n);
+  const entropy = -probs.reduce((s, p) => s + p * Math.log2(p + 1e-10), 0);
+
+  const sentences = text.split('.').map(s => s.trim()).filter(s => s.length > 0);
+  const longSent  = sentences.filter(s => s.split(' ').length > 5);
+  const avgSentLen = longSent.length > 0
+    ? longSent.reduce((s, sent) => s + sent.split(' ').length, 0) / longSent.length
+    : 0;
+
+  const lexDiv = unique / n;
+  const repRate = 1 - lexDiv;
+  const rareCount = Object.values(freq).filter(v => v < 3).length;
+  const rareRatio = rareCount / n;
+  const avgWordLen = words.reduce((s, w) => s + w.length, 0) / n;
+
+  const suspeitas_tokens = ['herein','hereby','hitherto','aforementioned'];
+  const suspeitas_frases = [
+    'to the best of our knowledge','fill the gap','research gap',
+    'further studies are needed','our findings suggest','we demonstrate',
+    'in this study we','this study aims to','the present study',
+  ];
+  const textLower = text.toLowerCase();
+  const tokenHits = words.filter(w => suspeitas_tokens.includes(w)).length;
+  const fraseHits = suspeitas_frases.filter(f => textLower.includes(f)).length;
+  const papermillRaw = (tokenHits + fraseHits * 2) / Math.max(n / 100, 1);
+  const papermillIndex = Math.min(papermillRaw, 1);
+
+  return {
+    word_count:        n,
+    repetition_rate:   +repRate.toFixed(4),
+    avg_word_length:   +avgWordLen.toFixed(2),
+    num_sentences:     sentences.length,
+    entropy:           +entropy.toFixed(4),
+    lexical_diversity: +lexDiv.toFixed(4),
+    rare_ratio:        +rareRatio.toFixed(4),
+    avg_sentence_len:  +avgSentLen.toFixed(2),
+    papermill_index:   +papermillIndex.toFixed(4),
+  };
+}
+
+function calcularScore(feats) {
+  const score =
+    feats.repetition_rate   * 28  +
+    feats.papermill_index   * 20  +
+    (1 - feats.lexical_diversity) * 18 +
+    (1 - feats.rare_ratio)  * 10  +
+    (feats.word_count < 100 ? 12 : feats.word_count < 150 ? 6 : 0) +
+    (feats.avg_sentence_len < 10 ? 8 : 0) +
+    (feats.entropy < 3 ? 4 : 0);
+  return Math.min(Math.round(score), 100);
+}
+
+function detectarFlags(feats, text) {
+  const flags = [];
+  const textLower = text.toLowerCase();
+  if (feats.repetition_rate > 0.25)         flags.push('Alta repetição de palavras');
+  if (feats.lexical_diversity < 0.55)       flags.push('Baixa diversidade lexical');
+  if (feats.word_count < 120)               flags.push('Abstract muito curto');
+  if (feats.papermill_index > 0.1)          flags.push('Linguagem de papermill');
+  if (feats.avg_sentence_len < 12)          flags.push('Sentenças estruturalmente simples');
+  if (textLower.includes('to the best of our knowledge')) flags.push('"To the best of our knowledge"');
+  if (textLower.includes('novel') && textLower.includes('significant')) flags.push('Excesso de adjetivos impactantes');
+  if (feats.entropy < 3.5)                  flags.push('Baixa entropia textual');
+  return flags;
+}
+
+function analisar() {
+  const text = document.getElementById('abstract-input').value.trim();
+  if (text.length < 50) {
+    alert('Por favor, cole um abstract com pelo menos 50 caracteres.');
+    return;
+  }
+
+  const feats = extrairFeatures(text);
+  if (!feats) return;
+
+  const score = calcularScore(feats);
+  const flags  = detectarFlags(feats, text);
+
+  document.getElementById('hero-score').textContent = score;
+
+  document.getElementById('result-placeholder').classList.add('hidden');
+  const content = document.getElementById('result-content');
+  content.classList.remove('hidden');
+
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-score').style.color =
+    score >= 60 ? '#F87171' : score >= 35 ? '#F59E0B' : '#10B981';
+
+  const bar = document.getElementById('res-bar');
+  bar.style.width = score + '%';
+  bar.style.background =
+    score >= 60 ? '#EF4444' : score >= 35 ? '#F59E0B' : '#10B981';
+
+  const verdict = document.getElementById('res-verdict');
+  if (score >= 60) {
+    verdict.className = 'verdict-badge verdict-high';
+    verdict.innerHTML = '⚠ Alto Risco — Revisão Recomendada';
+  } else if (score >= 35) {
+    verdict.className = 'verdict-badge verdict-medium';
+    verdict.innerHTML = '◉ Risco Moderado — Atenção';
+  } else {
+    verdict.className = 'verdict-badge verdict-low';
+    verdict.innerHTML = '✓ Baixo Risco';
+  }
+
+  const featGrid = document.getElementById('res-features');
+  featGrid.innerHTML = '';
+  const featLabels = {
+    word_count: 'Palavras', repetition_rate: 'Repetição',
+    avg_word_length: 'Comp. médio', num_sentences: 'Sentenças',
+    entropy: 'Entropia', lexical_diversity: 'Diversidade',
+    rare_ratio: 'Palavras raras', avg_sentence_len: 'Comp. sentença',
+    papermill_index: 'Papermill idx',
+  };
+  Object.entries(feats).forEach(([k, v]) => {
+    const el = document.createElement('div');
+    el.className = 'feat-item';
+    el.innerHTML = `<span class="feat-name">${featLabels[k] || k}</span><span class="feat-val">${v}</span>`;
+    featGrid.appendChild(el);
+  });
+
+  const flagsSec = document.getElementById('flags-section');
+  const flagsList = document.getElementById('res-flags');
+  if (flags.length > 0) {
+    flagsSec.classList.remove('hidden');
+    flagsList.innerHTML = flags.map(f => `<span class="flag">${f}</span>`).join('');
+  } else {
+    flagsSec.classList.add('hidden');
+  }
+
+  document.getElementById('demo').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function carregarExemplo() {
+  document.getElementById('abstract-input').value =
+    `This novel study demonstrates the significant and unprecedented effectiveness of our innovative approach to the treatment of diabetic retinopathy using advanced machine learning techniques. To the best of our knowledge, this is the first study to investigate this important research gap. Our comprehensive analysis shows promising and robust results. The novel findings suggest that our cutting-edge methodology achieves state-of-the-art performance. Further studies are needed to confirm these groundbreaking results. We demonstrate herein that our unique approach fills the gap in existing literature. The innovative results are significant and the methodology is comprehensive.`;
+  analisar();
+}
+
+function limpar() {
+  document.getElementById('abstract-input').value = '';
+  document.getElementById('result-placeholder').classList.remove('hidden');
+  document.getElementById('result-content').classList.add('hidden');
+  document.getElementById('hero-score').textContent = '—';
+}
+</script>
+</body>
+</html>

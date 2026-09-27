@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-07-26T19:02:17.470044",
+  "anomalia_atual": 2.15,
+  "status_nino": "EL NIÑO ATIVO",
+  "impactos": {
+    "Região": [
+      "Sul",
+      "Sudeste",
+      "Centro-Oeste",
+      "Nordeste",
+      "Norte"
+    ],
+    "Municípios_emergencia": [
+      122,
+      45,
+      32,
+      28,
+      13
+    ],
+    "Prejuízo_milhões": [
+      128,
+      450,
+      680,
+      1200,
+      3500
+    ],
+    "Estado_crítico": [
+      "RS: 69, SC: 53",
+      "MG: 18, SP: 12",
+      "MT: 15, GO: 10",
+      "BA: 12, PE: 8",
+      "PA: 7, AM: 4"
+    ]
+  },
+  "fontes": [
+    "NOAA",
+    "INMET",
+    "CEMADEN",
+    "CNM"
+  ]
+}

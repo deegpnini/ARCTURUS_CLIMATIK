@@ -1,0 +1,23 @@
+RELATÓRIO ARCTURUS CLIMATIK — 26/07/2026 19:14
+PROTOCOLO: Raw Evidence First
+
+1. FONTE: INMET (Boletim Oficial El Niño)
+   Status: VERIFICADO
+   Evidência bruta: /content/drive/MyDrive/ARCTURUS/inmet_boletim_20260726_1914.html
+   Título: El Niño 2026: saiba detalhes sobre o monitoramento, previsões e os possíveis impactos do fenômeno no Brasil
+
+2. FONTE: CEMADEN (Boletim de Riscos Geo-Hidrológicos)
+   Status: VERIFICADO
+   Boletim: https://www.gov.br/cemaden/pt-br/assuntos/riscos-geo-hidrologicos/27-07-2026-previsao-de-riscos-geo-hidrologicos
+   Evidência bruta: /content/drive/MyDrive/ARCTURUS/cemaden_boletim_20260726_1914.html
+
+3. FONTE: CNM (Municípios em emergência / prejuízos)
+   Status: NAO_VERIFICADO
+   Motivo: 403 - bloqueio anti-scraping
+   Ação recomendada: coleta manual
+
+4. STATUS DOS DADOS AGREGADOS:
+   - Municípios em emergência: ❌ NÃO VERIFICADO
+   - Prejuízos em R$: ❌ NÃO VERIFICADO
+   (Nenhum número agregado deve ser publicado até confirmação
+    via CNM ou fonte primária equivalente com evidência bruta.)

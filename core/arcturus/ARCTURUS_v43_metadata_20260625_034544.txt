@@ -1,0 +1,10 @@
+============================================================
+🏛️ ARCTURUS v4.3 — METADADOS
+============================================================
+
+versao: v4.3
+data_criacao: 20260625_034544
+total_artigos: 50
+casos: 20
+controles: 30
+features: ['word_count', 'repetition_rate', 'semantic_similarity', 'anomaly_score', 'segment', 'prediction', 'prediction_new']

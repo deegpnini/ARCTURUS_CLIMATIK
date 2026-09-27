@@ -1,0 +1,31 @@
+============================================================
+ARCTURUS v6.2 — RELATÓRIO
+============================================================
+
+Dataset: ARCTURUS_v611_dataset_20260625_044401.csv
+Total: 165 artigos
+Features: 9
+  NOVA FEATURE: papermill_index
+
+VALIDAÇÃO CRUZADA (5-fold):
+  recall: 94.56% ± 3.52%
+  precision: 95.67% ± 4.13%
+  f1: 95.07% ± 3.24%
+  roc_auc: 98.81% ± 0.93%
+
+EVOLUÇÃO:
+  v5.7 (182): 64.74%
+  v6.0 (261): 68.30%
+  v6.1.1 (165): 94.56%
+  v6.2 (165): 94.56%
+
+FEATURE IMPORTANCE:
+  repetition_rate: 0.3042
+  rare_ratio: 0.1844
+  papermill_index: 0.1777
+  lexical_diversity: 0.1459
+  avg_word_length: 0.0815
+  word_count: 0.0468
+  num_sentences: 0.0349
+  entropy: 0.0197
+  avg_sentence_len: 0.0049

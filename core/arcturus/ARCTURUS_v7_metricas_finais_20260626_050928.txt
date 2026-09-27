@@ -1,0 +1,12 @@
+============================================================
+ARCTURUS v7.0 — MÉTRICAS FINAIS
+============================================================
+
+Total de artigos (limpo): 93
+Casos: 1
+Controles: 92
+
+VALIDAÇÃO CRUZADA (5-fold):
+  AUC: nan ± nan
+  Recall: nan ± nan
+  Precisão: nan ± nan

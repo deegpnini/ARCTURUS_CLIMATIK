@@ -1,0 +1,18 @@
+======================================================================
+ARCTURUS TITANIC - RELATÓRIO DE RECONCILIAÇÃO v4
+======================================================================
+Data: 2026-07-31 05:10:15
+Versão: v4_20260731_051015
+Modelo: RandomForest V3
+Hiperparâmetros: {'n_estimators': 100, 'random_state': 42, 'n_jobs': -1}
+Features: ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked', 'FamilySize', 'IsAlone', 'Title']
+F1 CV (5-fold): 0.752922 ± 0.005027 (SE)
+IC 95% (t-student): [0.738966, 0.766878]
+Scores por fold: [np.float64(0.746269), np.float64(0.76259), np.float64(0.748092), np.float64(0.740741), np.float64(0.766917)]
+
+ENSEMBLE (RF + LGBM + XGB):
+  F1 CV: 0.767265
+  Ganho: 0.014343
+  Nadeau-Bengio (CORRETO): p = 0.0243
+  Teste-t pareado (sem correção): p = 0.0771
+======================================================================

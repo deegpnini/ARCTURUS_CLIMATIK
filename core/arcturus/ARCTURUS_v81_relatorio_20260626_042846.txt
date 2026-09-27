@@ -1,0 +1,25 @@
+============================================================
+ARCTURUS v8.1 — RELATÓRIO
+============================================================
+
+Total: 307 artigos
+Casos: 124
+Controles: 183
+Áreas: cancer, neuroscience, pharmacology, cardiovascular, ophthalmology
+
+VALIDAÇÃO CRUZADA (5-fold):
+  recall: 54.03% ± 1.79%
+  precision: 62.38% ± 4.37%
+  f1: 57.78% ± 1.51%
+  roc_auc: 70.15% ± 4.39%
+
+IMPORTÂNCIA DAS FEATURES:
+  num_sentences: 0.1503
+  word_count: 0.1378
+  avg_sentence_len: 0.1332
+  avg_word_length: 0.1161
+  rare_ratio: 0.1100
+  entropy: 0.1041
+  repetition_rate: 0.0844
+  papermill_index: 0.0830
+  lexical_diversity: 0.0810

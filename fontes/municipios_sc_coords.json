@@ -1,0 +1,1772 @@
+[
+  {
+    "codigo_ibge": 4200051,
+    "nome": "Abdon Batista",
+    "lat": -27.612419,
+    "lon": -51.022992
+  },
+  {
+    "codigo_ibge": 4200101,
+    "nome": "Abelardo Luz",
+    "lat": -26.5705893,
+    "lon": -52.3280339
+  },
+  {
+    "codigo_ibge": 4200200,
+    "nome": "Agrolândia",
+    "lat": -27.4120688,
+    "lon": -49.8294621
+  },
+  {
+    "codigo_ibge": 4200309,
+    "nome": "Agronômica",
+    "lat": -27.2660744,
+    "lon": -49.7104753
+  },
+  {
+    "codigo_ibge": 4200408,
+    "nome": "Água Doce",
+    "lat": -26.9986047,
+    "lon": -51.5529306
+  },
+  {
+    "codigo_ibge": 4200507,
+    "nome": "Águas de Chapecó",
+    "lat": -27.0741119,
+    "lon": -52.9879048
+  },
+  {
+    "codigo_ibge": 4200556,
+    "nome": "Águas Frias",
+    "lat": -26.8817187,
+    "lon": -52.8599756
+  },
+  {
+    "codigo_ibge": 4200606,
+    "nome": "Águas Mornas",
+    "lat": -27.696316,
+    "lon": -48.8247831
+  },
+  {
+    "codigo_ibge": 4200705,
+    "nome": "Alfredo Wagner",
+    "lat": -27.6961513,
+    "lon": -49.3326734
+  },
+  {
+    "codigo_ibge": 4200754,
+    "nome": "Alto Bela Vista",
+    "lat": -27.4320737,
+    "lon": -51.905771
+  },
+  {
+    "codigo_ibge": 4200804,
+    "nome": "Anchieta",
+    "lat": -26.5350527,
+    "lon": -53.3293938
+  },
+  {
+    "codigo_ibge": 4200903,
+    "nome": "Angelina",
+    "lat": -27.5805287,
+    "lon": -48.9838759
+  },
+  {
+    "codigo_ibge": 4201000,
+    "nome": "Anita Garibaldi",
+    "lat": -27.6855032,
+    "lon": -51.1293873
+  },
+  {
+    "codigo_ibge": 4201109,
+    "nome": "Anitápolis",
+    "lat": -27.9041185,
+    "lon": -49.1287395
+  },
+  {
+    "codigo_ibge": 4201208,
+    "nome": "Antônio Carlos",
+    "lat": -27.5168462,
+    "lon": -48.7684715
+  },
+  {
+    "codigo_ibge": 4201257,
+    "nome": "Apiúna",
+    "lat": -27.0374658,
+    "lon": -49.3885037
+  },
+  {
+    "codigo_ibge": 4201273,
+    "nome": "Arabutã",
+    "lat": -27.1587028,
+    "lon": -52.1438142
+  },
+  {
+    "codigo_ibge": 4201307,
+    "nome": "Araquari",
+    "lat": -26.3703324,
+    "lon": -48.7210994
+  },
+  {
+    "codigo_ibge": 4201406,
+    "nome": "Araranguá",
+    "lat": -28.9348832,
+    "lon": -49.4858389
+  },
+  {
+    "codigo_ibge": 4201505,
+    "nome": "Armazém",
+    "lat": -28.2624996,
+    "lon": -49.0190126
+  },
+  {
+    "codigo_ibge": 4201604,
+    "nome": "Arroio Trinta",
+    "lat": -26.9301976,
+    "lon": -51.334928
+  },
+  {
+    "codigo_ibge": 4201653,
+    "nome": "Arvoredo",
+    "lat": -27.0755081,
+    "lon": -52.4570855
+  },
+  {
+    "codigo_ibge": 4201703,
+    "nome": "Ascurra",
+    "lat": -26.9569975,
+    "lon": -49.3767752
+  },
+  {
+    "codigo_ibge": 4201802,
+    "nome": "Atalanta",
+    "lat": -27.421916,
+    "lon": -49.778863
+  },
+  {
+    "codigo_ibge": 4201901,
+    "nome": "Aurora",
+    "lat": -27.3166417,
+    "lon": -49.6368502
+  },
+  {
+    "codigo_ibge": 4201950,
+    "nome": "Balneário Arroio do Silva",
+    "lat": -28.9815269,
+    "lon": -49.4189932
+  },
+  {
+    "codigo_ibge": 4202008,
+    "nome": "Balneário Camboriú",
+    "lat": -27.0075487,
+    "lon": -48.6139259
+  },
+  {
+    "codigo_ibge": 4202057,
+    "nome": "Balneário Barra do Sul",
+    "lat": -26.459842,
+    "lon": -48.6061471
+  },
+  {
+    "codigo_ibge": 4202073,
+    "nome": "Balneário Gaivota",
+    "lat": -29.1553098,
+    "lon": -49.5808712
+  },
+  {
+    "codigo_ibge": 4202081,
+    "nome": "Bandeirante",
+    "lat": -26.7673451,
+    "lon": -53.6391722
+  },
+  {
+    "codigo_ibge": 4202099,
+    "nome": "Barra Bonita",
+    "lat": -26.6526364,
+    "lon": -53.4419581
+  },
+  {
+    "codigo_ibge": 4202107,
+    "nome": "Barra Velha",
+    "lat": -26.6338203,
+    "lon": -48.6835001
+  },
+  {
+    "codigo_ibge": 4202131,
+    "nome": "Bela Vista do Toldo",
+    "lat": -26.274625,
+    "lon": -50.466354
+  },
+  {
+    "codigo_ibge": 4202156,
+    "nome": "Belmonte",
+    "lat": -26.8448262,
+    "lon": -53.578916
+  },
+  {
+    "codigo_ibge": 4202206,
+    "nome": "Benedito Novo",
+    "lat": -26.7840657,
+    "lon": -49.3629511
+  },
+  {
+    "codigo_ibge": 4202305,
+    "nome": "Biguaçu",
+    "lat": -27.4961076,
+    "lon": -48.654111
+  },
+  {
+    "codigo_ibge": 4202404,
+    "nome": "Blumenau",
+    "lat": -26.9195567,
+    "lon": -49.0658025
+  },
+  {
+    "codigo_ibge": 4202438,
+    "nome": "Bocaina do Sul",
+    "lat": -27.745494,
+    "lon": -49.942279
+  },
+  {
+    "codigo_ibge": 4202453,
+    "nome": "Bombinhas",
+    "lat": -27.1519159,
+    "lon": -48.4875691
+  },
+  {
+    "codigo_ibge": 4202503,
+    "nome": "Bom Jardim da Serra",
+    "lat": -28.3380324,
+    "lon": -49.625588
+  },
+  {
+    "codigo_ibge": 4202537,
+    "nome": "Bom Jesus",
+    "lat": -26.7350604,
+    "lon": -52.3916519
+  },
+  {
+    "codigo_ibge": 4202578,
+    "nome": "Bom Jesus do Oeste",
+    "lat": -26.6929713,
+    "lon": -53.0967453
+  },
+  {
+    "codigo_ibge": 4202602,
+    "nome": "Bom Retiro",
+    "lat": -27.798993,
+    "lon": -49.486994
+  },
+  {
+    "codigo_ibge": 4202701,
+    "nome": "Botuverá",
+    "lat": -27.1990695,
+    "lon": -49.0726471
+  },
+  {
+    "codigo_ibge": 4202800,
+    "nome": "Braço do Norte",
+    "lat": -28.2728633,
+    "lon": -49.1622712
+  },
+  {
+    "codigo_ibge": 4202859,
+    "nome": "Braço do Trombudo",
+    "lat": -27.358578,
+    "lon": -49.882145
+  },
+  {
+    "codigo_ibge": 4202875,
+    "nome": "Brunópolis",
+    "lat": -27.310953,
+    "lon": -50.837585
+  },
+  {
+    "codigo_ibge": 4202909,
+    "nome": "Brusque",
+    "lat": -27.0964628,
+    "lon": -48.9136323
+  },
+  {
+    "codigo_ibge": 4203006,
+    "nome": "Caçador",
+    "lat": -26.763784,
+    "lon": -51.0510751
+  },
+  {
+    "codigo_ibge": 4203105,
+    "nome": "Caibi",
+    "lat": -27.0751925,
+    "lon": -53.2502133
+  },
+  {
+    "codigo_ibge": 4203154,
+    "nome": "Calmon",
+    "lat": -26.6023644,
+    "lon": -51.0992893
+  },
+  {
+    "codigo_ibge": 4203204,
+    "nome": "Camboriú",
+    "lat": -27.0273601,
+    "lon": -48.6535657
+  },
+  {
+    "codigo_ibge": 4203253,
+    "nome": "Capão Alto",
+    "lat": -27.9382827,
+    "lon": -50.511491
+  },
+  {
+    "codigo_ibge": 4203303,
+    "nome": "Campo Alegre",
+    "lat": -26.1941684,
+    "lon": -49.2657484
+  },
+  {
+    "codigo_ibge": 4203402,
+    "nome": "Campo Belo do Sul",
+    "lat": -27.8989298,
+    "lon": -50.759562
+  },
+  {
+    "codigo_ibge": 4203501,
+    "nome": "Campo Erê",
+    "lat": -26.3947432,
+    "lon": -53.0790495
+  },
+  {
+    "codigo_ibge": 4203600,
+    "nome": "Campos Novos",
+    "lat": -27.3962904,
+    "lon": -51.2224397
+  },
+  {
+    "codigo_ibge": 4203709,
+    "nome": "Canelinha",
+    "lat": -27.2660341,
+    "lon": -48.7666708
+  },
+  {
+    "codigo_ibge": 4203808,
+    "nome": "Canoinhas",
+    "lat": -26.1755121,
+    "lon": -50.3949592
+  },
+  {
+    "codigo_ibge": 4203907,
+    "nome": "Capinzal",
+    "lat": -27.3440651,
+    "lon": -51.6110403
+  },
+  {
+    "codigo_ibge": 4203956,
+    "nome": "Capivari de Baixo",
+    "lat": -28.449773,
+    "lon": -48.963144
+  },
+  {
+    "codigo_ibge": 4204004,
+    "nome": "Catanduvas",
+    "lat": -27.0689719,
+    "lon": -51.660158
+  },
+  {
+    "codigo_ibge": 4204103,
+    "nome": "Caxambu do Sul",
+    "lat": -27.1615046,
+    "lon": -52.8796675
+  },
+  {
+    "codigo_ibge": 4204152,
+    "nome": "Celso Ramos",
+    "lat": -27.6335797,
+    "lon": -51.3368111
+  },
+  {
+    "codigo_ibge": 4204178,
+    "nome": "Cerro Negro",
+    "lat": -27.7953331,
+    "lon": -50.8741305
+  },
+  {
+    "codigo_ibge": 4204194,
+    "nome": "Chapadão do Lageado",
+    "lat": -27.590507,
+    "lon": -49.553879
+  },
+  {
+    "codigo_ibge": 4204202,
+    "nome": "Chapecó",
+    "lat": -27.1110472,
+    "lon": -52.5958977
+  },
+  {
+    "codigo_ibge": 4204251,
+    "nome": "Cocal do Sul",
+    "lat": -28.6007346,
+    "lon": -49.3248697
+  },
+  {
+    "codigo_ibge": 4204301,
+    "nome": "Concórdia",
+    "lat": -27.2312011,
+    "lon": -52.0231024
+  },
+  {
+    "codigo_ibge": 4204350,
+    "nome": "Cordilheira Alta",
+    "lat": -26.9853947,
+    "lon": -52.603549
+  },
+  {
+    "codigo_ibge": 4204400,
+    "nome": "Coronel Freitas",
+    "lat": -26.9058932,
+    "lon": -52.7028055
+  },
+  {
+    "codigo_ibge": 4204459,
+    "nome": "Coronel Martins",
+    "lat": -26.5124719,
+    "lon": -52.6681763
+  },
+  {
+    "codigo_ibge": 4204509,
+    "nome": "Corupá",
+    "lat": -26.4267153,
+    "lon": -49.24747
+  },
+  {
+    "codigo_ibge": 4204558,
+    "nome": "Correia Pinto",
+    "lat": -27.587688,
+    "lon": -50.361448
+  },
+  {
+    "codigo_ibge": 4204608,
+    "nome": "Criciúma",
+    "lat": -28.6789941,
+    "lon": -49.3695627
+  },
+  {
+    "codigo_ibge": 4204707,
+    "nome": "Cunha Porã",
+    "lat": -26.8927163,
+    "lon": -53.1716516
+  },
+  {
+    "codigo_ibge": 4204756,
+    "nome": "Cunhataí",
+    "lat": -26.9735014,
+    "lon": -53.0914014
+  },
+  {
+    "codigo_ibge": 4204806,
+    "nome": "Curitibanos",
+    "lat": -27.2900659,
+    "lon": -50.5779683
+  },
+  {
+    "codigo_ibge": 4204905,
+    "nome": "Descanso",
+    "lat": -26.8246854,
+    "lon": -53.5017586
+  },
+  {
+    "codigo_ibge": 4205001,
+    "nome": "Dionísio Cerqueira",
+    "lat": -26.2604681,
+    "lon": -53.6346379
+  },
+  {
+    "codigo_ibge": 4205100,
+    "nome": "Dona Emma",
+    "lat": -26.9849398,
+    "lon": -49.7265136
+  },
+  {
+    "codigo_ibge": 4205159,
+    "nome": "Doutor Pedrinho",
+    "lat": -26.716408,
+    "lon": -49.482726
+  },
+  {
+    "codigo_ibge": 4205175,
+    "nome": "Entre Rios",
+    "lat": -26.7236463,
+    "lon": -52.5638445
+  },
+  {
+    "codigo_ibge": 4205191,
+    "nome": "Ermo",
+    "lat": -28.9849219,
+    "lon": -49.6427198
+  },
+  {
+    "codigo_ibge": 4205209,
+    "nome": "Erval Velho",
+    "lat": -27.2747859,
+    "lon": -51.4429712
+  },
+  {
+    "codigo_ibge": 4205308,
+    "nome": "Faxinal dos Guedes",
+    "lat": -26.8494222,
+    "lon": -52.2586485
+  },
+  {
+    "codigo_ibge": 4205357,
+    "nome": "Flor do Sertão",
+    "lat": -26.7784693,
+    "lon": -53.3478823
+  },
+  {
+    "codigo_ibge": 4205407,
+    "nome": "Florianópolis",
+    "lat": -27.5973002,
+    "lon": -48.5496098
+  },
+  {
+    "codigo_ibge": 4205431,
+    "nome": "Formosa do Sul",
+    "lat": -26.6478829,
+    "lon": -52.7934366
+  },
+  {
+    "codigo_ibge": 4205456,
+    "nome": "Forquilhinha",
+    "lat": -28.7487602,
+    "lon": -49.4737661
+  },
+  {
+    "codigo_ibge": 4205506,
+    "nome": "Fraiburgo",
+    "lat": -27.023288,
+    "lon": -50.919978
+  },
+  {
+    "codigo_ibge": 4205555,
+    "nome": "Frei Rogério",
+    "lat": -27.175021,
+    "lon": -50.807621
+  },
+  {
+    "codigo_ibge": 4205605,
+    "nome": "Galvão",
+    "lat": -26.4553595,
+    "lon": -52.6869755
+  },
+  {
+    "codigo_ibge": 4205704,
+    "nome": "Garopaba",
+    "lat": -28.0274798,
+    "lon": -48.6240197
+  },
+  {
+    "codigo_ibge": 4205803,
+    "nome": "Garuva",
+    "lat": -26.0294904,
+    "lon": -48.8545202
+  },
+  {
+    "codigo_ibge": 4205902,
+    "nome": "Gaspar",
+    "lat": -26.9307306,
+    "lon": -48.9566824
+  },
+  {
+    "codigo_ibge": 4206009,
+    "nome": "Governador Celso Ramos",
+    "lat": -27.317161,
+    "lon": -48.557608
+  },
+  {
+    "codigo_ibge": 4206108,
+    "nome": "Grão-Pará",
+    "lat": -28.1856937,
+    "lon": -49.2163956
+  },
+  {
+    "codigo_ibge": 4206207,
+    "nome": "Gravatal",
+    "lat": -28.3300703,
+    "lon": -49.0362296
+  },
+  {
+    "codigo_ibge": 4206306,
+    "nome": "Guabiruba",
+    "lat": -27.0864326,
+    "lon": -48.9781319
+  },
+  {
+    "codigo_ibge": 4206405,
+    "nome": "Guaraciaba",
+    "lat": -26.6001986,
+    "lon": -53.5216209
+  },
+  {
+    "codigo_ibge": 4206504,
+    "nome": "Guaramirim",
+    "lat": -26.4744805,
+    "lon": -48.9981151
+  },
+  {
+    "codigo_ibge": 4206603,
+    "nome": "Guarujá do Sul",
+    "lat": -26.3850268,
+    "lon": -53.527794
+  },
+  {
+    "codigo_ibge": 4206652,
+    "nome": "Guatambú",
+    "lat": -27.1123166,
+    "lon": -52.7808261
+  },
+  {
+    "codigo_ibge": 4206702,
+    "nome": "Herval d'Oeste",
+    "lat": -27.17361,
+    "lon": -51.4903659
+  },
+  {
+    "codigo_ibge": 4206751,
+    "nome": "Ibiam",
+    "lat": -27.1819094,
+    "lon": -51.2369886
+  },
+  {
+    "codigo_ibge": 4206801,
+    "nome": "Ibicaré",
+    "lat": -27.088141,
+    "lon": -51.368101
+  },
+  {
+    "codigo_ibge": 4206900,
+    "nome": "Ibirama",
+    "lat": -27.0537021,
+    "lon": -49.5190771
+  },
+  {
+    "codigo_ibge": 4207007,
+    "nome": "Içara",
+    "lat": -28.7116553,
+    "lon": -49.2971441
+  },
+  {
+    "codigo_ibge": 4207106,
+    "nome": "Ilhota",
+    "lat": -26.9022824,
+    "lon": -48.8284968
+  },
+  {
+    "codigo_ibge": 4207205,
+    "nome": "Imaruí",
+    "lat": -28.3440491,
+    "lon": -48.8151737
+  },
+  {
+    "codigo_ibge": 4207304,
+    "nome": "Imbituba",
+    "lat": -28.241827,
+    "lon": -48.6643444
+  },
+  {
+    "codigo_ibge": 4207403,
+    "nome": "Imbuia",
+    "lat": -27.49082,
+    "lon": -49.421766
+  },
+  {
+    "codigo_ibge": 4207502,
+    "nome": "Indaial",
+    "lat": -26.8901747,
+    "lon": -49.2416736
+  },
+  {
+    "codigo_ibge": 4207577,
+    "nome": "Iomerê",
+    "lat": -27.0019673,
+    "lon": -51.2405514
+  },
+  {
+    "codigo_ibge": 4207601,
+    "nome": "Ipira",
+    "lat": -27.4053188,
+    "lon": -51.7734648
+  },
+  {
+    "codigo_ibge": 4207650,
+    "nome": "Iporã do Oeste",
+    "lat": -26.9884305,
+    "lon": -53.5345628
+  },
+  {
+    "codigo_ibge": 4207684,
+    "nome": "Ipuaçu",
+    "lat": -26.6349873,
+    "lon": -52.4555915
+  },
+  {
+    "codigo_ibge": 4207700,
+    "nome": "Ipumirim",
+    "lat": -27.0762287,
+    "lon": -52.135736
+  },
+  {
+    "codigo_ibge": 4207759,
+    "nome": "Iraceminha",
+    "lat": -26.8237077,
+    "lon": -53.272834
+  },
+  {
+    "codigo_ibge": 4207809,
+    "nome": "Irani",
+    "lat": -27.0230476,
+    "lon": -51.9010675
+  },
+  {
+    "codigo_ibge": 4207858,
+    "nome": "Irati",
+    "lat": -26.6577742,
+    "lon": -52.8929851
+  },
+  {
+    "codigo_ibge": 4207908,
+    "nome": "Irineópolis",
+    "lat": -26.242006,
+    "lon": -50.795687
+  },
+  {
+    "codigo_ibge": 4208005,
+    "nome": "Itá",
+    "lat": -27.275006,
+    "lon": -52.3381725
+  },
+  {
+    "codigo_ibge": 4208104,
+    "nome": "Itaiópolis",
+    "lat": -26.3391899,
+    "lon": -49.9071983
+  },
+  {
+    "codigo_ibge": 4208203,
+    "nome": "Itajaí",
+    "lat": -26.9046787,
+    "lon": -48.6552979
+  },
+  {
+    "codigo_ibge": 4208302,
+    "nome": "Itapema",
+    "lat": -27.09472,
+    "lon": -48.6137778
+  },
+  {
+    "codigo_ibge": 4208401,
+    "nome": "Itapiranga",
+    "lat": -27.1724236,
+    "lon": -53.7118989
+  },
+  {
+    "codigo_ibge": 4208450,
+    "nome": "Itapoá",
+    "lat": -26.1162431,
+    "lon": -48.6180177
+  },
+  {
+    "codigo_ibge": 4208500,
+    "nome": "Ituporanga",
+    "lat": -27.4096219,
+    "lon": -49.6014812
+  },
+  {
+    "codigo_ibge": 4208609,
+    "nome": "Jaborá",
+    "lat": -27.1743246,
+    "lon": -51.7348631
+  },
+  {
+    "codigo_ibge": 4208708,
+    "nome": "Jacinto Machado",
+    "lat": -28.999338,
+    "lon": -49.7603204
+  },
+  {
+    "codigo_ibge": 4208807,
+    "nome": "Jaguaruna",
+    "lat": -28.6237365,
+    "lon": -49.0288664
+  },
+  {
+    "codigo_ibge": 4208906,
+    "nome": "Jaraguá do Sul",
+    "lat": -26.4897432,
+    "lon": -49.0778063
+  },
+  {
+    "codigo_ibge": 4208955,
+    "nome": "Jardinópolis",
+    "lat": -26.721575,
+    "lon": -52.8591464
+  },
+  {
+    "codigo_ibge": 4209003,
+    "nome": "Joaçaba",
+    "lat": -27.1737204,
+    "lon": -51.5065214
+  },
+  {
+    "codigo_ibge": 4209102,
+    "nome": "Joinville",
+    "lat": -26.3044898,
+    "lon": -48.8486726
+  },
+  {
+    "codigo_ibge": 4209151,
+    "nome": "José Boiteux",
+    "lat": -26.962072,
+    "lon": -49.6262509
+  },
+  {
+    "codigo_ibge": 4209177,
+    "nome": "Jupiá",
+    "lat": -26.3985774,
+    "lon": -52.7262856
+  },
+  {
+    "codigo_ibge": 4209201,
+    "nome": "Lacerdópolis",
+    "lat": -27.2614296,
+    "lon": -51.5564429
+  },
+  {
+    "codigo_ibge": 4209300,
+    "nome": "Lages",
+    "lat": -27.8165664,
+    "lon": -50.325883
+  },
+  {
+    "codigo_ibge": 4209409,
+    "nome": "Laguna",
+    "lat": -28.4837443,
+    "lon": -48.7816572
+  },
+  {
+    "codigo_ibge": 4209458,
+    "nome": "Lajeado Grande",
+    "lat": -26.8583425,
+    "lon": -52.5666619
+  },
+  {
+    "codigo_ibge": 4209508,
+    "nome": "Laurentino",
+    "lat": -27.2193231,
+    "lon": -49.7322856
+  },
+  {
+    "codigo_ibge": 4209607,
+    "nome": "Lauro Müller",
+    "lat": -28.3942244,
+    "lon": -49.3975402
+  },
+  {
+    "codigo_ibge": 4209706,
+    "nome": "Lebon Régis",
+    "lat": -26.927987,
+    "lon": -50.692109
+  },
+  {
+    "codigo_ibge": 4209805,
+    "nome": "Leoberto Leal",
+    "lat": -27.5071209,
+    "lon": -49.2871979
+  },
+  {
+    "codigo_ibge": 4209854,
+    "nome": "Lindóia do Sul",
+    "lat": -27.0520334,
+    "lon": -52.0831975
+  },
+  {
+    "codigo_ibge": 4209904,
+    "nome": "Lontras",
+    "lat": -27.1679891,
+    "lon": -49.5424602
+  },
+  {
+    "codigo_ibge": 4210001,
+    "nome": "Luiz Alves",
+    "lat": -26.7118577,
+    "lon": -48.9126756
+  },
+  {
+    "codigo_ibge": 4210035,
+    "nome": "Luzerna",
+    "lat": -27.1294338,
+    "lon": -51.4686169
+  },
+  {
+    "codigo_ibge": 4210050,
+    "nome": "Macieira",
+    "lat": -26.8541639,
+    "lon": -51.3763845
+  },
+  {
+    "codigo_ibge": 4210100,
+    "nome": "Mafra",
+    "lat": -26.1150943,
+    "lon": -49.8035982
+  },
+  {
+    "codigo_ibge": 4210209,
+    "nome": "Major Gercino",
+    "lat": -27.419236,
+    "lon": -48.94878
+  },
+  {
+    "codigo_ibge": 4210308,
+    "nome": "Major Vieira",
+    "lat": -26.3654856,
+    "lon": -50.3272634
+  },
+  {
+    "codigo_ibge": 4210407,
+    "nome": "Maracajá",
+    "lat": -28.8474775,
+    "lon": -49.4538861
+  },
+  {
+    "codigo_ibge": 4210506,
+    "nome": "Maravilha",
+    "lat": -26.7623898,
+    "lon": -53.1747387
+  },
+  {
+    "codigo_ibge": 4210555,
+    "nome": "Marema",
+    "lat": -26.802361,
+    "lon": -52.626445
+  },
+  {
+    "codigo_ibge": 4210605,
+    "nome": "Massaranduba",
+    "lat": -26.610868,
+    "lon": -49.005351
+  },
+  {
+    "codigo_ibge": 4210704,
+    "nome": "Matos Costa",
+    "lat": -26.4739837,
+    "lon": -51.1509787
+  },
+  {
+    "codigo_ibge": 4210803,
+    "nome": "Meleiro",
+    "lat": -28.8303183,
+    "lon": -49.6349851
+  },
+  {
+    "codigo_ibge": 4210852,
+    "nome": "Mirim Doce",
+    "lat": -27.2003527,
+    "lon": -50.0697185
+  },
+  {
+    "codigo_ibge": 4210902,
+    "nome": "Modelo",
+    "lat": -26.7752383,
+    "lon": -53.0525513
+  },
+  {
+    "codigo_ibge": 4211009,
+    "nome": "Mondaí",
+    "lat": -27.1020777,
+    "lon": -53.399242
+  },
+  {
+    "codigo_ibge": 4211058,
+    "nome": "Monte Carlo",
+    "lat": -27.2216645,
+    "lon": -50.9784032
+  },
+  {
+    "codigo_ibge": 4211108,
+    "nome": "Monte Castelo",
+    "lat": -26.460989,
+    "lon": -50.232724
+  },
+  {
+    "codigo_ibge": 4211207,
+    "nome": "Morro da Fumaça",
+    "lat": -28.6522275,
+    "lon": -49.2133979
+  },
+  {
+    "codigo_ibge": 4211256,
+    "nome": "Morro Grande",
+    "lat": -28.80057,
+    "lon": -49.721362
+  },
+  {
+    "codigo_ibge": 4211306,
+    "nome": "Navegantes",
+    "lat": -26.8898813,
+    "lon": -48.6495828
+  },
+  {
+    "codigo_ibge": 4211405,
+    "nome": "Nova Erechim",
+    "lat": -26.9027688,
+    "lon": -52.9071258
+  },
+  {
+    "codigo_ibge": 4211454,
+    "nome": "Nova Itaberaba",
+    "lat": -26.9406956,
+    "lon": -52.8132923
+  },
+  {
+    "codigo_ibge": 4211504,
+    "nome": "Nova Trento",
+    "lat": -27.2862616,
+    "lon": -48.9302652
+  },
+  {
+    "codigo_ibge": 4211603,
+    "nome": "Nova Veneza",
+    "lat": -28.637371,
+    "lon": -49.4997634
+  },
+  {
+    "codigo_ibge": 4211652,
+    "nome": "Novo Horizonte",
+    "lat": -26.4465656,
+    "lon": -52.8319931
+  },
+  {
+    "codigo_ibge": 4211702,
+    "nome": "Orleans",
+    "lat": -28.3572698,
+    "lon": -49.2872434
+  },
+  {
+    "codigo_ibge": 4211751,
+    "nome": "Otacílio Costa",
+    "lat": -27.4832304,
+    "lon": -50.1195204
+  },
+  {
+    "codigo_ibge": 4211801,
+    "nome": "Ouro",
+    "lat": -27.3389051,
+    "lon": -51.6137785
+  },
+  {
+    "codigo_ibge": 4211850,
+    "nome": "Ouro Verde",
+    "lat": -26.6941871,
+    "lon": -52.3103928
+  },
+  {
+    "codigo_ibge": 4211876,
+    "nome": "Paial",
+    "lat": -27.2564715,
+    "lon": -52.4998045
+  },
+  {
+    "codigo_ibge": 4211892,
+    "nome": "Painel",
+    "lat": -27.9214849,
+    "lon": -50.0994933
+  },
+  {
+    "codigo_ibge": 4211900,
+    "nome": "Palhoça",
+    "lat": -27.6447774,
+    "lon": -48.6646323
+  },
+  {
+    "codigo_ibge": 4212007,
+    "nome": "Palma Sola",
+    "lat": -26.3482487,
+    "lon": -53.2775974
+  },
+  {
+    "codigo_ibge": 4212056,
+    "nome": "Palmeira",
+    "lat": -27.5797981,
+    "lon": -50.1589086
+  },
+  {
+    "codigo_ibge": 4212106,
+    "nome": "Palmitos",
+    "lat": -27.0711023,
+    "lon": -53.1596594
+  },
+  {
+    "codigo_ibge": 4212205,
+    "nome": "Papanduva",
+    "lat": -26.4085449,
+    "lon": -50.1424094
+  },
+  {
+    "codigo_ibge": 4212239,
+    "nome": "Paraíso",
+    "lat": -26.6184407,
+    "lon": -53.675144
+  },
+  {
+    "codigo_ibge": 4212254,
+    "nome": "Passo de Torres",
+    "lat": -29.325393,
+    "lon": -49.7218979
+  },
+  {
+    "codigo_ibge": 4212270,
+    "nome": "Passos Maia",
+    "lat": -26.7806434,
+    "lon": -52.0611058
+  },
+  {
+    "codigo_ibge": 4212304,
+    "nome": "Paulo Lopes",
+    "lat": -27.964968,
+    "lon": -48.6830299
+  },
+  {
+    "codigo_ibge": 4212403,
+    "nome": "Pedras Grandes",
+    "lat": -28.4357866,
+    "lon": -49.1864128
+  },
+  {
+    "codigo_ibge": 4212502,
+    "nome": "Penha",
+    "lat": -26.775418,
+    "lon": -48.6465251
+  },
+  {
+    "codigo_ibge": 4212601,
+    "nome": "Peritiba",
+    "lat": -27.3736365,
+    "lon": -51.9050311
+  },
+  {
+    "codigo_ibge": 4212650,
+    "nome": "Pescaria Brava",
+    "lat": -28.3845591,
+    "lon": -48.8658054
+  },
+  {
+    "codigo_ibge": 4212700,
+    "nome": "Petrolândia",
+    "lat": -27.5329615,
+    "lon": -49.6984597
+  },
+  {
+    "codigo_ibge": 4212809,
+    "nome": "Balneário Piçarras",
+    "lat": -26.7638889,
+    "lon": -48.6716667
+  },
+  {
+    "codigo_ibge": 4212908,
+    "nome": "Pinhalzinho",
+    "lat": -26.852586,
+    "lon": -52.9872478
+  },
+  {
+    "codigo_ibge": 4213005,
+    "nome": "Pinheiro Preto",
+    "lat": -27.0457296,
+    "lon": -51.2296306
+  },
+  {
+    "codigo_ibge": 4213104,
+    "nome": "Piratuba",
+    "lat": -27.4215816,
+    "lon": -51.7822762
+  },
+  {
+    "codigo_ibge": 4213153,
+    "nome": "Planalto Alegre",
+    "lat": -27.0721133,
+    "lon": -52.8667023
+  },
+  {
+    "codigo_ibge": 4213203,
+    "nome": "Pomerode",
+    "lat": -26.7356218,
+    "lon": -49.1770095
+  },
+  {
+    "codigo_ibge": 4213302,
+    "nome": "Ponte Alta",
+    "lat": -27.483497,
+    "lon": -50.376404
+  },
+  {
+    "codigo_ibge": 4213351,
+    "nome": "Ponte Alta do Norte",
+    "lat": -27.1626096,
+    "lon": -50.4684028
+  },
+  {
+    "codigo_ibge": 4213401,
+    "nome": "Ponte Serrada",
+    "lat": -26.8708566,
+    "lon": -52.0164089
+  },
+  {
+    "codigo_ibge": 4213500,
+    "nome": "Porto Belo",
+    "lat": -27.1542415,
+    "lon": -48.5424395
+  },
+  {
+    "codigo_ibge": 4213609,
+    "nome": "Porto União",
+    "lat": -26.2336416,
+    "lon": -51.082771
+  },
+  {
+    "codigo_ibge": 4213708,
+    "nome": "Pouso Redondo",
+    "lat": -27.2567443,
+    "lon": -49.9331593
+  },
+  {
+    "codigo_ibge": 4213807,
+    "nome": "Praia Grande",
+    "lat": -29.1971454,
+    "lon": -49.950372
+  },
+  {
+    "codigo_ibge": 4213906,
+    "nome": "Presidente Castello Branco",
+    "lat": -27.2217868,
+    "lon": -51.8089482
+  },
+  {
+    "codigo_ibge": 4214003,
+    "nome": "Presidente Getúlio",
+    "lat": -27.0426247,
+    "lon": -49.6210429
+  },
+  {
+    "codigo_ibge": 4214102,
+    "nome": "Presidente Nereu",
+    "lat": -27.278277,
+    "lon": -49.3890424
+  },
+  {
+    "codigo_ibge": 4214151,
+    "nome": "Princesa",
+    "lat": -26.4452737,
+    "lon": -53.599913
+  },
+  {
+    "codigo_ibge": 4214201,
+    "nome": "Quilombo",
+    "lat": -26.7253683,
+    "lon": -52.7193084
+  },
+  {
+    "codigo_ibge": 4214300,
+    "nome": "Rancho Queimado",
+    "lat": -27.6727911,
+    "lon": -49.0124197
+  },
+  {
+    "codigo_ibge": 4214409,
+    "nome": "Rio das Antas",
+    "lat": -26.8998189,
+    "lon": -51.0748324
+  },
+  {
+    "codigo_ibge": 4214508,
+    "nome": "Rio do Campo",
+    "lat": -26.946807,
+    "lon": -50.1412936
+  },
+  {
+    "codigo_ibge": 4214607,
+    "nome": "Rio do Oeste",
+    "lat": -27.193267,
+    "lon": -49.7984595
+  },
+  {
+    "codigo_ibge": 4214706,
+    "nome": "Rio dos Cedros",
+    "lat": -26.739777,
+    "lon": -49.271828
+  },
+  {
+    "codigo_ibge": 4214805,
+    "nome": "Rio do Sul",
+    "lat": -27.2162607,
+    "lon": -49.643654
+  },
+  {
+    "codigo_ibge": 4214904,
+    "nome": "Rio Fortuna",
+    "lat": -28.1335539,
+    "lon": -49.1048223
+  },
+  {
+    "codigo_ibge": 4215000,
+    "nome": "Rio Negrinho",
+    "lat": -26.259075,
+    "lon": -49.517746
+  },
+  {
+    "codigo_ibge": 4215059,
+    "nome": "Rio Rufino",
+    "lat": -27.861691,
+    "lon": -49.7806323
+  },
+  {
+    "codigo_ibge": 4215075,
+    "nome": "Riqueza",
+    "lat": -27.0697574,
+    "lon": -53.3225281
+  },
+  {
+    "codigo_ibge": 4215109,
+    "nome": "Rodeio",
+    "lat": -26.9233304,
+    "lon": -49.3685354
+  },
+  {
+    "codigo_ibge": 4215208,
+    "nome": "Romelândia",
+    "lat": -26.6783317,
+    "lon": -53.3189986
+  },
+  {
+    "codigo_ibge": 4215307,
+    "nome": "Salete",
+    "lat": -26.9841891,
+    "lon": -50.0076205
+  },
+  {
+    "codigo_ibge": 4215356,
+    "nome": "Saltinho",
+    "lat": -26.604932,
+    "lon": -53.057763
+  },
+  {
+    "codigo_ibge": 4215406,
+    "nome": "Salto Veloso",
+    "lat": -26.9071647,
+    "lon": -51.406771
+  },
+  {
+    "codigo_ibge": 4215455,
+    "nome": "Sangão",
+    "lat": -28.6397512,
+    "lon": -49.1266106
+  },
+  {
+    "codigo_ibge": 4215505,
+    "nome": "Santa Cecília",
+    "lat": -26.9658952,
+    "lon": -50.4182571
+  },
+  {
+    "codigo_ibge": 4215554,
+    "nome": "Santa Helena",
+    "lat": -26.9388476,
+    "lon": -53.6194274
+  },
+  {
+    "codigo_ibge": 4215604,
+    "nome": "Santa Rosa de Lima",
+    "lat": -28.0404239,
+    "lon": -49.1280356
+  },
+  {
+    "codigo_ibge": 4215653,
+    "nome": "Santa Rosa do Sul",
+    "lat": -29.1354955,
+    "lon": -49.7154188
+  },
+  {
+    "codigo_ibge": 4215679,
+    "nome": "Santa Terezinha",
+    "lat": -26.7825834,
+    "lon": -50.0058788
+  },
+  {
+    "codigo_ibge": 4215687,
+    "nome": "Santa Terezinha do Progresso",
+    "lat": -26.6197384,
+    "lon": -53.1986638
+  },
+  {
+    "codigo_ibge": 4215695,
+    "nome": "Santiago do Sul",
+    "lat": -26.6346323,
+    "lon": -52.6753323
+  },
+  {
+    "codigo_ibge": 4215703,
+    "nome": "Santo Amaro da Imperatriz",
+    "lat": -27.6865324,
+    "lon": -48.7769405
+  },
+  {
+    "codigo_ibge": 4215752,
+    "nome": "São Bernardino",
+    "lat": -26.4712934,
+    "lon": -52.9658921
+  },
+  {
+    "codigo_ibge": 4215802,
+    "nome": "São Bento do Sul",
+    "lat": -26.2483669,
+    "lon": -49.3820672
+  },
+  {
+    "codigo_ibge": 4215901,
+    "nome": "São Bonifácio",
+    "lat": -27.900907,
+    "lon": -48.932608
+  },
+  {
+    "codigo_ibge": 4216008,
+    "nome": "São Carlos",
+    "lat": -27.081863,
+    "lon": -53.0051018
+  },
+  {
+    "codigo_ibge": 4216057,
+    "nome": "São Cristóvão do Sul",
+    "lat": -27.2670093,
+    "lon": -50.4409508
+  },
+  {
+    "codigo_ibge": 4216107,
+    "nome": "São Domingos",
+    "lat": -26.5593237,
+    "lon": -52.5311718
+  },
+  {
+    "codigo_ibge": 4216206,
+    "nome": "São Francisco do Sul",
+    "lat": -26.2495087,
+    "lon": -48.6308087
+  },
+  {
+    "codigo_ibge": 4216255,
+    "nome": "São João do Oeste",
+    "lat": -27.0981223,
+    "lon": -53.5931508
+  },
+  {
+    "codigo_ibge": 4216305,
+    "nome": "São João Batista",
+    "lat": -27.277547,
+    "lon": -48.8496101
+  },
+  {
+    "codigo_ibge": 4216354,
+    "nome": "São João do Itaperiú",
+    "lat": -26.6224154,
+    "lon": -48.7687361
+  },
+  {
+    "codigo_ibge": 4216404,
+    "nome": "São João do Sul",
+    "lat": -29.2246601,
+    "lon": -49.8081785
+  },
+  {
+    "codigo_ibge": 4216503,
+    "nome": "São Joaquim",
+    "lat": -28.2924972,
+    "lon": -49.9353255
+  },
+  {
+    "codigo_ibge": 4216602,
+    "nome": "São José",
+    "lat": -27.6157733,
+    "lon": -48.6276491
+  },
+  {
+    "codigo_ibge": 4216701,
+    "nome": "São José do Cedro",
+    "lat": -26.4555904,
+    "lon": -53.4954785
+  },
+  {
+    "codigo_ibge": 4216800,
+    "nome": "São José do Cerrito",
+    "lat": -27.6627041,
+    "lon": -50.5791762
+  },
+  {
+    "codigo_ibge": 4216909,
+    "nome": "São Lourenço do Oeste",
+    "lat": -26.35566,
+    "lon": -52.849837
+  },
+  {
+    "codigo_ibge": 4217006,
+    "nome": "São Ludgero",
+    "lat": -28.3243832,
+    "lon": -49.174819
+  },
+  {
+    "codigo_ibge": 4217105,
+    "nome": "São Martinho",
+    "lat": -28.165018,
+    "lon": -48.9793424
+  },
+  {
+    "codigo_ibge": 4217154,
+    "nome": "São Miguel da Boa Vista",
+    "lat": -26.6911028,
+    "lon": -53.2522818
+  },
+  {
+    "codigo_ibge": 4217204,
+    "nome": "São Miguel do Oeste",
+    "lat": -26.7278977,
+    "lon": -53.5176689
+  },
+  {
+    "codigo_ibge": 4217253,
+    "nome": "São Pedro de Alcântara",
+    "lat": -27.5676985,
+    "lon": -48.8047973
+  },
+  {
+    "codigo_ibge": 4217303,
+    "nome": "Saudades",
+    "lat": -26.9261779,
+    "lon": -53.0046945
+  },
+  {
+    "codigo_ibge": 4217402,
+    "nome": "Schroeder",
+    "lat": -26.411571,
+    "lon": -49.074041
+  },
+  {
+    "codigo_ibge": 4217501,
+    "nome": "Seara",
+    "lat": -27.1528578,
+    "lon": -52.3096985
+  },
+  {
+    "codigo_ibge": 4217550,
+    "nome": "Serra Alta",
+    "lat": -26.7291439,
+    "lon": -53.0440668
+  },
+  {
+    "codigo_ibge": 4217600,
+    "nome": "Siderópolis",
+    "lat": -28.597588,
+    "lon": -49.4250007
+  },
+  {
+    "codigo_ibge": 4217709,
+    "nome": "Sombrio",
+    "lat": -29.107985,
+    "lon": -49.632776
+  },
+  {
+    "codigo_ibge": 4217758,
+    "nome": "Sul Brasil",
+    "lat": -26.7379101,
+    "lon": -52.9650177
+  },
+  {
+    "codigo_ibge": 4217808,
+    "nome": "Taió",
+    "lat": -27.1167574,
+    "lon": -50.0002159
+  },
+  {
+    "codigo_ibge": 4217907,
+    "nome": "Tangará",
+    "lat": -27.0997957,
+    "lon": -51.2477143
+  },
+  {
+    "codigo_ibge": 4217956,
+    "nome": "Tigrinhos",
+    "lat": -26.6869135,
+    "lon": -53.1570085
+  },
+  {
+    "codigo_ibge": 4218004,
+    "nome": "Tijucas",
+    "lat": -27.239404,
+    "lon": -48.6353696
+  },
+  {
+    "codigo_ibge": 4218103,
+    "nome": "Timbé do Sul",
+    "lat": -28.8317599,
+    "lon": -49.846643
+  },
+  {
+    "codigo_ibge": 4218202,
+    "nome": "Timbó",
+    "lat": -26.8282737,
+    "lon": -49.270641
+  },
+  {
+    "codigo_ibge": 4218251,
+    "nome": "Timbó Grande",
+    "lat": -26.6170507,
+    "lon": -50.6742579
+  },
+  {
+    "codigo_ibge": 4218301,
+    "nome": "Três Barras",
+    "lat": -26.1693524,
+    "lon": -50.2451914
+  },
+  {
+    "codigo_ibge": 4218350,
+    "nome": "Treviso",
+    "lat": -28.5153879,
+    "lon": -49.4582122
+  },
+  {
+    "codigo_ibge": 4218400,
+    "nome": "Treze de Maio",
+    "lat": -28.5574415,
+    "lon": -49.1447586
+  },
+  {
+    "codigo_ibge": 4218509,
+    "nome": "Treze Tílias",
+    "lat": -26.9996788,
+    "lon": -51.4073067
+  },
+  {
+    "codigo_ibge": 4218608,
+    "nome": "Trombudo Central",
+    "lat": -27.3040981,
+    "lon": -49.79316
+  },
+  {
+    "codigo_ibge": 4218707,
+    "nome": "Tubarão",
+    "lat": -28.471488,
+    "lon": -49.014132
+  },
+  {
+    "codigo_ibge": 4218756,
+    "nome": "Tunápolis",
+    "lat": -26.97073,
+    "lon": -53.6382084
+  },
+  {
+    "codigo_ibge": 4218806,
+    "nome": "Turvo",
+    "lat": -28.9277445,
+    "lon": -49.6792206
+  },
+  {
+    "codigo_ibge": 4218855,
+    "nome": "União do Oeste",
+    "lat": -26.7642155,
+    "lon": -52.8515985
+  },
+  {
+    "codigo_ibge": 4218905,
+    "nome": "Urubici",
+    "lat": -28.015663,
+    "lon": -49.592547
+  },
+  {
+    "codigo_ibge": 4218954,
+    "nome": "Urupema",
+    "lat": -27.9557716,
+    "lon": -49.875957
+  },
+  {
+    "codigo_ibge": 4219002,
+    "nome": "Urussanga",
+    "lat": -28.4921948,
+    "lon": -49.3537731
+  },
+  {
+    "codigo_ibge": 4219101,
+    "nome": "Vargeão",
+    "lat": -26.861277,
+    "lon": -52.1544966
+  },
+  {
+    "codigo_ibge": 4219150,
+    "nome": "Vargem",
+    "lat": -27.4909659,
+    "lon": -50.9781096
+  },
+  {
+    "codigo_ibge": 4219176,
+    "nome": "Vargem Bonita",
+    "lat": -27.005456,
+    "lon": -51.740238
+  },
+  {
+    "codigo_ibge": 4219200,
+    "nome": "Vidal Ramos",
+    "lat": -27.3908814,
+    "lon": -49.3615664
+  },
+  {
+    "codigo_ibge": 4219309,
+    "nome": "Videira",
+    "lat": -27.00544,
+    "lon": -51.1533733
+  },
+  {
+    "codigo_ibge": 4219358,
+    "nome": "Vitor Meireles",
+    "lat": -26.879731,
+    "lon": -49.833243
+  },
+  {
+    "codigo_ibge": 4219408,
+    "nome": "Witmarsum",
+    "lat": -26.927487,
+    "lon": -49.794675
+  },
+  {
+    "codigo_ibge": 4219507,
+    "nome": "Xanxerê",
+    "lat": -26.8810171,
+    "lon": -52.3846548
+  },
+  {
+    "codigo_ibge": 4219606,
+    "nome": "Xavantina",
+    "lat": -27.0702363,
+    "lon": -52.3431086
+  },
+  {
+    "codigo_ibge": 4219705,
+    "nome": "Xaxim",
+    "lat": -26.9605363,
+    "lon": -52.5335505
+  },
+  {
+    "codigo_ibge": 4219853,
+    "nome": "Zortéa",
+    "lat": -27.4535362,
+    "lon": -51.55359
+  },
+  {
+    "codigo_ibge": 4220000,
+    "nome": "Balneário Rincão",
+    "lat": -28.8235718,
+    "lon": -49.2241642
+  }
+]

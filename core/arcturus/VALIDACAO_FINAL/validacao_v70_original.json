@@ -1,0 +1,18 @@
+{
+  "data_execucao": "2026-07-14T12:46:57.131673",
+  "dataset": "ARCTURUS_v70_treino_features_20260626_040424.csv",
+  "modelo": "ARCTURUS_v70_model_20260626_034900.pkl",
+  "n_amostras": 228,
+  "features": [
+    "word_count",
+    "repetition_rate",
+    "avg_word_length",
+    "num_sentences",
+    "entropy",
+    "lexical_diversity",
+    "rare_ratio",
+    "avg_sentence_len",
+    "papermill_index"
+  ],
+  "matriz_confusao": {
+    "tp": 

@@ -1,0 +1,15 @@
+============================================================
+🏛️ ARCTURUS v4.2.1 — RELATÓRIO FINAL
+============================================================
+
+Data: 2026-06-25 03:40:01
+Total de artigos: 50
+Casos retratados: 20
+Controles: 30
+
+MÉTRICAS:
+  Recall: 0.00%
+  Precisão: 0.00%
+  F1-Score: 0.000
+  Acurácia: 60.00%
+  AUC: 0.500

@@ -1,0 +1,52 @@
+{
+  "gerado_em": "2026-07-26T19:14:38.314672",
+  "inmet": {
+    "fonte": "INMET",
+    "status": "VERIFICADO",
+    "url": "https://portal.inmet.gov.br/noticias/el-ni%C3%B1o-2026-saiba-detalhes-sobre-o-monitoramento-previs%C3%B5es-e-os-poss%C3%ADveis-impactos-do-fen%C3%B4meno-no-brasil",
+    "status_http": 200,
+    "titulo": "El Niño 2026: saiba detalhes sobre o monitoramento, previsões e os possíveis impactos do fenômeno no Brasil",
+    "paragrafos": [
+      "O Instituto Nacional de Meteorologia (INMET), em parceria com o Instituto Nacional de Pesquisas Espaciais (INPE), a Agência Nacional de Águas e Saneamento Básico (ANA), Centro Nacional de Monitoramento e Alerta de Desastres Naturais (CEMADEN), o Serviço Geológico do Brasil (SGB) e a Secretaria Nacional de Proteção e Defesa Civil (SEDEC) divulgaram nesta segunda-feira (29), oBoletim nº 1com o objetivo de apresentar o monitoramento, previsões e os possíveis impactos do El Niño no Brasil em 2026.",
+      "O documento é resultado do trabalho realizado em parceria pelos órgãos nacionais e oficiais sobre monitoramento, regulação do uso das águas, gestão de riscos e previsão do clima e tempo.Mensalmente, o conteúdo será atualizado para disponibilizar informações acerca do fenômeno e, assim, apoiar os órgãos federais e estaduais além de contribuir para a tomada de decisões governamentais referentes ao País.",
+      "De acordo com o boletim, em junho de 2026 as condições observadas de temperatura da superfície do mar mostram um padrão típico do fenômeno El Niño. Este padrão se apresenta na forma de uma faixa de águas quentes em grande parte do Oceano Pacífico Equatorial que, próximo à costa da América do Sul, são superiores a 2°C.",
+      "Previsão para os próximos meses",
+      "A previsão climática para o trimestre julho-agosto-setembro de 2026 indica, de forma geral, chuvas acima da média em áreas da Região Sul do Sul e, chuvas abaixo da média no centro-norte do País.",
+      "Ainda, as previsões indicam alta probabilidade de temperaturas acima de média no segundo semestre que, podem aumentar os eventos de onda de calor e a ocorrência de incêndios florestais.",
+      "Sobre a previsão da persistência do El Niño e sua intensidade, os modelos indicam probabilidade acima de 90% de permanência do fenômeno até, pelo menos o início de 2027, com alta probabilidade de ocorrência de um El Niño muito forte, quando as anomalias/desvios de temperatura da superfície do mar (TSM) no Oceano Pacífico Equatorial ficam acima de 2,0°C, entre a primavera e o verão de 2026.",
+      "Monitoramento contínuo e previsão de impactos",
+      "O boletim destaca a importância do acompanhamento das atualizações diárias e mensais dos órgãos para informações acerca de possíveis impactos na agricultura, níveis de rios e reservatórios prioritários além de riscos para inundações e deslizamentos.",
+      "Importante também as recomendações e orientações da Defesa Civil Nacional, especialmente sobre as medidas de autoproteção para a população.",
+      "A atuação antecipada e coordenada entre os diferentes níveis de governo e instituições parceiras é fundamental para reduzir os impactos do fenômeno El Niño sobre a população brasileira. O monitoramento contínuo, o planejamento integrado e a adoção tempestiva de medidas de preparação e resposta constituem elementos essenciais para o fortalecimento da gestão de riscos e desastres no país.",
+      "Postado em 14/07/2026 13h47  ·12 days ago",
+      "Postado em 14/07/2026 13h35  ·12 days ago",
+      "Postado em 29/06/2026 12h57  ·27 days ago"
+    ],
+    "evidencia_bruta": "/content/drive/MyDrive/ARCTURUS/inmet_boletim_20260726_1914.html",
+    "coletado_em": "2026-07-26T19:14:33.004984"
+  },
+  "cemaden": {
+    "fonte": "CEMADEN",
+    "status": "VERIFICADO",
+    "url_index": "https://www.gov.br/cemaden/pt-br/assuntos/riscos-geo-hidrologicos",
+    "status_http": 200,
+    "url_boletim": "https://www.gov.br/cemaden/pt-br/assuntos/riscos-geo-hidrologicos/27-07-2026-previsao-de-riscos-geo-hidrologicos",
+    "paragrafos": [
+      "Nesta segunda-feira (27/07/2026), o cenário de risco de eventos geo-hidrológicos para as regiõesdo Brasil é apresentado a seguir:",
+      "Considera-seMODERADAa possibilidade de continuidade do quadro de inundação instalado nas Regiões Geográficas intermediárias de Uruguaiana, devido ao deslocamento da onda de cheia do Rio Uruguai.",
+      "ÉMODERADAtambém a possibilidade de novos eventos hidrológicos nas Regiões intermediárias de Uruguaiana, Santa Maria e Pelotas, devido à previsão de chuva ao longo do dia, podendo ter pancadas a partir da tarde, que pode causar alagamentos e extravasamento de arroios, principalmente nas bacias do Ibirapuitã, Jacuí e Santa Maria, devido aos níveis elevados dos rios, que dificultam o escoamento das águas pluviais.  (Figura 1).",
+      "Considerando a previsão meteorológica e o acumulado de chuva dos últimos dias, não há cenário de risco significativo relacionado a eventos de movimentos de massa (Figura 2).",
+      "Gostaria de contribuir registrando ocorrência de eventos de caráter geodinâmico (movimento de massa) e/ou hidrológico (inundaçãoe/ouenxurrada) no seu município?  Sua informação é bem-vinda,  mesmo  ocorrências pequenas são de extrema importância para avaliar a qualidade dos alertas emitidos pelo CEMADEN.Por gentileza, preencha o breve questionário no link abaixo:http://www2.cemaden.gov.br/ocorrencias/index.php"
+    ],
+    "evidencia_bruta": "/content/drive/MyDrive/ARCTURUS/cemaden_boletim_20260726_1914.html",
+    "coletado_em": "2026-07-26T19:14:37.521018"
+  },
+  "cnm": {
+    "fonte": "CNM",
+    "status": "NAO_VERIFICADO",
+    "url": "https://www.cnm.org.br/comunicacao/noticias",
+    "erro": "403 - bloqueio anti-scraping",
+    "acao_recomendada": "coleta manual"
+  },
+  "dados_agregados_status": "NAO_VERIFICADO"
+}

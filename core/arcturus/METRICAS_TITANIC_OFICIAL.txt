@@ -1,0 +1,12 @@
+======================================================================
+ARCTURUS TITANIC - MÉTRICA OFICIAL
+======================================================================
+Data: 2026-07-31 04:55:33
+Modelo: RandomForest V3
+Features: 10
+F1 CV (5-fold): 0.760688 ± 0.023755
+Scores por fold: [np.float64(0.759124), np.float64(0.780142), np.float64(0.715328), np.float64(0.772727), np.float64(0.776119)]
+Dataset: 891 passageiros
+Status: RECONCILIADO COM EVIDÊNCIA BRUTA
+Fonte: Titanic Dataset (seaborn)
+======================================================================

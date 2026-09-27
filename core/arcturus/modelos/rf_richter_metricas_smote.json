@@ -1,0 +1,30 @@
+{
+    "modelo": "RandomForest + SMOTE",
+    "features": [
+        "latitude",
+        "longitude",
+        "profundidade_km",
+        "proximidade_falha"
+    ],
+    "f1_por_classe": [
+        0.7042858604111971,
+        0.5823374551256482,
+        0.42941994186781246
+    ],
+    "precision_por_classe": [
+        0.7319631467044649,
+        0.6094376168848518,
+        0.3097538742023701
+    ],
+    "recall_por_classe": [
+        0.6786254024574545,
+        0.55754483517155,
+        0.6997528830313015
+    ],
+    "f1_weighted": 0.6403023642571443,
+    "n_estimators": 150,
+    "max_depth": 12,
+    "smote_strategy": {
+        "2": 10000
+    }
+}

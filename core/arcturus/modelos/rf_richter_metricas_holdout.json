@@ -1,0 +1,26 @@
+{
+    "modelo": "RandomForest + SMOTE (holdout)",
+    "features": [
+        "latitude",
+        "longitude",
+        "profundidade_km",
+        "proximidade_falha"
+    ],
+    "f1_por_classe": [
+        0.638638791393255,
+        0.4864051585169264,
+        0.3019898556379243
+    ],
+    "precision_por_classe": [
+        0.668797443068318,
+        0.5149032992036405,
+        0.2109566639411284
+    ],
+    "recall_por_classe": [
+        0.6110827188435424,
+        0.46089613034623217,
+        0.5312285518188058
+    ],
+    "f1_weighted": 0.5591388404746571,
+    "tamanho_holdout": 24974
+}

@@ -1,0 +1,233 @@
+{
+  "data_analise": "2026-07-14T12:33:08.426698",
+  "drive_root": "/content/drive/MyDrive/ARCTURUS/",
+  "estatisticas": {
+    "total_datasets": 63,
+    "total_modelos": 11,
+    "total_relatorios": 13,
+    "total_graficos": 12
+  },
+  "modelo_final": {
+    "nome": "ARCTURUS_v90_model_20260626_044337.pkl",
+    "carregado": true,
+    "tipo": "RandomForestClassifier",
+    "n_estimators": 500,
+    "max_depth": 30,
+    "features": 10
+  },
+  "dataset_v70": {
+    "nome": "ARCTURUS_v70_expansivo_20260626_034759.csv",
+    "shape": "285 linhas, 7 colunas",
+    "target_col": "label",
+    "distribuicao": {
+      "1": 193,
+      "0": 92
+    }
+  },
+  "metricas_v70": {
+    "precisao": 84.81,
+    "recall": 87.21,
+    "f1": 85.99,
+    "auc": 91.84,
+    "fonte": "REGISTRO_INTERNO_CONFIRMADO"
+  },
+  "matrizes_confusao": [],
+  "modelos_info": [
+    {
+      "nome": "ARCTURUS_v57_model_20260625_042146.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.11759940383301812,
+        0.10919874257602688,
+        0.21939919278846745,
+        0.10944198079545207,
+        0.12002053829281963,
+        0.09439934153926587,
+        0.09876160782848899,
+        0.007127041856769611,
+        0.12405215048969138
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v57_model_20260625_042236.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.11824779285871048,
+        0.10267476444348526,
+        0.18576788330067087,
+        0.10786385760981997,
+        0.13101065588921523,
+        0.10902210268455549,
+        0.11757866962498731,
+        0.014120697459081894,
+        0.11371357612947353
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v60_model_20260625_043529.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.10166136402456702,
+        0.15954469858087617,
+        0.13743679463874378,
+        0.11746991530124114,
+        0.08726865769242835,
+        0.1760665170098559,
+        0.13723432054766052,
+        0.08331773220462714
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v60_model_20260625_043935.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.10166136402456702,
+        0.15954469858087617,
+        0.13743679463874378,
+        0.11746991530124114,
+        0.08726865769242835,
+        0.1760665170098559,
+        0.13723432054766052,
+        0.08331773220462714
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v611_model_20260625_044531.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.08977715422580164,
+        0.32402067719665706,
+        0.09414941697150946,
+        0.04220080076847367,
+        0.027038026062668242,
+        0.2112562049436811,
+        0.18441052889788248,
+        0.027147190933326373
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v62_model_20260625_044932.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.06468110035315527,
+        0.30167020002005157,
+        0.05943854436663056,
+        0.019027993529402057,
+        0.029037956620628247,
+        0.14587352668043943,
+        0.16293973111599985,
+        0.022569802421101463,
+        0.1947611448925916
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v63_model_20260625_045202.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 100,
+      "max_depth": null,
+      "feature_importances_": [
+        0.04739945191867489,
+        0.21763921761364505,
+        0.07866394844143129,
+        0.021305785284185103,
+        0.03643217187869544,
+        0.19131709372845565,
+        0.24600244023959617,
+        0.02166167735903135,
+        0.1395782135362851
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v70_model_20260626_034900.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 200,
+      "max_depth": null,
+      "feature_importances_": [
+        0.12503186449588624,
+        0.07385739184630985,
+        0.11438815690179154,
+        0.16565805187212773,
+        0.09621169040618233,
+        0.08241842892983378,
+        0.11153246330764982,
+        0.15723127994848743,
+        0.07367067229173127
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v80_model_20260626_042456.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 200,
+      "max_depth": null,
+      "feature_importances_": [
+        0.13636152057744838,
+        0.08911736027364273,
+        0.12602712304099206,
+        0.12187919259655818,
+        0.11548348612415676,
+        0.08531636556496709,
+        0.09980794114272888,
+        0.14148644088220996,
+        0.08452056979729589
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v81_model_20260626_042846.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 200,
+      "max_depth": null,
+      "feature_importances_": [
+        0.13777205439602705,
+        0.08442790573970736,
+        0.1161227256290914,
+        0.1502598096055056,
+        0.10414230347751442,
+        0.08104756734446732,
+        0.10997141816426663,
+        0.1332272541970109,
+        0.08302896144640928
+      ]
+    },
+    {
+      "nome": "ARCTURUS_v90_model_20260626_044337.pkl",
+      "carregado": true,
+      "tipo": "RandomForestClassifier",
+      "n_estimators": 500,
+      "max_depth": 30,
+      "feature_importances_": [
+        0.11308931377121016,
+        0.07571592009545716,
+        0.09016400199151647,
+        0.15979521650853404,
+        0.09166678201848506,
+        0.07788087105408414,
+        0.08126665502050524,
+        0.1426867255304479,
+        0.07310694612673595,
+        0.09462756788302407
+      ]
+    }
+  ]
+}

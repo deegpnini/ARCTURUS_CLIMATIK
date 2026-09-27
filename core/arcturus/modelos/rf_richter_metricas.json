@@ -1,0 +1,18 @@
+{
+    "modelo": "RandomForest",
+    "features": [
+        "latitude",
+        "longitude",
+        "profundidade_km",
+        "proximidade_falha"
+    ],
+    "f1_mean": 0.6236900396190717,
+    "f1_std": 0.004167685184081067,
+    "precision_mean": 0.6246551350928946,
+    "recall_mean": 0.6231800283023695,
+    "accuracy_mean": 0.6231800283023695,
+    "target_binario": "risco_alto (target >= 1)",
+    "n_estimators": 100,
+    "max_depth": 10,
+    "random_state": 42
+}

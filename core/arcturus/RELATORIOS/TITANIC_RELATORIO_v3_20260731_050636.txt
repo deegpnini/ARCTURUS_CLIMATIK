@@ -1,0 +1,20 @@
+======================================================================
+ARCTURUS TITANIC - RELATÓRIO DE RECONCILIAÇÃO
+======================================================================
+Data: 2026-07-31 05:06:37
+Versão: v3_20260731_050636
+Modelo: RandomForest V3
+Features: 10
+F1 CV (5-fold): 0.752922 ± 0.005027 (SE)
+IC 95% (t-student): [0.738966, 0.766878]
+Scores por fold: [np.float64(0.746269), np.float64(0.76259), np.float64(0.748092), np.float64(0.740741), np.float64(0.766917)]
+Dataset: 891 passageiros (Kaggle train.csv)
+Status: RECONCILIADO COM EVIDÊNCIA BRUTA
+Protocolo: StratifiedKFold + Nadeau-Bengio
+
+ENSEMBLE:
+  F1 CV: 0.767265
+  Ganho: 0.014343
+  p-valor (Nadeau-Bengio): 0.0771
+  Decisão: RF mantido por parcimônia
+======================================================================

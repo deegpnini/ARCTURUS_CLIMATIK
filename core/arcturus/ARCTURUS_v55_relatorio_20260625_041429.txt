@@ -1,0 +1,20 @@
+============================================================
+🏛️ ARCTURUS v5.5 — RELATÓRIO FINAL
+============================================================
+
+Data: 2026-06-25 04:14:29
+Arquivo: ARCTURUS_v54_features_20260625_041037.csv
+Total: 182 artigos
+Casos: 94
+Controles: 88
+
+MÉTRICAS:
+  Recall: 64.29%
+  Precisão: 58.06%
+  F1-Score: 0.610
+  Acurácia: 58.18%
+  AUC: 0.651
+
+MATRIZ DE CONFUSÃO:
+  TP: 18, FP: 13
+  FN: 10, TN: 14

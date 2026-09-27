@@ -1,0 +1,85 @@
+# ============================================================
+# ARCTURUS CLIMATIK — .gitignore
+# ============================================================
+
+# --- SEGREDOS (NUNCA SUBIR) ---
+.env
+.env.*
+*.env
+*token*
+*secret*
+*credential*
+*.key
+*.pem
+token.json
+
+# --- DADOS BRUTOS (NUNCA SUBIR) ---
+cache/
+dados/
+modulos/
+logs/
+relatorios/
+backup_completo/
+backup_*/
+*.csv
+*.jsonl
+
+# --- EXCEÇÕES (arquivos específicos que SOBEM) ---
+!requirements.txt
+!*.md
+!*.py
+
+# --- MODELOS TREINADOS ---
+*.pkl
+*.cbm
+*.h5
+*.pt
+*.onnx
+*.joblib
+
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# --- NOTEBOOKS ---
+.ipynb_checkpoints/
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- SISTEMA ---
+.DS_Store
+Thumbs.db
+
+# --- BACKUPS LOCAIS ---
+*.bak
+*.old
+*.orig
+*.bak_*
+
+# --- DATASETS INTERNOS (nunca subir) ---
+core/arcturus/DATASETS/
+core/arcturus/*.csv
+core/arcturus/*.nc
+core/arcturus/*.CSV
+dados/sar/DATASETS/
+dados/sar/*.csv
+dados/sar/*.pkl
+dados/sar/*.cbm
+modulos/sismico/dados/
+modulos/sismico/*.csv
+modulos/sismico/*.pkl
+modulos/sentinel/
+modulos/audio/
+modulos/visual/
