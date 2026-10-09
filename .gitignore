@@ -122,3 +122,6 @@ credentials.json
 backup_*
 _bak_*
 Eu consigo*
+
+data/telemetria_*.json
+data/referencia/
