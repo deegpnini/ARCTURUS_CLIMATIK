@@ -137,3 +137,6 @@ src/modelo/_variante_*.py
 # Python cache
 __pycache__/
 *.pyc
+
+# Arquivos temporarios
+.archive/
