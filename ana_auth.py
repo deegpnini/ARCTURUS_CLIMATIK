@@ -1,16 +1,17 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-ana_auth — autenticacao ANA com auto-renovacao.
+ana_auth â€” autenticacao ANA com auto-renovacao.
 Testa validade real (nao so timestamp).
 """
 import os, json, urllib.request, subprocess
 from datetime import datetime, timedelta
 
-HOME = os.path.expanduser("~")
-CACHE = f"{HOME}/ARCTURUS_CLIMATIK/cache"
-TOKEN_FILE = f"{CACHE}/ana_token.txt"
-META_FILE = f"{CACHE}/ana_token_meta.json"
-ENV_FILE = f"{HOME}/ARCTURUS_CLIMATIK/.env"
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+CACHE = BASE_DIR / "cache"
+TOKEN_FILE = CACHE / "ana_token.txt"
+META_FILE = CACHE / "ana_token_meta.json"
+ENV_FILE = BASE_DIR / ".env"
 BASE = "https://www.ana.gov.br/hidrowebservice/EstacoesTelemetricas"
 
 def carregar_env():
@@ -79,3 +80,5 @@ if __name__ == "__main__":
     t = get_token()
     print(f"Token: {len(t)} chars")
     print(f"Valido: {testar_token(t)}")
+
+

@@ -125,3 +125,15 @@ Eu consigo*
 
 data/telemetria_*.json
 data/referencia/
+
+data/_backup/
+
+src/modelo/_variante_*.py
+
+# Exceção: código-fonte em src/relatorios (produção)
+!src/relatorios/
+!src/relatorios/**
+
+# Python cache
+__pycache__/
+*.pyc
