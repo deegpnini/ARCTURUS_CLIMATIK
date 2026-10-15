@@ -1,230 +1,167 @@
-﻿# ARCTURUS CLIMATIK
+# ARCTURUS CLIMATIK
 
-Sistema de previsao de nivel de rio para Santa Catarina.
+**Projeto experimental de pesquisa hidrológica para Santa Catarina.**
 
-## O problema
+O ARCTURUS CLIMATIK investiga se dados históricos, telemetria dos rios e
+informações meteorológicas podem ajudar a antecipar a elevação do nível
+da água.
 
-Em setembro de 2026, SC entrou em calamidade publica.
-57 municipios com ocorrencias. Rio Tubarao atingiu o maior valor da serie.
+É um projeto pessoal de pesquisa. Não é um sistema oficial de alerta, não
+substitui a Defesa Civil, o CEMADEN ou os órgãos responsáveis e ainda não
+demonstrou desempenho prospectivo suficiente para orientar decisões de
+emergência.
 
-## A solucao
+## Objetivo
 
-Modelo LightGBM com target delta (variacao, nao cota absoluta).
-Previsao: cota_atual + delta_previsto.
-Horizontes: 1h, 3h, 6h.
+Estimar a variação do nível de uma estação fluviométrica com 1, 3 e 6 horas
+de antecedência e reconstruir a cota prevista:
 
-## Validacao
+`cota_prevista = cota_atual + delta_previsto`
 
-Leave-one-event-out em 27 eventos historicos.
-Ganho sobre persistencia: 26/27 (1h), 26/27 (3h), 24/27 (6h).
+A meta é demonstrar ganho sobre referências simples, como persistência e
+tendência, e verificar se esse ganho oferece antecedência útil para
+identificar elevações perigosas do rio.
 
-## Limitacoes
+Prever o nível do rio não é o mesmo que prever inundação urbana. Para estudar
+impactos, também são necessários registros dos locais atingidos, chuva,
+condições do terreno e informações sobre os danos.
 
-- Uma bacia apenas (Tubarao).
-- Sem previsao ao vivo (estacao caida).
-- Nao e alerta oficial.
-- 26 features (vazao removida por redundancia).
+## Estado atual
 
-## Contato
+- Estação de referência: ANA 84580000, Rio do Pouso, bacia do Rio Tubarão.
+- Algoritmo de referência: LightGBM, com alvo delta.
+- Modelo de produção documentado: 26 features, sem a variável `vazao`.
+- Avaliação histórica: leave-one-event-out (LOEO), com 27 eventos.
+- Estado operacional: não considerar o sistema pronto para previsão pública
+  em tempo real. A atual disponibilidade e a qualidade da telemetria precisam
+  ser verificadas antes de qualquer operação ao vivo.
+- O projeto não emite alertas oficiais.
 
-Helyton Renato Goncalves Ronchi
-deegp.nini@gmail.com
+## Registros históricos em investigação
 
----
+A extração local do arquivo
+`data/_backup/cache/historico_84580000_MASTER.csv` contém os valores abaixo:
 
-## Estrutura do repositorio
+| Data registrada | Cota no arquivo local |
+|---|---:|
+| 24/03/1974 | 727 cm |
+| 01/10/2001 | 730 cm |
+| 05/05/2022 | 700 cm |
+| 01/12/2022 | 746 cm |
 
-```
-ARCTURUS_CLIMATIK/
-|-- README.md
-|-- requirements.txt
-|-- LICENSE
-|-- modelos/                # Modelos de producao + manifesto
-|-- src/
-|   |-- modelo/             # Porte das celulas do Colab
-|   `-- relatorios/         # insight.py (gerador de relatorios)
-|-- tools/                  # Scripts de auditoria, treino, coleta
-|-- docs/                   # Documentacao tecnica
-`-- data/                   # (ignorado) Dados baixados da ANA
-```
+Esses valores documentam o conteúdo da extração local. Não devem ser tratados
+como classificação oficial dos maiores desastres ou como prova isolada de
+inundação urbana. A unidade, o significado do campo, a consistência e a
+resolução temporal precisam ser confirmados junto à fonte original.
 
----
+A maior tragédia urbana e a maior cota de uma estação são medidas diferentes.
+Uma leitura diária também não revela necessariamente o pico intradiário.
 
-## Como rodar
+### Caso de setembro de 2026
 
-```bash
-# 1. Clonar
-git clone https://github.com/deegpnini/ARCTURUS_CLIMATIK.git
-cd ARCTURUS_CLIMATIK
+A análise local identificou uma leitura de 446 cm na estação 84580000 após
+uma lacuna de telemetria. O nível máximo ocorrido durante o intervalo sem
+dados não foi observado e permanece desconhecido.
 
-# 2. Instalar dependencias
-pip install -r requirements.txt
+Portanto, 446 cm não deve ser apresentado como o pico máximo real da cheia,
+nem como prova isolada de inundação urbana. O caso permanece como uma
+investigação de qualidade da série e do comportamento do modelo diante de
+dados incompletos.
 
-# 3. Criar .env com credenciais da ANA
-echo "ANA_CPF=SEU_CPF" > .env
-echo "ANA_SENHA=SUA_SENHA" >> .env
+## Resultados históricos e validação
 
-# 4. Rodar insight (modo retrospectivo)
-python -m src.relatorios.insight --modo retrospectivo --data "2026-09-22 00:00"
-```
+O modelo LightGBM prevê `delta`, a mudança estimada da cota. Os resultados
+abaixo são retrospectivos e não garantem desempenho em novas tempestades.
 
----
+Na versão sem `vazao`, quatro execuções (padrão e sementes 11, 22 e 33)
+produziram as seguintes faixas:
 
-## Fontes de dados
+| Horizonte | MAE médio do delta por evento | Vitórias sobre persistência | Vitórias sobre modelo absoluto |
+|---|---:|---:|---:|
+| 1h | 2,09–2,10 cm | 26–27 de 27 | 18–20 de 27 |
+| 3h | 6,15–6,20 cm | 26 de 27 | 17–22 de 27 |
+| 6h | 10,07–10,35 cm | 23–24 de 27 | 16–20 de 27 |
 
-- **ANA HidroWebService** — telemetria de 15 min (cota, chuva, vazao)
-- **INMET** — meteorologia
-- **EPAGRI/CIRAM** — planejado (estacoes classicas de SC)
-- **USGS, Sentinel-1, Open-Meteo, NASA POWER** — projetos paralelos
+As faixas mostram variação entre execuções. As contagens de vitórias usam
+margens de empate definidas no relatório técnico. O MAE apresentado é a
+média dos MAEs por evento, não uma métrica ponderada pelo número de leituras.
 
----
+### Análise da remoção de `vazao`
 
-## Limitacoes declaradas
+A diferença é calculada como MAE do modelo sem `vazao` menos MAE do modelo
+com `vazao`. Valor positivo significa erro maior após remover a variável.
 
-**Trabalho em andamento.** O que esta pronto e o que nao esta:
+| Horizonte | Diferença média | IC 95% bootstrap |
+|---|---:|---:|
+| 1h | -0,001 cm | -0,021 a +0,016 cm |
+| 3h | -0,060 cm | -0,131 a +0,004 cm |
+| 6h | +0,205 cm | +0,035 a +0,410 cm |
 
-- **Uma bacia apenas.** Modelo treinado e validado para a bacia do Rio Tubarao.
-- **Sem previsao ao vivo.** A estacao 84580000 esta caida desde 22/09/2026.
-- **Sem alerta oficial.** E analise tecnica. Complementa a Defesa Civil, nao substitui.
-- **Sem peer review.** Projeto pessoal, nao publicado.
-- **26 features, nao 27.** A feature vazao foi removida (derivada da cota, Spearman 1.0).
-- **Features de montante nao implementadas.** Candidatas testadas, correlacao de delta fraca (~0.11).
-- **27 eventos historicos.** Amostra pequena. IC pode ser otimista.
-- **Cobertura esparsa entre eventos.** 55% no treino, 96-100% dentro dos eventos.
-
----
-
-## Documentacao tecnica
-
-- [docs/ARCTURUS_FORECAST_v1.0.md](docs/ARCTURUS_FORECAST_v1.0.md) — arquitetura do modelo
-- [docs/regras_completude_v1.0.md](docs/regras_completude_v1.0.md) — regras de completude
-- [docs/STATUS_20260922.md](docs/STATUS_20260922.md) — status do dia 22/09/2026
-
----
-
-## Roadmap
-
-- [x] Corrigir README (concluido em 09/10/2026)
-- [ ] Implementar insight_parte3.py (geracao de relatorios JSON + Markdown)
-- [ ] Buscar estacao alternativa para a ancora (ou aguardar retorno)
-- [ ] Testar features de grade de chuva (Open-Meteo, CHIRPS)
-- [ ] Expandir para Chapeco, Uruguai, Itajai, Ararangua
-- [ ] Ativar bot do Telegram em producao
-- [ ] Publicar preprint cientifico
-
----
-
-## Metodo
-
-Este projeto aplica 10 principios de trabalho:
-
-1. **Raw Evidence First** — o disco manda, memoria nao
-2. **Mover nunca deletar**
-3. **Pre-voo antes de mover**
-4. **Confirmacao explicita antes de executar**
-5. **Print linha a linha**
-6. **LEIA-ME por pasta**
-7. **Rollback escrito antes**
-8. **Template antes de executavel**
-9. **Descoberta dinamica**
-10. **Nao classificar sem avaliar valor**
-
-E 3 principios cientificos:
-
-- **Correlacao != causalidade**
-- **Backtest decide, nao correlacao**
-- **Teste e intocado ate a decisao final**
-
----
-
-## Licenca
-
-MIT. Veja [LICENSE](LICENSE).
-
----
-
-## Contato
-
-Helyton Renato Goncalves Ronchi
-deegp.nini@gmail.com
-
-## Limitacoes
-
-- Uma bacia apenas (Tubarao).
-- Sem previsao ao vivo (estacao caida desde 22/09/2026).
-- Nao e alerta oficial. Complementa Defesa Civil e CEMADEN.
-- 26 features (vazao removida por redundancia, Spearman 1.0).
-- 27 eventos historicos. Amostra pequena.
-
-## Como rodar
-
-git clone https://github.com/deegpnini/ARCTURUS_CLIMATIK.git
-pip install -r requirements.txt
-echo "ANA_CPF=SEU_CPF" > .env
-echo "ANA_SENHA=SUA_SENHA" >> .env
-python -m src.relatorios.insight --modo retrospectivo --data "2026-09-22 00:00"
-
-## Fontes
-
-- ANA HidroWebService (telemetria 15 min)
-- INMET (meteorologia)
-- EPAGRI/CIRAM (planejado)
-
-## Contato
-
-Helyton Renato Goncalves Ronchi
-deegp.nini@gmail.com
-
-## Limitacoes
-
-- Uma bacia apenas (Tubarao).
-- Sem previsao ao vivo (estacao caida desde 22/09/2026).
-- Nao e alerta oficial. Complementa Defesa Civil e CEMADEN.
-- 26 features (vazao removida por redundancia, Spearman 1.0).
-- 27 eventos historicos. Amostra pequena.
-
-## Como rodar
-
-git clone https://github.com/deegpnini/ARCTURUS_CLIMATIK.git
-pip install -r requirements.txt
-echo "ANA_CPF=SEU_CPF" > .env
-echo "ANA_SENHA=SUA_SENHA" >> .env
-python -m src.relatorios.insight --modo retrospectivo --data "2026-09-22 00:00"
-
-## Fontes
-
-- ANA HidroWebService (telemetria 15 min)
-- INMET (meteorologia)
-- EPAGRI/CIRAM (planejado)
-
-## Contato
-
-Helyton Renato Goncalves Ronchi
-deegp.nini@gmail.com
-
-## Limitacoes
-
-- Uma bacia apenas (Tubarao).
-- Sem previsao ao vivo (estacao caida desde 22/09/2026).
-- Nao e alerta oficial. Complementa Defesa Civil e CEMADEN.
-- 26 features (vazao removida por redundancia, Spearman 1.0).
-- 27 eventos historicos. Amostra pequena.
-
-## Como rodar
-
-git clone https://github.com/deegpnini/ARCTURUS_CLIMATIK.git
-pip install -r requirements.txt
-echo "ANA_CPF=SEU_CPF" > .env
-echo "ANA_SENHA=SUA_SENHA" >> .env
-python -m src.relatorios.insight --modo retrospectivo --data "2026-09-22 00:00"
-
-## Fontes
-
-- ANA HidroWebService (telemetria 15 min)
-- INMET (meteorologia)
-- EPAGRI/CIRAM (planejado)
-
-## Contato
-
-Helyton Renato Goncalves Ronchi
-deegp.nini@gmail.com
+O resultado de 6h sugere um pequeno custo médio após remover `vazao`.
+A versão com 26 features favorece a simplicidade e reduz a dependência de
+uma variável considerada redundante na auditoria. Isso não prova que as
+duas versões sejam equivalentes em todas as situações.
+
+Os intervalos são estimativas exploratórias baseadas na avaliação por
+eventos. Não eliminam a incerteza causada por novas cheias, diferenças entre
+eventos ou escolhas de treinamento.
+
+## Limitações
+
+- Uma estação de referência e 27 eventos na avaliação documentada.
+- Poucos eventos severos para concluir que o modelo antecipa cheias extremas.
+- A avaliação retrospectiva não comprova desempenho em operação real.
+- A série histórica diária não substitui dados sub-horários para avaliar
+  previsões de 1h, 3h e 6h.
+- Valores ausentes podem permitir que o modelo gere uma saída sem informação
+  suficiente. A operação deve identificar essas situações e bloquear
+  previsões que não cumpram critérios de qualidade previamente definidos.
+- Estações distintas podem ter referências de nível e características
+  próprias. O modelo não deve ser transferido sem calibração e validação.
+- O projeto ainda não demonstrou capacidade validada de prever inundação
+  em uma rua ou bairro específico.
+
+## Dados e reprodutibilidade
+
+As pastas locais `data/` e `resultados/` não fazem parte deste commit público.
+Dados brutos, respostas de API e configurações locais devem ser preservados
+e auditados separadamente. Credenciais nunca devem ser publicadas.
+
+Resultados públicos devem indicar os arquivos de referência, versões,
+configurações, hashes e protocolo usados. Métricas de execuções distintas
+não devem ser combinadas sem explicitar a regra de comparação.
+
+## Fontes de dados em investigação
+
+- ANA HidroWebService: dados fluviométricos, cotas e chuva.
+- INMET: observações meteorológicas.
+- CEMADEN: monitoramento de chuva e referências de eventos.
+- EPAGRI/CIRAM e órgãos de defesa civil: estações, boletins e registros de
+  impactos, sujeitos a verificação.
+- Registros oficiais de desastres: datas dos eventos, locais atingidos e
+  descrição dos impactos.
+
+Disponibilidade, qualidade, horários e significado de cada campo precisam
+ser verificados antes da integração ao conjunto de treinamento.
+
+## Próximas etapas
+
+1. Auditar os registros históricos e os códigos de consistência da ANA.
+2. Montar um catálogo de eventos com níveis, chuva e impactos documentados.
+3. Testar a antecipação de ultrapassagens de níveis de referência em eventos
+   que não participaram do treinamento.
+4. Medir eventos detectados, falsos alarmes e antecedência útil.
+5. Expandir para outras bacias somente após auditar e validar cada estação.
+
+## Princípios de trabalho
+
+- Raw Evidence First: a evidência observada prevalece sobre a memória.
+- Correlação não implica causalidade.
+- Backtest não substitui avaliação prospectiva.
+- Dados de referência não são sobrescritos.
+- Dados ausentes não são preenchidos sem regra explícita.
+- Limitações devem ser declaradas antes dos resultados.
+
+## Licença
+
+Consulte o arquivo `LICENSE`.
