@@ -1,0 +1,9 @@
+* text=auto eol=lf
+modelos/*.txt text eol=lf
+modelos/*.json text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.tar.gz binary
+*.zip binary
