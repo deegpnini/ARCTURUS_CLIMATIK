@@ -140,3 +140,6 @@ __pycache__/
 
 # Arquivos temporarios
 .archive/
+
+# Projetos nao relacionados (Titanic, Richter, El Nino, Taquari/RS)
+core/
