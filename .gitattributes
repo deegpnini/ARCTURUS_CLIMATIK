@@ -7,3 +7,7 @@ modelos/*.json text eol=lf
 *.jpg binary
 *.tar.gz binary
 *.zip binary
+
+# modelos: bytes exatos (o manifesto guarda o sha256 dos arquivos)
+modelos/*.txt -text
+modelos/*.json -text
