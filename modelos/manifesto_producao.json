@@ -67,6 +67,7 @@
         "cos_dia_ano"
       ],
       "sha256_modelo": "159bd6d8bb9280961d1ef8a9088538562c2efd87cf26ce8fb7320a6a2ff5777c",
+      "sha256_modelo_sem_CR": "2de7bb7fffd7d8263bdef4a0bb419fa89d82ae60925ed10bd70deb0812a98695",
       "assinatura_reprodutibilidade": {
         "amostra": "ultima linha do dataset filtrado por target valido",
         "valor_esperado": 24.65931417233207
@@ -106,6 +107,7 @@
         "cos_dia_ano"
       ],
       "sha256_modelo": "cee9cbca0d6e3d608f8e6c9cb81e292163a5c23157c9c2a67edc968fe087c76d",
+      "sha256_modelo_sem_CR": "ff289deede62fc47b462335b9e6bea4ae3de67533782c0c0f641171830928330",
       "assinatura_reprodutibilidade": {
         "amostra": "ultima linha do dataset filtrado por target valido",
         "valor_esperado": 72.27479806928439
@@ -145,6 +147,7 @@
         "cos_dia_ano"
       ],
       "sha256_modelo": "3335da21b8329022666bac2eedc0c257eda818930dd4b80dcc3d782f42c1cb58",
+      "sha256_modelo_sem_CR": "f281215d35de5ec3a3872d379044cb6fd97e4633c1528073964b661c7b9a7af9",
       "assinatura_reprodutibilidade": {
         "amostra": "ultima linha do dataset filtrado por target valido",
         "valor_esperado": 31.933188103896185

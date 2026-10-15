@@ -1,0 +1,13 @@
+{
+  "nota": "sha256 do conteudo do modelo SEM o caractere CR. O treino no Linux e o do Windows geram as mesmas arvores; so o fim de linha do arquivo muda (CR extra no Windows).",
+  "sha256_sem_CR": {
+    "1h": "2de7bb7fffd7d8263bdef4a0bb419fa89d82ae60925ed10bd70deb0812a98695",
+    "3h": "ff289deede62fc47b462335b9e6bea4ae3de67533782c0c0f641171830928330",
+    "6h": "f281215d35de5ec3a3872d379044cb6fd97e4633c1528073964b661c7b9a7af9"
+  },
+  "sha256_bruto_no_manifesto": {
+    "1h": "159bd6d8bb9280961d1ef8a9088538562c2efd87cf26ce8fb7320a6a2ff5777c",
+    "3h": "cee9cbca0d6e3d608f8e6c9cb81e292163a5c23157c9c2a67edc968fe087c76d",
+    "6h": "3335da21b8329022666bac2eedc0c257eda818930dd4b80dcc3d782f42c1cb58"
+  }
+}

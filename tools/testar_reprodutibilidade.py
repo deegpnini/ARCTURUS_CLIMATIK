@@ -16,6 +16,12 @@ os.chdir(ROOT)
 DATA = ROOT / "data"
 MODELOS = ROOT / "modelos"
 
+def sha256_lf(path):
+    # sha256 do conteudo sem o caractere CR (o Windows grava CR extra no fim; as arvores sao as mesmas)
+    with open(path, 'rb') as f:
+        return hashlib.sha256(f.read().replace(b'\r', b'')).hexdigest()
+
+
 def sha256(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -41,6 +47,10 @@ for h, info in manifest["horizontes"].items():
     model_path = MODELOS / info["arquivo"]
     hash_atual = sha256(model_path)
     hash_esperado = info["sha256_modelo"]
+    hash_esperado_lf = info.get("sha256_modelo_sem_CR")
+    if hash_atual != hash_esperado and hash_esperado_lf and sha256_lf(model_path) == hash_esperado_lf:
+        print("  [i] arquivo difere do manifesto so no caractere CR (mesmas arvores)")
+        hash_atual, hash_esperado = hash_esperado_lf, hash_esperado_lf
 
     if hash_atual == hash_esperado:
         print(f"  [OK] sha256 bate: {hash_atual[:16]}...")

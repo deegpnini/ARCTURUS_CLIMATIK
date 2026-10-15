@@ -87,6 +87,12 @@ PARAMS = {
 # ============================================================
 # 4. Calcula hash dos arquivos de entrada
 # ============================================================
+def sha256_lf(path):
+    # sha256 do conteudo sem o caractere CR (o Windows grava CR extra no fim; as arvores sao as mesmas)
+    with open(path, 'rb') as f:
+        return hashlib.sha256(f.read().replace(b'\r', b'')).hexdigest()
+
+
 def sha256(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -171,6 +177,7 @@ for h in ["1h", "3h", "6h"]:
         "n_features": len(feats),
         "features": feats,
         "sha256_modelo": model_hash,
+        "sha256_modelo_sem_CR": sha256_lf(model_path),
         "assinatura_reprodutibilidade": {
             "amostra": "ultima linha do dataset filtrado por target valido",
             "valor_esperado": pred_amostra,
