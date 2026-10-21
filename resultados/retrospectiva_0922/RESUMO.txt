@@ -1,0 +1,56 @@
+registros: 27204 | duplicados removidos: 0 | periodo: 2025-12-03 00:00:00 a 2026-09-22 08:45:00
+
+== A. Registros em torno do evento (atraso_min = Data_Atualizacao - medicao) ==
+                     Cota_Adotada Cota_Adotada_Status  Vazao_Adotada  Chuva_Adotada  atraso_min
+t                                                                                              
+2026-09-21 19:00:00         169.0                   0         193.53            0.2        65.3
+2026-09-21 19:15:00         174.0                   0         199.44            0.0        50.3
+2026-09-21 19:30:00         178.0                   0         204.23            0.0        35.3
+2026-09-21 19:45:00         183.0                   0         210.30            0.4        20.3
+2026-09-21 20:00:00           NaN                 NaN            NaN            NaN        60.1
+2026-09-21 20:15:00           NaN                 NaN            NaN            NaN        45.1
+2026-09-21 20:30:00           NaN                 NaN            NaN            NaN        30.1
+2026-09-21 20:45:00           NaN                 NaN            NaN            NaN        15.1
+2026-09-22 00:00:00         446.0                   0         642.29            1.0        61.6
+2026-09-22 00:15:00         442.0                   0         634.10            0.0        46.6
+2026-09-22 00:30:00         436.0                   0         621.91            0.0        31.6
+2026-09-22 00:45:00         430.0                   0         609.83            0.0        16.6
+2026-09-22 01:00:00         424.0                   0         597.86            0.0        61.5
+2026-09-22 01:15:00         421.0                   0         591.92            0.0        46.5
+2026-09-22 01:30:00         416.0                   0         582.07            0.0        31.5
+2026-09-22 01:45:00         413.0                   0         576.20            0.0        16.5
+2026-09-22 02:00:00         409.0                   0         568.42            0.0        61.4
+
+Status da cota (arquivo todo):
+Cota_Adotada_Status
+NaN    14336
+0      10369
+1       2499
+
+== B. O buraco e o pico ==
+ultima leitura antes: 2026-09-21 19:45:00 = 183 cm
+primeira leitura depois: 2026-09-22 00:00:00 = 446 cm
+duracao: 4.25 h | leituras sem cota: 16
+maior valor medido em 18-26/09: 446 cm em 2026-09-22 00:00:00
+subida nas ultimas leituras antes do buraco: 4.7 cm/15min (~19 cm/h)
+subida media necessaria no buraco: 62 cm/h
+recessao na 1a hora apos o buraco: 22 cm/h
+
+== C. Conferencia dos numeros do relatorio (erro da persistencia a partir de 446 cm) ==
++1h (2026-09-22 01:00:00): observado=424 | erro persistencia=22 | relatorio cita=22 -> OK
++3h (2026-09-22 03:00:00): observado=398 | erro persistencia=48 | relatorio cita=33 -> DIFERE
++6h (2026-09-22 06:00:00): observado=375 | erro persistencia=71 | relatorio cita=71 -> OK
+
+== D. Chuva_Adotada antes do primeiro dado apos o buraco (definicao do campo NAO verificada) ==
+ 6h: leituras validas=   9 soma=     1.8 max=   1.0
+24h: leituras validas=  81 soma=    46.2 max=   6.8
+48h: leituras validas= 177 soma=    51.6 max=   6.8
+se o campo for ACUMULADO (e nao incremento), a soma nao vale; veja os valores da tabela A
+
+== E. A vazao e funcao da cota? ==
+dispersao relativa mediana da vazao para a MESMA cota: 0.0000  (perto de 0 = vazao derivada da cota, feature redundante)
+correlacao de Spearman cota x vazao: 1.0000
+
+== F. Pendencias externas ==
+1) boletim Epagri/Ciram de 21 a 23/09 (estacao 84580000): comparar com a tabela A
+2) pedir a Epagri/Ciram ou ANA os dados do datalogger de 21/09 20:00 a 22/09 00:00

@@ -1,0 +1,893 @@
+{
+  "data_geracao": "2026-10-09 19:34:45",
+  "projeto": "ARCTURUS CLIMATIK",
+  "estacao": "84580000",
+  "target": "delta",
+  "reconstrucao": "cota_atual + delta_previsto",
+  "versao": "1.0.0",
+  "hashes_datasets": {
+    "split_v3.json": "dcb3ec4c8476f4f535305311ed6c1bfab5164e95480dce70bcba23cfeb7a4ad8",
+    "dataset_1h.csv": "cc3a13f56ed6ba8b7c05a8701bdffd4f5d5462de2cd71071cb65ac8731e6b679",
+    "dataset_3h.csv": "18c9056a1cb13bc3e0214d21bcfa22562c3ca3d4956937c71c939a679abdf4a5",
+    "dataset_6h.csv": "21295265dce577559d44c2f30907c16caf4b778fdb9dc7c386a71e64bdfba0d8"
+  },
+  "features_por_horizonte": {
+    "1h": [
+      "cota",
+      "cota_lag_15m",
+      "cota_lag_30m",
+      "cota_lag_60m",
+      "cota_lag_180m",
+      "cota_lag_360m",
+      "cota_lag_720m",
+      "cota_lag_1440m",
+      "delta_15m",
+      "delta_60m",
+      "delta_180m",
+      "aceleracao_1h",
+      "cota_std_12h",
+      "cota_max_12h",
+      "cota_min_12h",
+      "vazao",
+      "chuva_15m",
+      "chuva_60m",
+      "chuva_180m",
+      "chuva_360m",
+      "chuva_720m",
+      "chuva_1440m",
+      "chuva_2880m",
+      "sin_hora",
+      "cos_hora",
+      "sin_dia_ano",
+      "cos_dia_ano"
+    ],
+    "3h": [
+      "cota",
+      "cota_lag_15m",
+      "cota_lag_30m",
+      "cota_lag_60m",
+      "cota_lag_180m",
+      "cota_lag_360m",
+      "cota_lag_720m",
+      "cota_lag_1440m",
+      "delta_15m",
+      "delta_60m",
+      "delta_180m",
+      "aceleracao_1h",
+      "cota_std_12h",
+      "cota_max_12h",
+      "cota_min_12h",
+      "vazao",
+      "chuva_15m",
+      "chuva_60m",
+      "chuva_180m",
+      "chuva_360m",
+      "chuva_720m",
+      "chuva_1440m",
+      "chuva_2880m",
+      "sin_hora",
+      "cos_hora",
+      "sin_dia_ano",
+      "cos_dia_ano"
+    ],
+    "6h": [
+      "cota",
+      "cota_lag_15m",
+      "cota_lag_30m",
+      "cota_lag_60m",
+      "cota_lag_180m",
+      "cota_lag_360m",
+      "cota_lag_720m",
+      "cota_lag_1440m",
+      "delta_15m",
+      "delta_60m",
+      "delta_180m",
+      "aceleracao_1h",
+      "cota_std_12h",
+      "cota_max_12h",
+      "cota_min_12h",
+      "vazao",
+      "chuva_15m",
+      "chuva_60m",
+      "chuva_180m",
+      "chuva_360m",
+      "chuva_720m",
+      "chuva_1440m",
+      "chuva_2880m",
+      "sin_hora",
+      "cos_hora",
+      "sin_dia_ano",
+      "cos_dia_ano"
+    ]
+  },
+  "params_lightgbm": {
+    "objective": "regression",
+    "metric": "mae",
+    "num_leaves": 31,
+    "max_depth": 5,
+    "learning_rate": 0.05,
+    "verbose": -1,
+    "min_data_in_leaf": 20,
+    "feature_fraction": 0.8,
+    "bagging_fraction": 0.8,
+    "bagging_freq": 5,
+    "seed": 42,
+    "data_random_seed": 42,
+    "feature_fraction_seed": 42,
+    "bagging_seed": 42,
+    "deterministic": true,
+    "force_col_wise": true,
+    "num_threads": 1
+  },
+  "eventos_total": 27,
+  "resultado_por_horizonte": {
+    "1h": {
+      "num_boost_round_recomendado": 1000,
+      "best_iteration_mediana": 1000,
+      "best_iteration_iqr": [
+        1000,
+        1000
+      ],
+      "best_iteration_min": 1000,
+      "best_iteration_max": 1000,
+      "mae_delta_medio_loeo": 2.2284971011524166,
+      "folds": [
+        {
+          "evento": 1,
+          "inicio": "2024-10-03T02:00:00",
+          "fim": "2024-10-05T06:00:00",
+          "pico": 252.0,
+          "n": 201,
+          "mae_delta": 0.8560598587051713,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 2,
+          "inicio": "2024-10-10T03:00:00",
+          "fim": "2024-10-14T16:00:00",
+          "pico": 202.0,
+          "n": 397,
+          "mae_delta": 1.4785255419781922,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 3,
+          "inicio": "2024-11-07T01:30:00",
+          "fim": "2024-11-10T02:15:00",
+          "pico": 250.0,
+          "n": 292,
+          "mae_delta": 5.420252517134096,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 4,
+          "inicio": "2024-11-20T14:00:00",
+          "fim": "2024-11-26T02:30:00",
+          "pico": 253.0,
+          "n": 467,
+          "mae_delta": 1.480437930777087,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 5,
+          "inicio": "2024-12-07T14:15:00",
+          "fim": "2024-12-13T09:00:00",
+          "pico": 158.0,
+          "n": 548,
+          "mae_delta": 1.9314442209478475,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 6,
+          "inicio": "2025-01-01T03:15:00",
+          "fim": "2025-01-04T13:30:00",
+          "pico": 217.0,
+          "n": 222,
+          "mae_delta": 4.166892970462355,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 7,
+          "inicio": "2025-01-09T06:15:00",
+          "fim": "2025-01-14T23:45:00",
+          "pico": 148.0,
+          "n": 535,
+          "mae_delta": 1.3039175845223678,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 8,
+          "inicio": "2025-01-18T23:00:00",
+          "fim": "2025-01-21T09:45:00",
+          "pico": 151.0,
+          "n": 236,
+          "mae_delta": 1.8385811363591669,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 9,
+          "inicio": "2025-01-29T00:15:00",
+          "fim": "2025-02-05T21:00:00",
+          "pico": 304.0,
+          "n": 754,
+          "mae_delta": 4.382185797119536,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 10,
+          "inicio": "2025-02-07T05:45:00",
+          "fim": "2025-02-10T12:00:00",
+          "pico": 188.0,
+          "n": 306,
+          "mae_delta": 1.0131893462031767,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 11,
+          "inicio": "2025-02-14T04:15:00",
+          "fim": "2025-02-24T12:00:00",
+          "pico": 275.0,
+          "n": 984,
+          "mae_delta": 1.908519005449663,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 12,
+          "inicio": "2025-02-28T03:00:00",
+          "fim": "2025-03-01T18:30:00",
+          "pico": 157.0,
+          "n": 151,
+          "mae_delta": 1.9656526517683044,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 13,
+          "inicio": "2025-03-26T08:15:00",
+          "fim": "2025-03-27T08:30:00",
+          "pico": 160.0,
+          "n": 98,
+          "mae_delta": 1.9501602704480558,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 14,
+          "inicio": "2025-06-29T10:15:00",
+          "fim": "2025-06-29T19:45:00",
+          "pico": 211.0,
+          "n": 39,
+          "mae_delta": 7.23309067815997,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 15,
+          "inicio": "2025-08-05T19:30:00",
+          "fim": "2025-08-06T21:45:00",
+          "pico": 145.0,
+          "n": 106,
+          "mae_delta": 0.9642579546412386,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 16,
+          "inicio": "2025-08-24T07:15:00",
+          "fim": "2025-08-29T15:00:00",
+          "pico": 282.0,
+          "n": 512,
+          "mae_delta": 1.6539928472552705,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 17,
+          "inicio": "2025-09-06T02:15:00",
+          "fim": "2025-09-11T13:30:00",
+          "pico": 177.0,
+          "n": 506,
+          "mae_delta": 1.289117670862158,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 18,
+          "inicio": "2025-10-29T06:30:00",
+          "fim": "2025-11-02T13:45:00",
+          "pico": 312.0,
+          "n": 406,
+          "mae_delta": 1.8656081634841324,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 19,
+          "inicio": "2025-11-08T00:30:00",
+          "fim": "2025-11-11T20:30:00",
+          "pico": 280.0,
+          "n": 361,
+          "mae_delta": 2.148137661004658,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 20,
+          "inicio": "2025-11-24T01:15:00",
+          "fim": "2025-11-26T22:30:00",
+          "pico": 171.0,
+          "n": 278,
+          "mae_delta": 1.2117596095868632,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 21,
+          "inicio": "2026-07-03T00:00:00",
+          "fim": "2026-07-04T14:15:00",
+          "pico": 221.0,
+          "n": 154,
+          "mae_delta": 1.0359174788943124,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 22,
+          "inicio": "2026-07-12T04:15:00",
+          "fim": "2026-07-13T00:15:00",
+          "pico": 147.0,
+          "n": 81,
+          "mae_delta": 1.6765446717339276,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 23,
+          "inicio": "2026-07-22T09:15:00",
+          "fim": "2026-07-24T00:15:00",
+          "pico": 215.0,
+          "n": 157,
+          "mae_delta": 2.680818073768735,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 24,
+          "inicio": "2026-07-29T10:30:00",
+          "fim": "2026-07-31T16:00:00",
+          "pico": 243.0,
+          "n": 195,
+          "mae_delta": 4.323283265812424,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 25,
+          "inicio": "2026-08-13T14:30:00",
+          "fim": "2026-08-18T02:00:00",
+          "pico": 163.0,
+          "n": 403,
+          "mae_delta": 1.4345780866135562,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 26,
+          "inicio": "2026-08-31T06:30:00",
+          "fim": "2026-09-04T11:30:00",
+          "pico": 187.0,
+          "n": 389,
+          "mae_delta": 1.457311750835668,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 27,
+          "inicio": "2026-09-11T22:15:00",
+          "fim": "2026-09-14T16:15:00",
+          "pico": 211.0,
+          "n": 265,
+          "mae_delta": 1.4991849865873257,
+          "best_iteration": 1000
+        }
+      ]
+    },
+    "3h": {
+      "num_boost_round_recomendado": 1000,
+      "best_iteration_mediana": 1000,
+      "best_iteration_iqr": [
+        1000,
+        1000
+      ],
+      "best_iteration_min": 1000,
+      "best_iteration_max": 1000,
+      "mae_delta_medio_loeo": 7.047290341496637,
+      "folds": [
+        {
+          "evento": 1,
+          "inicio": "2024-10-03T02:00:00",
+          "fim": "2024-10-05T06:00:00",
+          "pico": 252.0,
+          "n": 201,
+          "mae_delta": 2.0900272734488605,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 2,
+          "inicio": "2024-10-10T03:00:00",
+          "fim": "2024-10-14T16:00:00",
+          "pico": 202.0,
+          "n": 397,
+          "mae_delta": 5.2039728071356635,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 3,
+          "inicio": "2024-11-07T01:30:00",
+          "fim": "2024-11-10T02:15:00",
+          "pico": 250.0,
+          "n": 292,
+          "mae_delta": 17.814142325971577,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 4,
+          "inicio": "2024-11-20T14:00:00",
+          "fim": "2024-11-26T02:30:00",
+          "pico": 253.0,
+          "n": 463,
+          "mae_delta": 4.374848444555114,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 5,
+          "inicio": "2024-12-07T14:15:00",
+          "fim": "2024-12-13T09:00:00",
+          "pico": 158.0,
+          "n": 544,
+          "mae_delta": 7.399419791631874,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 6,
+          "inicio": "2025-01-01T03:15:00",
+          "fim": "2025-01-04T13:30:00",
+          "pico": 217.0,
+          "n": 214,
+          "mae_delta": 11.445246585858891,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 7,
+          "inicio": "2025-01-09T06:15:00",
+          "fim": "2025-01-14T23:45:00",
+          "pico": 148.0,
+          "n": 535,
+          "mae_delta": 7.6805711649324575,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 8,
+          "inicio": "2025-01-18T23:00:00",
+          "fim": "2025-01-21T09:45:00",
+          "pico": 151.0,
+          "n": 236,
+          "mae_delta": 7.969464742889361,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 9,
+          "inicio": "2025-01-29T00:15:00",
+          "fim": "2025-02-05T21:00:00",
+          "pico": 304.0,
+          "n": 754,
+          "mae_delta": 13.43694476845943,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 10,
+          "inicio": "2025-02-07T05:45:00",
+          "fim": "2025-02-10T12:00:00",
+          "pico": 188.0,
+          "n": 306,
+          "mae_delta": 4.101564255544021,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 11,
+          "inicio": "2025-02-14T04:15:00",
+          "fim": "2025-02-24T12:00:00",
+          "pico": 275.0,
+          "n": 984,
+          "mae_delta": 6.34556077166212,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 12,
+          "inicio": "2025-02-28T03:00:00",
+          "fim": "2025-03-01T18:30:00",
+          "pico": 157.0,
+          "n": 151,
+          "mae_delta": 5.50592558507727,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 13,
+          "inicio": "2025-03-26T08:15:00",
+          "fim": "2025-03-27T08:30:00",
+          "pico": 160.0,
+          "n": 98,
+          "mae_delta": 8.382419989525888,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 14,
+          "inicio": "2025-06-29T10:15:00",
+          "fim": "2025-06-29T19:45:00",
+          "pico": 211.0,
+          "n": 31,
+          "mae_delta": 17.31450154654834,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 15,
+          "inicio": "2025-08-05T19:30:00",
+          "fim": "2025-08-06T21:45:00",
+          "pico": 145.0,
+          "n": 106,
+          "mae_delta": 4.514356633508638,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 16,
+          "inicio": "2025-08-24T07:15:00",
+          "fim": "2025-08-29T15:00:00",
+          "pico": 282.0,
+          "n": 512,
+          "mae_delta": 4.101860595291862,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 17,
+          "inicio": "2025-09-06T02:15:00",
+          "fim": "2025-09-11T13:30:00",
+          "pico": 177.0,
+          "n": 502,
+          "mae_delta": 4.480789372403784,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 18,
+          "inicio": "2025-10-29T06:30:00",
+          "fim": "2025-11-02T13:45:00",
+          "pico": 312.0,
+          "n": 406,
+          "mae_delta": 6.170667292802282,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 19,
+          "inicio": "2025-11-08T00:30:00",
+          "fim": "2025-11-11T20:30:00",
+          "pico": 280.0,
+          "n": 361,
+          "mae_delta": 5.555524679609403,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 20,
+          "inicio": "2025-11-24T01:15:00",
+          "fim": "2025-11-26T22:30:00",
+          "pico": 171.0,
+          "n": 278,
+          "mae_delta": 3.7275914625033626,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 21,
+          "inicio": "2026-07-03T00:00:00",
+          "fim": "2026-07-04T14:15:00",
+          "pico": 221.0,
+          "n": 154,
+          "mae_delta": 4.414088160445293,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 22,
+          "inicio": "2026-07-12T04:15:00",
+          "fim": "2026-07-13T00:15:00",
+          "pico": 147.0,
+          "n": 81,
+          "mae_delta": 7.119330644749105,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 23,
+          "inicio": "2026-07-22T09:15:00",
+          "fim": "2026-07-24T00:15:00",
+          "pico": 215.0,
+          "n": 157,
+          "mae_delta": 9.081446877946915,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 24,
+          "inicio": "2026-07-29T10:30:00",
+          "fim": "2026-07-31T16:00:00",
+          "pico": 243.0,
+          "n": 191,
+          "mae_delta": 8.609016294530281,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 25,
+          "inicio": "2026-08-13T14:30:00",
+          "fim": "2026-08-18T02:00:00",
+          "pico": 163.0,
+          "n": 391,
+          "mae_delta": 4.6963926046205,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 26,
+          "inicio": "2026-08-31T06:30:00",
+          "fim": "2026-09-04T11:30:00",
+          "pico": 187.0,
+          "n": 393,
+          "mae_delta": 4.49231355968037,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 27,
+          "inicio": "2026-09-11T22:15:00",
+          "fim": "2026-09-14T16:15:00",
+          "pico": 211.0,
+          "n": 265,
+          "mae_delta": 4.248850989076513,
+          "best_iteration": 1000
+        }
+      ]
+    },
+    "6h": {
+      "num_boost_round_recomendado": 1000,
+      "best_iteration_mediana": 1000,
+      "best_iteration_iqr": [
+        1000,
+        1000
+      ],
+      "best_iteration_min": 1000,
+      "best_iteration_max": 1000,
+      "mae_delta_medio_loeo": 11.326672222926195,
+      "folds": [
+        {
+          "evento": 1,
+          "inicio": "2024-10-03T02:00:00",
+          "fim": "2024-10-05T06:00:00",
+          "pico": 252.0,
+          "n": 205,
+          "mae_delta": 2.960827101194402,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 2,
+          "inicio": "2024-10-10T03:00:00",
+          "fim": "2024-10-14T16:00:00",
+          "pico": 202.0,
+          "n": 397,
+          "mae_delta": 7.222759021307568,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 3,
+          "inicio": "2024-11-07T01:30:00",
+          "fim": "2024-11-10T02:15:00",
+          "pico": 250.0,
+          "n": 292,
+          "mae_delta": 25.989165353088453,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 4,
+          "inicio": "2024-11-20T14:00:00",
+          "fim": "2024-11-26T02:30:00",
+          "pico": 253.0,
+          "n": 463,
+          "mae_delta": 9.046060998597264,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 5,
+          "inicio": "2024-12-07T14:15:00",
+          "fim": "2024-12-13T09:00:00",
+          "pico": 158.0,
+          "n": 544,
+          "mae_delta": 14.260227581679624,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 6,
+          "inicio": "2025-01-01T03:15:00",
+          "fim": "2025-01-04T13:30:00",
+          "pico": 217.0,
+          "n": 202,
+          "mae_delta": 15.923811200365606,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 7,
+          "inicio": "2025-01-09T06:15:00",
+          "fim": "2025-01-14T23:45:00",
+          "pico": 148.0,
+          "n": 535,
+          "mae_delta": 7.99249627941514,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 8,
+          "inicio": "2025-01-18T23:00:00",
+          "fim": "2025-01-21T09:45:00",
+          "pico": 151.0,
+          "n": 236,
+          "mae_delta": 12.546331900132818,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 9,
+          "inicio": "2025-01-29T00:15:00",
+          "fim": "2025-02-05T21:00:00",
+          "pico": 304.0,
+          "n": 754,
+          "mae_delta": 21.632441484087163,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 10,
+          "inicio": "2025-02-07T05:45:00",
+          "fim": "2025-02-10T12:00:00",
+          "pico": 188.0,
+          "n": 306,
+          "mae_delta": 15.256493930618522,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 11,
+          "inicio": "2025-02-14T04:15:00",
+          "fim": "2025-02-24T12:00:00",
+          "pico": 275.0,
+          "n": 984,
+          "mae_delta": 11.530764138982754,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 12,
+          "inicio": "2025-02-28T03:00:00",
+          "fim": "2025-03-01T18:30:00",
+          "pico": 157.0,
+          "n": 148,
+          "mae_delta": 8.692108483343878,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 13,
+          "inicio": "2025-03-26T08:15:00",
+          "fim": "2025-03-27T08:30:00",
+          "pico": 160.0,
+          "n": 98,
+          "mae_delta": 13.692994835259778,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 14,
+          "inicio": "2025-06-29T10:15:00",
+          "fim": "2025-06-29T19:45:00",
+          "pico": 211.0,
+          "n": 19,
+          "mae_delta": 25.92969657301807,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 15,
+          "inicio": "2025-08-05T19:30:00",
+          "fim": "2025-08-06T21:45:00",
+          "pico": 145.0,
+          "n": 106,
+          "mae_delta": 8.013086101091307,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 16,
+          "inicio": "2025-08-24T07:15:00",
+          "fim": "2025-08-29T15:00:00",
+          "pico": 282.0,
+          "n": 512,
+          "mae_delta": 9.485744646826625,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 17,
+          "inicio": "2025-09-06T02:15:00",
+          "fim": "2025-09-11T13:30:00",
+          "pico": 177.0,
+          "n": 507,
+          "mae_delta": 7.253115981472169,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 18,
+          "inicio": "2025-10-29T06:30:00",
+          "fim": "2025-11-02T13:45:00",
+          "pico": 312.0,
+          "n": 406,
+          "mae_delta": 8.656001249816352,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 19,
+          "inicio": "2025-11-08T00:30:00",
+          "fim": "2025-11-11T20:30:00",
+          "pico": 280.0,
+          "n": 361,
+          "mae_delta": 8.978091653313061,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 20,
+          "inicio": "2025-11-24T01:15:00",
+          "fim": "2025-11-26T22:30:00",
+          "pico": 171.0,
+          "n": 278,
+          "mae_delta": 6.967880006499933,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 21,
+          "inicio": "2026-07-03T00:00:00",
+          "fim": "2026-07-04T14:15:00",
+          "pico": 221.0,
+          "n": 154,
+          "mae_delta": 13.10972312676595,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 22,
+          "inicio": "2026-07-12T04:15:00",
+          "fim": "2026-07-13T00:15:00",
+          "pico": 147.0,
+          "n": 81,
+          "mae_delta": 10.627337178359472,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 23,
+          "inicio": "2026-07-22T09:15:00",
+          "fim": "2026-07-24T00:15:00",
+          "pico": 215.0,
+          "n": 157,
+          "mae_delta": 9.80048831252919,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 24,
+          "inicio": "2026-07-29T10:30:00",
+          "fim": "2026-07-31T16:00:00",
+          "pico": 243.0,
+          "n": 191,
+          "mae_delta": 11.048282365268616,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 25,
+          "inicio": "2026-08-13T14:30:00",
+          "fim": "2026-08-18T02:00:00",
+          "pico": 163.0,
+          "n": 391,
+          "mae_delta": 6.148877618149974,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 26,
+          "inicio": "2026-08-31T06:30:00",
+          "fim": "2026-09-04T11:30:00",
+          "pico": 187.0,
+          "n": 389,
+          "mae_delta": 7.261563275000886,
+          "best_iteration": 1000
+        },
+        {
+          "evento": 27,
+          "inicio": "2026-09-11T22:15:00",
+          "fim": "2026-09-14T16:15:00",
+          "pico": 211.0,
+          "n": 265,
+          "mae_delta": 5.793779622822671,
+          "best_iteration": 1000
+        }
+      ]
+    }
+  }
+}
