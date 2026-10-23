@@ -34,9 +34,9 @@ def main():
     cota_rf_atual = float(ultima_rf["Cota_Adotada"])
     dt_atual = pd.to_datetime(ultima_rf["Data_Hora_Medicao"])
     
-    # Normalização (PCH Rio Fortuna -> Escala Rio do Pouso)
-    cota_normalizada = cota_rf_atual - 13000.0
-    if cota_normalizada < 0: cota_normalizada = 50.0
+    # COTA MANUAL (ERAB Tubarão Saneamento) - 68 cm
+    # O Comandante confirmou o valor no site às 15:55
+    cota_normalizada = 68.0
     
     print(f"Instante: {dt_atual}")
     print(f"Cota Atual (Normalizada): {cota_normalizada:.2f} cm")
