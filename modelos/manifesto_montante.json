@@ -15,7 +15,6 @@
         "cota_std_12h",
         "cota_max_12h",
         "cota_min_12h",
-        "vazao",
         "chuva_15m",
         "chuva_60m",
         "chuva_180m",
@@ -31,9 +30,7 @@
         "rio_fortuna_delta_1h_lag2h",
         "invernadinha_delta_1h_lag2h"
     ],
-    "n_features": 30,
-    "rmse_geral": 3.771916506075395,
-    "rmse_subida": 11.528435928409017,
-    "data_treino": "2023-12-04 10:30:00",
-    "data_teste": "2026-09-21 18:45:00"
+    "n_features": 29,
+    "rmse_geral": 5.571302610027919,
+    "rmse_subida": 12.82498582143978
 }
