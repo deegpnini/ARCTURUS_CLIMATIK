@@ -1,0 +1,23 @@
+{
+  "teste": ">=2025-07-01",
+  "validacao": "2025-01..06",
+  "treino": "<2025-01-01",
+  "resultados": {
+    "persistencia": {
+      "geral": 4.2626799584304536,
+      "subida": 16.1634711050918
+    },
+    "sem_montante": {
+      "geral": 3.0150268174914334,
+      "subida": 10.97804080016608,
+      "iteracoes": 148,
+      "n_features": 26
+    },
+    "com_montante": {
+      "geral": 3.0020576820566096,
+      "subida": 10.890924591364623,
+      "iteracoes": 190,
+      "n_features": 28
+    }
+  }
+}
