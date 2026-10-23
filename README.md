@@ -1,5 +1,23 @@
 # ARCTURUS CLIMATIK
 
+## Evolução: ARCTURUS v2 (Integração de Montante)
+**Data:** 23/10/2026
+
+Após a descontinuação da estação âncora ANA 84580000 (encerramento do contrato ANA/IGAM), o modelo foi re-treinado utilizando dados de 3 estações vivas a montante (CGH São Maurício, PCH Rio Fortuna e CGH Invernadinha). 
+
+**Descoberta Científica (Tempo de Viagem):**
+Através de um teste A/B focado em momentos de subida (delta > 5cm), descobrimos que o tempo de viagem da água a montante para a bacia do Tubarão é de **2 horas**. Modelos com lag de 6h ou 12h pioravam a previsão; o lag de 2h reduziu o erro.
+
+**Resultados do v2 (Backtest 2025-2026):**
+- **Features:** 30 (adicionadas as variações de cota de montante com lag de 2h).
+- **RMSE Geral:** 3.77 cm (ante 6.90 cm do modelo antigo sem montante).
+- **RMSE em Subidas:** 11.53 cm (foco no que realmente importa para alertas).
+- **R²:** 0.98 (o modelo explica 98% da variação local).
+
+O arquivo do modelo está salvo em `modelos/modelo_delta_1h_com_montante.txt` com o respectivo manifesto de reprodutibilidade.
+
+---
+
 **Projeto experimental de pesquisa hidrológica para Santa Catarina.**
 
 O ARCTURUS CLIMATIK investiga se dados históricos, telemetria dos rios e
