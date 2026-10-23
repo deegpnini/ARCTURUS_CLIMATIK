@@ -34,9 +34,18 @@ def main():
     cota_rf_atual = float(ultima_rf["Cota_Adotada"])
     dt_atual = pd.to_datetime(ultima_rf["Data_Hora_Medicao"])
     
-    # COTA MANUAL (ERAB Tubarão Saneamento) - 68 cm
-    # O Comandante confirmou o valor no site às 15:55
-    cota_normalizada = 68.0
+    # COTA AUTOMÁTICA (Tubarão Saneamento via Playwright)
+    import json
+    from pathlib import Path
+    caminho_json = Path(__file__).resolve().parents[2] / "tubarao_saneamento_dados.json"
+    if caminho_json.exists():
+        with open(caminho_json, "r") as f:
+            dados_tubarao = json.load(f)
+        cota_normalizada = dados_tubarao.get("cota_cm", 65.0)
+        print(f"Cota lida do Tubarão Saneamento: {cota_normalizada:.1f} cm")
+    else:
+        cota_normalizada = 65.0
+        print("⚠️ JSON da Tubarão Saneamento não encontrado. Usando fallback de 65 cm.")
     
     print(f"Instante: {dt_atual}")
     print(f"Cota Atual (Normalizada): {cota_normalizada:.2f} cm")
