@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>ARCTURUS - Mancha de Inundação (200 km²)</name>
+    <Style id="mancha">
+      <PolyStyle>
+        <color>7f0000ff</color> <!-- Vermelho transparente -->
+      </PolyStyle>
+    </Style>
+
+    <Placemark>
+      <styleUrl>#mancha</styleUrl>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>-49.16141607216471,-28.434509256257392,0 -49.16051775688061,-28.434509256257392,0 -49.16051775688061,-28.433610940973274,0 -49.16141607216471,-28.433610940973274,0 -49.16141607216471,-28.434509256257392,0</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+  </Document>
+</kml>
