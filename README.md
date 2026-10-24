@@ -234,7 +234,7 @@ Esta seção documenta os testes que foram feitos, mas que **não agregaram valo
 
 ---
 
-## Testes que não funcionaram (Honestidade Radical)
+
 
 Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
 
@@ -282,48 +282,35 @@ Esta seção documenta os testes que foram feitos, mas que **não agregaram valo
 
 ---
 
-## Testes que não funcionaram (Honestidade Radical)
+## Calibração ERAB x 84580000 (Bloqueio Atual)
 
-Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
+O modelo v8 foi treinado na régua do Rio do Pouso (84580000). O painel de produção usa a cota da ERAB (Tubarão Saneamento), que é outro ponto do rio, com outra escala.
 
-### GloFAS (Vazão Simulada do Copernicus)
-- **O que foi testado:** Adicionar a vazão simulada do GloFAS (Open-Meteo Flood API) como feature do modelo.
-- **Resultado:** Não agregou valor. No 3h, o RMSE piorou de 8.49 para 8.55. No 6h, empatou (14.43 vs 14.42), mas a performance na subida piorou (50.72 vs 51.50).
-- **Conclusão:** A cota local (e seus lags) já capturam a informação que o GloFAS tentaria adicionar. O GloFAS é uma simulação global que não tem a resolução temporal nem a precisão da cota local.
+**O problema:** Não existe período de sobreposição entre as duas séries. O cache da ANA termina em 22/09/2026. O JSON da ERAB tem um único ponto (23/10/2026, 67 cm).
 
-### LSTM e GRU (Redes Neurais)
-- **O que foi testado:** Treinar LSTM e GRU com janelas de 48 passos (12h) para prever o delta de 6h.
-- **Resultado:** O LightGBM venceu com folga. RMSE de 14.60 cm (LightGBM) vs 15.92 cm (GRU) e 16.92 cm (LSTM). O tempo de treino foi 1.385x maior para as redes.
-- **Conclusão:** Para dados tabulares com features bem construídas, o gradient boosting (LightGBM/XGBoost) é mais eficiente e preciso que as redes neurais. A literatura confirma isso para datasets com menos de 10.000 amostras.
+**Consequência:** O modelo não pode ser operado em tempo real com a cota da ERAB até que a Tubarão Saneamento forneça o histórico da ERAB (pelo menos 12 meses, incluindo o período de 18 a 26/09/2026).
 
-### Invernadinha (Estação de Montante)
-- **O que foi testado:** Usar a CGH Invernadinha (70110000) como feature de montante.
-- **Resultado:** A estação é da Bacia do Uruguai (prefixo 7x), não da Bacia do Tubarão (prefixo 84). A correlação com o Rio do Pouso era espúria.
-- **Conclusão:** Removida do modelo. A chuva da bacia (Open-Meteo) carrega a informação que a Invernadinha deveria fornecer.
-
-### CEMADEN (Pluviômetros Densos)
-- **O que foi testado:** Coletar dados de pluviômetros do CEMADEN via API.
-- **Resultado:** O IP da API (`150.163.255.240`) está fora do ar. O fallback para Open-Meteo foi implementado.
-- **Conclusão:** O CEMADEN é uma fonte instável. O HydroBR (pacote R) é a rota recomendada para o futuro.
+**Ação:** Pedido formal enviado à Tubarão Saneamento. Enquanto isso, o painel deve exibir o rótulo **"EXPERIMENTAL — ERAB NÃO CALIBRADA"** e bloquear a previsão se o dado tiver mais de 45 minutos.
 
 ---
 
-## Campeonato de Modelos (1 passo à frente = 15 min)
+---
 
-| Modelo | RMSE (cm) | Tempo (s) |
-| :--- | :--- | :--- |
-| **LightGBM** | **0.09** | 0.3 |
-| XGBoost | 0.38 | 0.2 |
-| LSTM | 2.00 | 179.5 |
-| GRU | 2.18 | 279.7 |
+## Limitações Conhecidas
 
-## Campeonato de Modelos (6h à frente)
+### Julho/2024 (Evento Perdido)
+O evento de julho/2024 (cota máxima diária de 335 cm) está presente na série longa da ANA (1939-2026), mas **não está no cache de telemetria de 15 min**. A API da ANA não retornou os dados desse período, e o `build_dataset.py` não pôde incluí-lo no dataset de treino.
 
-| Modelo | RMSE (cm) | Tempo (s) |
-| :--- | :--- | :--- |
-| **LightGBM** | **14.60** | 0.2 |
-| XGBoost | 15.26 | 0.2 |
-| GRU | 15.92 | 277.1 |
-| LSTM | 16.92 | 148.7 |
+**Consequência:** O modelo de 15 min nunca viu o maior evento do período 2023-2026. Ele foi treinado em um período calmo (cota máxima de 253 cm) e testado em um período com eventos extremos (cota máxima de 312 cm), mas sem o evento de 335 cm de julho/2024.
 
-**Veredito:** O LightGBM é o modelo de produção. As redes neurais (LSTM/GRU) foram lentas e imprecisas para este dataset.
+**Isso é uma limitação da fonte de dados, não do modelo.**
+
+### Resolução Temporal da Série Longa
+A série longa da ANA (1939-2026) é **diária**, não horária. Ela é útil para contar quantos eventos extremos existem (182 eventos com cota > 300 cm), mas não para treinar o modelo de previsão de 15 min.
+
+### Calibração ERAB (Bloqueio Atual)
+O modelo v8 foi treinado na régua do Rio do Pouso (84580000). O painel de produção usa a cota da ERAB (Tubarão Saneamento). Não existe período de sobreposição entre as duas séries.
+
+**Ação:** Pedido formal enviado à Tubarão Saneamento. Enquanto isso, o painel deve exibir o rótulo **"EXPERIMENTAL — ERAB NÃO CALIBRADA"** e bloquear a previsão se o dado tiver mais de 45 minutos.
+
+---
