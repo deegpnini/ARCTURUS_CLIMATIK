@@ -1,0 +1,8 @@
+{
+    "openmeteo_48h_mm": 56.9,
+    "ecmwf_48h_mm": 8.54,
+    "media_48h_mm": 32.72,
+    "pior_caso_48h_mm": 56.9,
+    "diferenca_mm": 48.36,
+    "incerteza_alta": true
+}

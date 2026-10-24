@@ -222,7 +222,10 @@ with col2:
     st.subheader("🤖 2. Previsão e Alerta")
     if st.button("🔮 Rodar Classificador de Cheia", use_container_width=True, type="primary"):
         with st.spinner("Simulando probabilidade..."):
-            script = BASE / "src" / "modelo" / "simular_previsao_chuva.py"
+            script_comp = BASE / "src" / "relatorios" / "comparar_fontes_chuva.py"
+            script_sim = BASE / "src" / "modelo" / "simular_ensemble.py"
+            subprocess.run(["python", str(script_comp)], capture_output=True, text=True)
+            subprocess.run(["python", str(script_sim)], capture_output=True, text=True)
             if script.exists():
                 result = subprocess.run(["python", str(script)], capture_output=True, text=True)
                 st.text(result.stdout)
