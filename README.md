@@ -183,3 +183,147 @@ ser verificados antes da integração ao conjunto de treinamento.
 ## Licença
 
 Consulte o arquivo `LICENSE`.
+
+---
+
+## Testes que não funcionaram (Honestidade Radical)
+
+Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
+
+### GloFAS (Vazão Simulada do Copernicus)
+- **O que foi testado:** Adicionar a vazão simulada do GloFAS (Open-Meteo Flood API) como feature do modelo.
+- **Resultado:** Não agregou valor. No 3h, o RMSE piorou de 8.49 para 8.55. No 6h, empatou (14.43 vs 14.42), mas a performance na subida piorou (50.72 vs 51.50).
+- **Conclusão:** A cota local (e seus lags) já capturam a informação que o GloFAS tentaria adicionar. O GloFAS é uma simulação global que não tem a resolução temporal nem a precisão da cota local.
+
+### LSTM e GRU (Redes Neurais)
+- **O que foi testado:** Treinar LSTM e GRU com janelas de 48 passos (12h) para prever o delta de 6h.
+- **Resultado:** O LightGBM venceu com folga. RMSE de 14.60 cm (LightGBM) vs 15.92 cm (GRU) e 16.92 cm (LSTM). O tempo de treino foi 1.385x maior para as redes.
+- **Conclusão:** Para dados tabulares com features bem construídas, o gradient boosting (LightGBM/XGBoost) é mais eficiente e preciso que as redes neurais. A literatura confirma isso para datasets com menos de 10.000 amostras.
+
+### Invernadinha (Estação de Montante)
+- **O que foi testado:** Usar a CGH Invernadinha (70110000) como feature de montante.
+- **Resultado:** A estação é da Bacia do Uruguai (prefixo 7x), não da Bacia do Tubarão (prefixo 84). A correlação com o Rio do Pouso era espúria.
+- **Conclusão:** Removida do modelo. A chuva da bacia (Open-Meteo) carrega a informação que a Invernadinha deveria fornecer.
+
+### CEMADEN (Pluviômetros Densos)
+- **O que foi testado:** Coletar dados de pluviômetros do CEMADEN via API.
+- **Resultado:** O IP da API (`150.163.255.240`) está fora do ar. O fallback para Open-Meteo foi implementado.
+- **Conclusão:** O CEMADEN é uma fonte instável. O HydroBR (pacote R) é a rota recomendada para o futuro.
+
+---
+
+## Campeonato de Modelos (1 passo à frente = 15 min)
+
+| Modelo | RMSE (cm) | Tempo (s) |
+| :--- | :--- | :--- |
+| **LightGBM** | **0.09** | 0.3 |
+| XGBoost | 0.38 | 0.2 |
+| LSTM | 2.00 | 179.5 |
+| GRU | 2.18 | 279.7 |
+
+## Campeonato de Modelos (6h à frente)
+
+| Modelo | RMSE (cm) | Tempo (s) |
+| :--- | :--- | :--- |
+| **LightGBM** | **14.60** | 0.2 |
+| XGBoost | 15.26 | 0.2 |
+| GRU | 15.92 | 277.1 |
+| LSTM | 16.92 | 148.7 |
+
+**Veredito:** O LightGBM é o modelo de produção. As redes neurais (LSTM/GRU) foram lentas e imprecisas para este dataset.
+
+---
+
+## Testes que não funcionaram (Honestidade Radical)
+
+Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
+
+### GloFAS (Vazão Simulada do Copernicus)
+- **O que foi testado:** Adicionar a vazão simulada do GloFAS (Open-Meteo Flood API) como feature do modelo.
+- **Resultado:** Não agregou valor. No 3h, o RMSE piorou de 8.49 para 8.55. No 6h, empatou (14.43 vs 14.42), mas a performance na subida piorou (50.72 vs 51.50).
+- **Conclusão:** A cota local (e seus lags) já capturam a informação que o GloFAS tentaria adicionar. O GloFAS é uma simulação global que não tem a resolução temporal nem a precisão da cota local.
+
+### LSTM e GRU (Redes Neurais)
+- **O que foi testado:** Treinar LSTM e GRU com janelas de 48 passos (12h) para prever o delta de 6h.
+- **Resultado:** O LightGBM venceu com folga. RMSE de 14.60 cm (LightGBM) vs 15.92 cm (GRU) e 16.92 cm (LSTM). O tempo de treino foi 1.385x maior para as redes.
+- **Conclusão:** Para dados tabulares com features bem construídas, o gradient boosting (LightGBM/XGBoost) é mais eficiente e preciso que as redes neurais. A literatura confirma isso para datasets com menos de 10.000 amostras.
+
+### Invernadinha (Estação de Montante)
+- **O que foi testado:** Usar a CGH Invernadinha (70110000) como feature de montante.
+- **Resultado:** A estação é da Bacia do Uruguai (prefixo 7x), não da Bacia do Tubarão (prefixo 84). A correlação com o Rio do Pouso era espúria.
+- **Conclusão:** Removida do modelo. A chuva da bacia (Open-Meteo) carrega a informação que a Invernadinha deveria fornecer.
+
+### CEMADEN (Pluviômetros Densos)
+- **O que foi testado:** Coletar dados de pluviômetros do CEMADEN via API.
+- **Resultado:** O IP da API (`150.163.255.240`) está fora do ar. O fallback para Open-Meteo foi implementado.
+- **Conclusão:** O CEMADEN é uma fonte instável. O HydroBR (pacote R) é a rota recomendada para o futuro.
+
+---
+
+## Campeonato de Modelos (1 passo à frente = 15 min)
+
+| Modelo | RMSE (cm) | Tempo (s) |
+| :--- | :--- | :--- |
+| **LightGBM** | **0.09** | 0.3 |
+| XGBoost | 0.38 | 0.2 |
+| LSTM | 2.00 | 179.5 |
+| GRU | 2.18 | 279.7 |
+
+## Campeonato de Modelos (6h à frente)
+
+| Modelo | RMSE (cm) | Tempo (s) |
+| :--- | :--- | :--- |
+| **LightGBM** | **14.60** | 0.2 |
+| XGBoost | 15.26 | 0.2 |
+| GRU | 15.92 | 277.1 |
+| LSTM | 16.92 | 148.7 |
+
+**Veredito:** O LightGBM é o modelo de produção. As redes neurais (LSTM/GRU) foram lentas e imprecisas para este dataset.
+
+---
+
+## Testes que não funcionaram (Honestidade Radical)
+
+Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
+
+### GloFAS (Vazão Simulada do Copernicus)
+- **O que foi testado:** Adicionar a vazão simulada do GloFAS (Open-Meteo Flood API) como feature do modelo.
+- **Resultado:** Não agregou valor. No 3h, o RMSE piorou de 8.49 para 8.55. No 6h, empatou (14.43 vs 14.42), mas a performance na subida piorou (50.72 vs 51.50).
+- **Conclusão:** A cota local (e seus lags) já capturam a informação que o GloFAS tentaria adicionar. O GloFAS é uma simulação global que não tem a resolução temporal nem a precisão da cota local.
+
+### LSTM e GRU (Redes Neurais)
+- **O que foi testado:** Treinar LSTM e GRU com janelas de 48 passos (12h) para prever o delta de 6h.
+- **Resultado:** O LightGBM venceu com folga. RMSE de 14.60 cm (LightGBM) vs 15.92 cm (GRU) e 16.92 cm (LSTM). O tempo de treino foi 1.385x maior para as redes.
+- **Conclusão:** Para dados tabulares com features bem construídas, o gradient boosting (LightGBM/XGBoost) é mais eficiente e preciso que as redes neurais. A literatura confirma isso para datasets com menos de 10.000 amostras.
+
+### Invernadinha (Estação de Montante)
+- **O que foi testado:** Usar a CGH Invernadinha (70110000) como feature de montante.
+- **Resultado:** A estação é da Bacia do Uruguai (prefixo 7x), não da Bacia do Tubarão (prefixo 84). A correlação com o Rio do Pouso era espúria.
+- **Conclusão:** Removida do modelo. A chuva da bacia (Open-Meteo) carrega a informação que a Invernadinha deveria fornecer.
+
+### CEMADEN (Pluviômetros Densos)
+- **O que foi testado:** Coletar dados de pluviômetros do CEMADEN via API.
+- **Resultado:** O IP da API (`150.163.255.240`) está fora do ar. O fallback para Open-Meteo foi implementado.
+- **Conclusão:** O CEMADEN é uma fonte instável. O HydroBR (pacote R) é a rota recomendada para o futuro.
+
+---
+
+## Campeonato de Modelos (1 passo à frente = 15 min)
+
+| Modelo | RMSE (cm) | Tempo (s) |
+| :--- | :--- | :--- |
+| **LightGBM** | **0.09** | 0.3 |
+| XGBoost | 0.38 | 0.2 |
+| LSTM | 2.00 | 179.5 |
+| GRU | 2.18 | 279.7 |
+
+## Campeonato de Modelos (6h à frente)
+
+| Modelo | RMSE (cm) | Tempo (s) |
+| :--- | :--- | :--- |
+| **LightGBM** | **14.60** | 0.2 |
+| XGBoost | 15.26 | 0.2 |
+| GRU | 15.92 | 277.1 |
+| LSTM | 16.92 | 148.7 |
+
+**Veredito:** O LightGBM é o modelo de produção. As redes neurais (LSTM/GRU) foram lentas e imprecisas para este dataset.
