@@ -1,8 +1,0 @@
-{
-    "cota_atual_cm": 65.0,
-    "prob_ecmwf": 0.02,
-    "prob_media": 0.0,
-    "prob_pior_caso": 0.01,
-    "delta_prob_pct": 0.01,
-    "incerteza_critica": true
-}
