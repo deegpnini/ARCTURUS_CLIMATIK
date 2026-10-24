@@ -143,3 +143,11 @@ __pycache__/
 
 # Projetos nao relacionados (Titanic, Richter, El Nino, Taquari/RS)
 core/
+
+# --- RUNTIME DO ARCTURUS (NÃO SUBIR) ---
+data/*.grib
+data/*.idx
+data/regime_atual.json
+data/simulacao_probabilidade_atual.json
+tubarao_saneamento_dados.json
+for
