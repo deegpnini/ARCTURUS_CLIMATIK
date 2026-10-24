@@ -314,3 +314,25 @@ O modelo v8 foi treinado na régua do Rio do Pouso (84580000). O painel de produ
 **Ação:** Pedido formal enviado à Tubarão Saneamento. Enquanto isso, o painel deve exibir o rótulo **"EXPERIMENTAL — ERAB NÃO CALIBRADA"** e bloquear a previsão se o dado tiver mais de 45 minutos.
 
 ---
+
+---
+
+## Validação de Dados (24/10/2026)
+
+### Queda da Cota (67 cm → 26 cm)
+No dia 23/10/2026, a cota da ERAB (Tubarão Saneamento) estava em 67 cm. No dia 24/10/2026, às 12:15, caiu para 26 cm. **Isso não é erro do Playwright.** O rio está em recessão (período de seca), e a cota de 26 cm é consistente com o histórico da bacia (cota mínima de 24 cm em dias secos).
+
+### Interpretação do Modelo (0.35% de Probabilidade)
+Com a cota em 26 cm e a chuva prevista de 56.9 mm em 48h, o classificador de cheia calculou uma probabilidade de **0.35%** de o rio atingir 300 cm em 2 dias. Isso é consistente com a física da bacia: o rio está tão baixo que, mesmo com chuva significativa, a água não sobe 274 cm em 48h.
+
+### Fontes de Dados e Confiabilidade
+- **Cota:** Tubarão Saneamento (ERAB) via Playwright. Dado validado (26 cm em 24/10 às 12:15).
+- **Chuva Prevista:** Open-Meteo Forecast. 56.9 mm em 48h.
+- **Classificador de Cheia:** Treinado com 87 anos de dados (1939-2026) e 182 eventos extremos. AUC de 0.869.
+
+### Limitações Conhecidas
+- **Calibração ERAB x 84580000:** O modelo foi treinado na régua do Rio do Pouso (84580000), mas opera com a cota da ERAB. A calibração está pendente (pedido enviado à Tubarão Saneamento).
+- **Evento de Julho/2024:** O evento de 335 cm (média diária) está na série longa, mas não no cache de 15 min. O modelo não pôde aprender com ele.
+- **Eventos Extremos:** O modelo tem maior incerteza em subidas muito rápidas (RMSE de ~12 cm na subida).
+
+---
