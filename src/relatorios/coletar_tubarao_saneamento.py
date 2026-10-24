@@ -1,3 +1,4 @@
+from src.relatorios.monitor_continuo import salvar_no_historico
 from playwright.sync_api import sync_playwright
 import json
 from datetime import datetime
@@ -38,6 +39,9 @@ def coletar_cota():
             print("⚠️ Elemento .chartjs-value não encontrado. O site pode ter mudado.")
         
         browser.close()
+
+
+
 
 if __name__ == "__main__":
     coletar_cota()
