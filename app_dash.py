@@ -71,32 +71,43 @@ def ler_dados():
     return cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color
 
 def gerar_grafico_cota():
-    if not FILE_HISTORICO.exists():
-        return go.Figure()
+    import pandas as pd
+    import plotly.graph_objects as go
+    from datetime import datetime, timedelta
     
     try:
-        df = pd.read_csv(FILE_HISTORICO)
-        df = df.tail(20)  # Últimas 20 leituras
+        df = pd.read_csv("resultados/historico_previsoes.csv")
+        df['timestamp_execucao'] = pd.to_datetime(df['timestamp_execucao'])
+        agora = datetime.now()
+        
         fig = go.Figure()
         fig.add_trace(go.Scatter(
-            x=df["timestamp_execucao"], 
-            y=df["cota_atual_cm"],
-            mode="lines+markers",
-            name="Cota (cm)",
-            line=dict(color="#00bfff", width=3)
+            x=df['timestamp_execucao'], y=df['cota_atual_cm'],
+            mode='lines+markers', name='Cota (cm)',
+            line=dict(color='#00d2ff', width=3), marker=dict(size=6),
+            hovertemplate='<b>%{x|%d/%m/%Y %H:%M}</b><br>Cota: %{y:.1f} cm<extra></extra>'
         ))
+        
+        # WORKAROUND: add_shape + add_annotation separados (evita bug do Plotly)
+        fig.add_shape(type="line", x0=agora, x1=agora, y0=0, y1=1, yref="paper",
+                      line=dict(color="#ff6b6b", width=2, dash="dot"))
+        fig.add_annotation(x=agora, y=1, yref="paper", text=f"Agora: {agora.strftime('%d/%m/%Y %H:%M:%S')}",
+                           showarrow=False, xanchor="left", yanchor="bottom",
+                           font=dict(size=10, color="#ff6b6b"))
+
         fig.update_layout(
-            template="plotly_dark",
-            paper_bgcolor="#000",
-            plot_bgcolor="#000",
-            margin=dict(l=20, r=20, t=20, b=20),
-            height=200,
-            xaxis_title="Tempo",
-            yaxis_title="Cota (cm)"
+            title="Cota do Rio Tubarão (Tempo Real)", xaxis_title="Data / Hora", yaxis_title="Cota (cm)",
+            template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=40, r=20, t=60, b=40),
+            xaxis=dict(range=[df['timestamp_execucao'].min(), agora + timedelta(minutes=10)],
+                       tickformat="%d/%m<br>%H:%M", tickangle=-45, tickfont=dict(size=9))
         )
         return fig
-    except:
-        return go.Figure()
+    except Exception as e:
+        fig = go.Figure()
+        fig.add_annotation(text=f"Erro: {e}", showarrow=False, font=dict(color="red"))
+        fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        return fig
 
 def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#111"):
     return dbc.Card(
@@ -110,6 +121,11 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
     )
 
 app.layout = dbc.Container([
+    dcc.Interval(
+        id='intervalo-atualizacao',
+        interval=30*1000, # Atualiza a cada 30 segundos
+        n_intervals=0
+    ),
     dbc.Row([
         dbc.Col([
             html.Img(src="/assets/logo_arcturus.jpg", style={"width": "150px"}),
@@ -152,27 +168,79 @@ app.layout = dbc.Container([
      Output("prob-val", "children"), Output("prob-sub", "children"),
      Output("regime-val", "children"), Output("regime-val", "className"), Output("regime-sub", "children"),
      Output("status-msg", "children"), Output("grafico-cota", "figure")],
-    [Input("btn-atualizar", "n_clicks")]
+    [Input("btn-atualizar", "n_clicks"),
+     Input("intervalo-atualizacao", "n_intervals")]
 )
-def atualizar_painel(n_clicks):
-    msg = "Aguardando comando..."
+def atualizar_painel(n_clicks, n_intervals):
+    # O Dash apenas LÊ os dados atualizados pelo cron. Não roda mais subprocessos em loop.
+    msg = f"🔄 Atualizado (Ciclo {n_intervals})" if n_intervals else "✅ Painel carregado."
     
-    if n_clicks and n_clicks > 0:
-        try:
-            subprocess.run(["python3", "src/relatorios/comparar_fontes_chuva.py"], check=True)
-            subprocess.run(["python3", "src/modelo/simular_ensemble.py"], check=True)
-            msg = "✅ Pipeline executado. Dados atualizados."
-        except subprocess.CalledProcessError as e:
-            msg = f"❌ Erro na execução: {e}"
+    try:
+        import json
+        from datetime import datetime
+        with open("data/regime_atual.json", "r") as f:
+            regime_data = json.load(f)
+            hora_raw = regime_data.get("atualizado", "Desconhecida")
+            hora_dt = datetime.fromisoformat(hora_raw)
+            hora_formatada = hora_dt.strftime("%H:%M:%S")
+    except Exception:
+        hora_formatada = "Desconhecida"
 
     cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color = ler_dados()
     
+    cota_sub = f"Última leitura: {hora_formatada}"
     regime_class = f"card-title {regime_color}"
-    cota_sub = "Sensor Online"
-    
     fig = gerar_grafico_cota()
+
+    # --- MOTOR DE INTELIGÊNCIA (INSIGHTS) ---
+    try:
+        import pandas as pd
+        df = pd.read_csv("resultados/historico_previsoes.csv")
+        if len(df) >= 2:
+            cota_atual = df.iloc[-1]['cota_atual_cm']
+            cota_anterior = df.iloc[-2]['cota_atual_cm']
+            variacao = cota_atual - cota_anterior
+            
+            # Lê o JSON de chuva
+            import json
+            with open("data/chuva_ensemble_consolidada.json", "r") as f:
+                chuva = json.load(f)
+                chuva_pior = chuva.get("pior_caso_48h_mm", 0)
+                
+            if variacao > 2:
+                direcao = f"subiu {variacao:.1f} cm"
+                causa = f"provavelmente influenciado pela chuva prevista de {chuva_pior} mm"
+            elif variacao < -2:
+                direcao = f"baixou {abs(variacao):.1f} cm"
+                causa = "devido à estiagem nas cabeceiras"
+            else:
+                direcao = "estabilizou"
+                causa = "mantendo o nível atual"
+                
+            msg = f"📊 O rio {direcao} desde a última leitura, {causa}. Tendência atual: {regime_val}."
+        else:
+            msg = "Aguardando dados suficientes para gerar insights."
+    except Exception as e:
+        msg = f"Painel carregado. (Insight indisponível: {e})"
+    # ----------------------------------------
 
     return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig
 
+
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8050)
+    import threading
+    import time
+    import os
+    import subprocess
+
+    def abrir_chrome():
+        # Espera o Dash carregar completamente (3.5 segundos é o tempo médio do Flask subir)
+        time.sleep(3.5)
+        # Tenta abrir usando os comandos do WSL (explorer ou wslview)
+        os.system("explorer.exe 'http://localhost:8050' 2>/dev/null || wslview 'http://localhost:8050' 2>/dev/null &")
+
+    # Inicia a thread que abre o navegador em paralelo
+    threading.Thread(target=abrir_chrome, daemon=True).start()
+
+    # Inicia o servidor Dash (use_reloader=False impede que ele abra duas abas e quebre a thread)
+    app.run(debug=False, use_reloader=False, host="0.0.0.0", port=8050)
