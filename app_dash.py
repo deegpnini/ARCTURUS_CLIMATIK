@@ -48,9 +48,8 @@ def ler_dados():
         try:
             with open(FILE_SIMULACAO, "r") as f:
                 sim = json.load(f)
-                prob = sim.get('prob_pior_caso', 0)
-                prob_val = f"{prob:.2f}%"
-                prob_sub = "Seguro" if prob < 20 else "Risco Elevado"
+                prob_val = 'INDISPONÍVEL'
+                prob_sub = 'Estimativa em revisão. Use Defesa Civil / Epagri-Ciram / INMET'
         except: pass
 
     if FILE_REGIME.exists():
