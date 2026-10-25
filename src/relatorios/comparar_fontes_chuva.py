@@ -1,7 +1,15 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import json
+from src.relatorios.log_incidentes import registrar
 
 BASE = Path.cwd()
 DATA_DIR = BASE / "data"
@@ -49,8 +57,19 @@ media_chuva = (total_openmeteo + total_ecmwf) / 2.0
 pior_caso = max(total_openmeteo, total_ecmwf)
 diferenca_abs = abs(total_openmeteo - total_ecmwf)
 
+# --- ÍNDICE DE CONFIANÇA (IDEIA DO ENGENHEIRO) ---
+if diferenca_abs <= 15:
+    confianca = "ALTA"
+elif diferenca_abs <= 35:
+    confianca = "MÉDIA"
+else:
+    confianca = "BAIXA"
+print(f"📊 Índice de Confiança: {confianca} (Δ = {diferenca_abs:.1f} mm)")
+if confianca == "BAIXA":
+    registrar("DIVERGENCIA_MODELOS", {"delta_mm": round(diferenca_abs, 1), "confianca": confianca})
+
 # Limiar de incerteza crítica: divergência superior a 20 mm
-LIMIAR_INCERTEZA = 20.0
+LIMIAR_INCERTEZA = 35.0  # Alinhado com o limiar de confiança BAIXA
 incerteza_alta = diferenca_abs > LIMIAR_INCERTEZA
 
 print("\n" + "="*60)
@@ -76,7 +95,9 @@ payload = {
     "media_48h_mm": round(media_chuva, 2),
     "pior_caso_48h_mm": round(pior_caso, 2),
     "diferenca_mm": round(diferenca_abs, 2),
-    "incerteza_alta": bool(incerteza_alta)
+    "incerteza_alta": bool(incerteza_alta),
+    "indice_confianca": confianca,
+    "confianca_score": int(max(0, 100 - (diferenca_abs * 2)))  # Score de 0 a 100
 }
 
 with open(OUT_JSON, "w", encoding="utf-8") as f:

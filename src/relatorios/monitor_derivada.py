@@ -37,6 +37,35 @@ def calcular_derivada():
         return
     
     vz = (cota_atual - cota_anterior) / delta_t_horas
+
+    # --- ACELERAÇÃO HIDROLÓGICA (Az) ---
+    # Az = (Vz_atual - Vz_anterior) / delta_t_horas
+    # Precisa de 3 pontos para calcular a aceleração.
+    try:
+        if len(df) >= 3:
+            cota_2_atras = float(df.iloc[-3]["cota_atual_cm"])
+            ts_2_atras = pd.to_datetime(df.iloc[-3]["timestamp_execucao"])
+            delta_t_2 = (pd.to_datetime(ultima["timestamp_execucao"]) - ts_2_atras).total_seconds() / 3600
+            if delta_t_2 > 0:
+                vz_anterior = (cota_anterior - cota_2_atras) / delta_t_2
+                az = (vz - vz_anterior) / delta_t_horas
+            else:
+                az = 0.0
+        else:
+            az = 0.0
+    except Exception:
+        az = 0.0
+
+    # --- TEMPO ATÉ O LIMIAR (IDEIA 2 DO ENGENHEIRO) ---
+    # Se o rio está subindo (vz > 0), calcula o tempo estimado para 200 e 300 cm.
+    tempo_200 = None
+    tempo_300 = None
+    if vz > 0:
+        if cota_atual < 200:
+            tempo_200 = (200 - cota_atual) / vz
+        if cota_atual < 300:
+            tempo_300 = (300 - cota_atual) / vz
+
     
     # Ler a incerteza do ensemble (se existir)
     incerteza_alta = False
@@ -71,6 +100,9 @@ def calcular_derivada():
         json.dump({
             "regime": regime,
             "delta_60m": vz,
+            "aceleracao_az": round(az, 2),
+            "tempo_para_200h": round(tempo_200, 1) if tempo_200 else None,
+            "tempo_para_300h": round(tempo_300, 1) if tempo_300 else None,
             "motivo": motivo,
             "atualizado": datetime.now().isoformat()
         }, f, indent=2)

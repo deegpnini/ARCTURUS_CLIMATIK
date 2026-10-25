@@ -21,6 +21,8 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG], title="ARCTU
 
 def ler_dados():
     cota_val = "-- cm"
+    health_status = "⚪ Health Check indisponível"
+    health_color = "text-muted"
     chuva_val = "-- mm"
     chuva_sub = "Aguardando dados..."
     prob_val = "-- %"
@@ -52,6 +54,20 @@ def ler_dados():
                 prob_sub = 'Estimativa em revisão. Use Defesa Civil / Epagri-Ciram / INMET'
         except: pass
 
+    # --- LEITURA DO HEALTH CHECK ---
+    try:
+        with open("data/health_check.json", "r") as f:
+            health = json.load(f)
+        if (health.get("sensor_erab", {}).get("status", "").startswith("🟢") and
+            health.get("pipeline_regime", {}).get("status", "").startswith("🟢")):
+            health_status = "🟢 Todos os sistemas operacionais"
+            health_color = "text-success"
+        else:
+            health_status = "🟡 Atenção ao sistema"
+            health_color = "text-warning"
+    except Exception:
+        pass
+
     if FILE_REGIME.exists():
         try:
             with open(FILE_REGIME, "r") as f:
@@ -61,13 +77,32 @@ def ler_dados():
                 regime_val = status
                 sinal = "+" if vz > 0 else ""
                 regime_sub = f"Vz: {sinal}{vz:.1f} cm/h"
+
+                az_val = reg.get("aceleracao_az", 0.0)
+                if az_val > 5:
+                    regime_sub += f" | Az = +{az_val:.1f} cm/h² (acelerando)"
+                elif az_val < -5:
+                    regime_sub += f" | Az = {az_val:.1f} cm/h² (desacelerando)"
+                else:
+                    regime_sub += f" | Az = {az_val:.1f} cm/h² (estável)"
+                
+                # --- TEMPO ATÉ O LIMIAR ---
+                t200 = reg.get("tempo_para_200h")
+                t300 = reg.get("tempo_para_300h")
+                if t200 or t300:
+                    tempos = []
+                    if t200: tempos.append(f"200cm em {t200:.1f}h")
+                    if t300: tempos.append(f"300cm em {t300:.1f}h")
+                    regime_sub += f" | Est: {' / '.join(tempos)}"
+                else:
+                    regime_sub += " | Est: rio estável"
                 
                 if status == "NORMAL": regime_color = "text-success"
                 elif status == "ATENCAO": regime_color = "text-warning"
                 else: regime_color = "text-danger"
         except: pass
 
-    return cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color
+    return cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color
 
 def gerar_grafico_cota():
     import pandas as pd
@@ -78,6 +113,9 @@ def gerar_grafico_cota():
         df = pd.read_csv("resultados/historico_previsoes.csv")
         df['timestamp_execucao'] = pd.to_datetime(df['timestamp_execucao'])
         agora = datetime.now()
+        
+        # FILTRO: mostra apenas os últimos 7 dias (evita picos antigos)
+        df = df[df['timestamp_execucao'] >= (agora - timedelta(days=7))]
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
@@ -139,6 +177,7 @@ app.layout = dbc.Container([
                 dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
                 dbc.Col(criar_card("Probabilidade de Cheia", "prob-val", "prob-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
+                dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
             ], className="mb-4"),
             
             dbc.Row([
@@ -166,7 +205,8 @@ app.layout = dbc.Container([
      Output("chuva-val", "children"), Output("chuva-sub", "children"),
      Output("prob-val", "children"), Output("prob-sub", "children"),
      Output("regime-val", "children"), Output("regime-val", "className"), Output("regime-sub", "children"),
-     Output("status-msg", "children"), Output("grafico-cota", "figure")],
+     Output("status-msg", "children"), Output("grafico-cota", "figure"),
+     Output("health-val", "children"), Output("health-sub", "children"), Output("health-val", "className")],
     [Input("btn-atualizar", "n_clicks"),
      Input("intervalo-atualizacao", "n_intervals")]
 )
@@ -185,7 +225,7 @@ def atualizar_painel(n_clicks, n_intervals):
     except Exception:
         hora_formatada = "Desconhecida"
 
-    cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color = ler_dados()
+    cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color = ler_dados()
     
     cota_sub = f"Última leitura: {hora_formatada}"
     regime_class = f"card-title {regime_color}"
@@ -223,7 +263,7 @@ def atualizar_painel(n_clicks, n_intervals):
         msg = f"Painel carregado. (Insight indisponível: {e})"
     # ----------------------------------------
 
-    return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig
+    return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color
 
 
 if __name__ == "__main__":
