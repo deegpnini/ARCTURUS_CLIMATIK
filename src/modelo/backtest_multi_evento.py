@@ -1,3 +1,5 @@
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 """Porte mecanico da cel 65 do CLIMATIK5.ipynb. Corpo original preservado;
 so os caminhos mudaram (data/ entradas, resultados/ saidas).
 Rode da raiz: python -m src.modelo.backtest_multi_evento"""
@@ -110,6 +112,10 @@ for h in ['1h', '3h', '6h']:
         pred_delta = model_delta.predict(X_te)
         pred_delta_abs = X_te[:, idx_cota].astype(float) + pred_delta
         mae_delta = mae(y_abs_te, pred_delta_abs)
+        # --- METRICAS M1S13 (SENAI) ---
+        import numpy as np
+        rmse_delta = np.sqrt(np.mean((y_abs_te - pred_delta_abs)**2))
+        r2_delta = r2_score(y_abs_te, pred_delta_abs)
 
         # Marca quem ganha
         ganhador = "delta" if mae_delta < mae_abs else ("abs" if mae_abs < mae_delta else "empate")
@@ -117,7 +123,7 @@ for h in ['1h', '3h', '6h']:
             ganhador = "persist"
 
         label = f"{ev['inicio'][:10]} ({i+1})"
-        print(f"{label:12s} | {int(m_test.sum()):5d} | {ev['pico']:5.0f} | {mae_pers:9.2f} | {mae_abs:9.2f} | {mae_delta:10.2f} | {ganhador}")
+        print(f"{label:12s} | {int(m_test.sum()):5d} | {ev['pico']:5.0f} | {mae_pers:9.2f} | {mae_abs:9.2f} | {mae_delta:10.2f} | {rmse_delta:10.2f} | {r2_delta:6.3f} | {ganhador}")
 
         resultados.append({
             'h': h,
@@ -128,6 +134,8 @@ for h in ['1h', '3h', '6h']:
             'mae_pers': mae_pers,
             'mae_abs': mae_abs,
             'mae_delta': mae_delta,
+            'rmse_delta': rmse_delta,
+            'r2_delta': r2_delta,
             'ganhador': ganhador,
         })
 

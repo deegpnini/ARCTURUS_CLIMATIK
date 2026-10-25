@@ -1,0 +1,39 @@
+{
+  "features": [
+    "cota",
+    "d1",
+    "d3",
+    "max3",
+    "sin",
+    "cos",
+    "chuva_1d",
+    "chuva_2d",
+    "chuva_3d",
+    "chuva_5d",
+    "chuva_10d",
+    "chuva_30d",
+    "chuva_max_ponto_2d"
+  ],
+  "limiar_cheia_cm_media_diaria": 300.0,
+  "limiares_por_orcamento_ano": {
+    "2": 0.1760181418023005,
+    "5": 0.09024389868713129,
+    "10": 0.056156174148512754,
+    "20": 0.03142369017141961
+  },
+  "iteracoes": [
+    97,
+    72,
+    34
+  ],
+  "treino": "<2000",
+  "validacao": "2000-2009",
+  "teste": ">=2010",
+  "modelos": [
+    "classificador_v2_seed0.txt",
+    "classificador_v2_seed1.txt",
+    "classificador_v2_seed2.txt"
+  ],
+  "uso": "média das 3 sementes; limiar vale só para esta média",
+  "gerado_em": "2026-10-25"
+}
