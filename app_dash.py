@@ -104,6 +104,65 @@ def ler_dados():
 
     return cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color
 
+
+
+def ler_ultimos_incidentes(n=5):
+    """Lê os últimos N incidentes do log_incidentes.jsonl."""
+    from pathlib import Path
+    log_path = Path("data/log_incidentes.jsonl")
+    if not log_path.exists():
+        return []
+    try:
+        import json
+        with open(log_path, "r") as f:
+            linhas = f.readlines()
+        ultimos = linhas[-n:]
+        return [json.loads(l) for l in ultimos if l.strip()]
+    except Exception:
+        return []
+
+
+
+
+
+def calcular_score_operacional():
+    """Calcula o score de 0 a 100 baseado no health_check.json."""
+    try:
+        with open("data/health_check.json", "r") as f:
+            health = json.load(f)
+        score = 0
+        # Sensor ERAB online (+25)
+        if health.get("sensor_erab", {}).get("status", "").startswith("🟢"):
+            score += 25
+        # Pipeline online (+25)
+        if health.get("pipeline_regime", {}).get("status", "").startswith("🟢"):
+            score += 25
+        # Banco online (+25) - verifica se o SQLite existe e tem dados
+        from pathlib import Path
+        if Path("data/arcturus.db").exists():
+            score += 25
+        # Última leitura < 20 min (+25)
+        idade = health.get("sensor_erab", {}).get("idade_min", 999)
+        if idade < 20:
+            score += 25
+        return score
+    except Exception:
+        return 0
+
+def gerar_resumo_executivo(cota, vz, az, regime):
+    """Gera uma frase em linguagem natural a partir dos números."""
+    if regime == "EXTREMO":
+        return f"🚨 EMERGÊNCIA: Rio em {cota:.1f} cm, subindo a {vz:.1f} cm/h com aceleração de {az:.1f} cm/h². Evacuação imediata."
+    elif regime == "ATENCAO":
+        return f"⚠️ ATENÇÃO: Rio em {cota:.1f} cm, subindo a {vz:.1f} cm/h. A aceleração é de {az:.1f} cm/h². Monitore de perto."
+    else:
+        if vz > 0:
+            return f"✅ NORMAL: Rio em {cota:.1f} cm, subindo lentamente ({vz:.1f} cm/h). A aceleração é de {az:.1f} cm/h²."
+        elif vz < 0:
+            return f"✅ NORMAL: Rio em {cota:.1f} cm, em queda de {abs(vz):.1f} cm/h. A desaceleração é de {az:.1f} cm/h²."
+        else:
+            return f"✅ NORMAL: Rio em {cota:.1f} cm, estável. Sem tendência de subida ou queda."
+
 def gerar_grafico_cota():
     import pandas as pd
     import plotly.graph_objects as go
@@ -178,6 +237,7 @@ app.layout = dbc.Container([
                 dbc.Col(criar_card("Probabilidade de Cheia", "prob-val", "prob-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
+                dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
             ], className="mb-4"),
             
             dbc.Row([
@@ -206,13 +266,24 @@ app.layout = dbc.Container([
      Output("prob-val", "children"), Output("prob-sub", "children"),
      Output("regime-val", "children"), Output("regime-val", "className"), Output("regime-sub", "children"),
      Output("status-msg", "children"), Output("grafico-cota", "figure"),
-     Output("health-val", "children"), Output("health-sub", "children"), Output("health-val", "className")],
+     Output("health-val", "children"), Output("health-sub", "children"), Output("health-val", "className"),
+     Output("score-val", "children"), Output("score-sub", "children"), Output("score-val", "className")],
     [Input("btn-atualizar", "n_clicks"),
      Input("intervalo-atualizacao", "n_intervals")]
 )
 def atualizar_painel(n_clicks, n_intervals):
     # O Dash apenas LÊ os dados atualizados pelo cron. Não roda mais subprocessos em loop.
-    msg = f"🔄 Atualizado (Ciclo {n_intervals})" if n_intervals else "✅ Painel carregado."
+    # --- RESUMO EXECUTIVO (IDEIA DO ENGENHEIRO) ---
+    try:
+        with open("data/regime_atual.json", "r") as f:
+            reg_data = json.load(f)
+            cota_n = float(cota_val.replace(" cm", "")) if cota_val != "-- cm" else 0.0
+            vz_n = reg_data.get("delta_60m", 0.0)
+            az_n = reg_data.get("aceleracao_az", 0.0)
+            regime_n = reg_data.get("regime", "NORMAL")
+            msg = gerar_resumo_executivo(cota_n, vz_n, az_n, regime_n)
+    except Exception:
+        msg = f"🔄 Atualizado (Ciclo {n_intervals})" if n_intervals else "✅ Painel carregado."
     
     try:
         import json
@@ -256,14 +327,29 @@ def atualizar_painel(n_clicks, n_intervals):
                 direcao = "estabilizou"
                 causa = "mantendo o nível atual"
                 
-            msg = f"📊 O rio {direcao} desde a última leitura, {causa}. Tendência atual: {regime_val}."
-        else:
-            msg = "Aguardando dados suficientes para gerar insights."
+            # O Resumo Executivo já foi definido acima (gerar_resumo_executivo).
+            # Este bloco antigo foi removido para não sobrescrever o resumo.
+            pass
     except Exception as e:
-        msg = f"Painel carregado. (Insight indisponível: {e})"
+        pass
     # ----------------------------------------
 
-    return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color
+    # --- SCORE OPERACIONAL (IDEIA DO ENGENHEIRO) ---
+    score = calcular_score_operacional()
+    if score >= 75:
+        score_color = "text-success"
+        score_status = f"🟢 {score}/100 (Saudável)"
+    elif score >= 50:
+        score_color = "text-warning"
+        score_status = f"🟡 {score}/100 (Atenção)"
+    elif score >= 25:
+        score_color = "text-warning"
+        score_status = f"🟠 {score}/100 (Degradado)"
+    else:
+        score_color = "text-danger"
+        score_status = f"🔴 {score}/100 (Crítico)"
+
+    return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color, score_status, score_status, score_color
 
 
 if __name__ == "__main__":

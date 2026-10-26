@@ -19,6 +19,15 @@ ch = pd.concat([pd.read_csv(f, index_col=0, parse_dates=True).iloc[:, 0]
                 for f in sorted((BASE / "data").glob("chuva_longa_*.csv"))], axis=1).reindex(c.index)
 bacia = ch.mean(axis=1)
 
+# --- LEITURA DO ENSEMBLE (PREVISÃO DE HOJE) ---
+try:
+    with open(BASE / "data" / "chuva_ensemble_consolidada.json", "r") as f:
+        ensemble = json.load(f)
+        chuva_pior_caso = ensemble.get("pior_caso_48h_mm", 0.0)
+except Exception:
+    chuva_pior_caso = 0.0
+print(f"🌧️ Chuva Pior Caso (Ensemble): {chuva_pior_caso} mm")
+
 # 3. Criar features
 X = pd.DataFrame(index=c.index)
 X["cota"] = c
@@ -29,6 +38,7 @@ X["cos"] = np.cos(2 * np.pi * c.index.dayofyear / 365.25)
 for k in (1, 2, 3, 5, 10, 30):
     X[f"chuva_{k}d"] = bacia.rolling(k, min_periods=k).sum()
 X["chuva_max_ponto_2d"] = ch.rolling(2, min_periods=2).sum().max(axis=1)
+X["chuva_ensemble_hoje"] = chuva_pior_caso  # Feature do Ensemble
 
 # 4. Alvo: cheia em 2 dias (média diária >= 300)
 LIM = 300
@@ -44,12 +54,24 @@ P = dict(objective="binary", metric="average_precision", learning_rate=0.03, num
 dtr = lgb.Dataset(D[features], D["y"])
 b = lgb.train(P, dtr, 2000)
 
+# --- CÁLCULO DO AUC HONESTO (TREINO vs TESTE) ---
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
+
+# Separa 80% para treino e 20% para teste (sem olhar o gabarito)
+X_tr, X_te, y_tr, y_te = train_test_split(D[features], D["y"], test_size=0.2, random_state=42, shuffle=False)
+b_val = lgb.train(P, lgb.Dataset(X_tr, y_tr), 2000)
+y_pred_te = b_val.predict(X_te)
+auc = roc_auc_score(y_te, y_pred_te)
+print(f"📊 AUC do Modelo (Validação Honesta): {auc:.4f}")
+
 # 6. Salvar o modelo e o manifesto
 caminho_modelo = BASE / "modelos" / "classificador_extremos_final.txt"
 b.save_model(str(caminho_modelo))
 print(f"✅ Modelo salvo em: {caminho_modelo}")
 
 manifesto = {
+    "auc": float(auc),
     "features": features,
     "n_features": len(features),
     "limiar_cheia": LIM,
