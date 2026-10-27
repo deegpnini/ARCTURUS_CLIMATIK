@@ -336,3 +336,29 @@ Com a cota em 26 cm e a chuva prevista de 56.9 mm em 48h, o classificador de che
 - **Eventos Extremos:** O modelo tem maior incerteza em subidas muito rápidas (RMSE de ~12 cm na subida).
 
 ---
+
+## Desenvolvimento Assistido por IA (XERJ)
+
+O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
+
+**Benefícios:**
+- Busca semântica do código (sem ler arquivos inteiros).
+- Economia de tokens (o Copilot recebe o trecho exato, não o arquivo todo).
+- Localização rápida de funções (ex: "onde o Vz é calculado?").
+- Integração com GitHub Copilot via MCP (Model Context Protocol).
+- Navegação contextual do projeto.
+
+**Índices disponíveis:**
+- `src/` (109 arquivos, 1.462 documentos) → prefixo `ax`.
+- `tools/` (59 arquivos, 455 documentos) → prefixo `tools`.
+
+**Exemplos de perguntas:**
+- "Onde é calculado o Vz?"
+- "Onde o Az é escrito no JSON?"
+- "Onde o regime é atualizado?"
+- "Onde o SQLite recebe novas leituras?"
+
+**Configuração:**
+- O arquivo `.vscode/mcp.json` contém a configuração do servidor XERJ.
+- O XERJ roda na porta `9200` (MCP stdio server).
+
