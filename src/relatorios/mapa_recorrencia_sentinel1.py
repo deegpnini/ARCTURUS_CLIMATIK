@@ -55,11 +55,12 @@ for ev in eventos:
     mapa_agua = agua
 
 if mapa_agua is not None:
-    # Exporta como GeoTIFF (0 = não alagado, 1 = alagado)
-    mapa_vis = mapa_agua.visualize(min=0, max=1, palette=['000000', '0000FF'])
+    # Exporta a MÁSCARA BINÁRIA (0 = não alagado, 1 = alagado)
+    # Converte para uint8 (0 e 1)
+    mapa_binario = mapa_agua.uint8()
     task = ee.batch.Export.image.toDrive(
-        image=mapa_vis,
-        description='mapa_inundacao_tubarao_2019',
+        image=mapa_binario,
+        description='mapa_inundacao_tubarao_2019_binario',
         folder='ARCTURUS',
         scale=30,
         region=bbox,

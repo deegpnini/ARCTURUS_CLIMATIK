@@ -217,6 +217,32 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
     )
 
 app.layout = dbc.Container([
+    # --- BARRA LATERAL (SIDEBAR) ---
+    html.Div([
+        # Logo do ARCTURUS (preservada)
+        html.Img(src="assets/logo_arcturus.jpg", style={"width": "100%", "marginBottom": "20px"}),
+        html.H4("A.C.", className="text-white mb-3"),
+        html.Hr(),
+        dbc.Nav([
+            dbc.NavLink("📊 A.C. Monitor", href="/", active="exact", className="text-white"),
+            dbc.NavLink("📷 A.C. Vision (Câmera ERAB)", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="text-white"),
+            dbc.NavLink("🗺️ A.C. Geo (Mapa 2019)", href="assets/mapa_inundacao_tubarao_2019_satelite.png", target="_blank", className="text-white"),
+            dbc.NavLink("🛰️ A.C. Sentinel (Satélite)", href="https://earth.google.com/web/@-28.48,-49.02,100a,1000d,35y,0h,0t,0r", target="_blank", className="text-white"),
+        ], vertical=True, pills=True),
+    ], style={
+        "backgroundColor": "#1a1a1a", 
+        "padding": "20px", 
+        "height": "100vh", 
+        "position": "fixed", 
+        "width": "250px", 
+        "left": 0, 
+        "top": 0, 
+        "zIndex": 1000
+    }),
+    # --- CONTEÚDO PRINCIPAL (com margem à esquerda para não ficar atrás da barra) ---
+    html.Div([
+        # (o conteúdo original do dbc.Container começa aqui)
+    ], style={"marginLeft": "250px"}),
     dcc.Interval(
         id='intervalo-atualizacao',
         interval=30*1000, # Atualiza a cada 30 segundos
@@ -237,6 +263,11 @@ app.layout = dbc.Container([
                 dbc.Col(criar_card("Probabilidade de Cheia", "prob-val", "prob-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
+                dbc.Col(html.Div([
+                    html.H5("A.C. Vision", className="card-title"),
+                    html.P("📷 Câmera ERAB", className="card-text"),
+                    html.A("Abrir Câmera", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="btn btn-primary btn-sm")
+                ], className="card-body"), width=3),
                 dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
             ], className="mb-4"),
             
