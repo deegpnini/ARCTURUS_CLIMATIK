@@ -31,6 +31,7 @@ def salvar_no_historico():
         "delta_3h_cm": None,
         "cota_6h_cm": None,
         "delta_6h_cm": None,
+        "qc": "ok",
     }
     
     # Salvar no CSV (append)
