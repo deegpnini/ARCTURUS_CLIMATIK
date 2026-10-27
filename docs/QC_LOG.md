@@ -1,0 +1,1 @@
+- 2026-10-26: ponto removido de resultados/historico_previsoes.csv: 2026-10-25 21:54, cota 127 cm (antes: 86 cm às 21:46). Motivo: não consta no SQLite (101 cm às 22:00; 85 cm antes) e a chuva nas cabeceiras foi ~0,6 mm. Causa não identificada (erro de leitura, operação de barragem ou pulso real não foram distinguidos).
