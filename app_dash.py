@@ -170,7 +170,7 @@ def gerar_grafico_cota():
     
     try:
         df = pd.read_csv("resultados/historico_previsoes.csv")
-        df['timestamp_execucao'] = pd.to_datetime(df['timestamp_execucao'])
+        df['timestamp_execucao'] = pd.to_datetime(df['timestamp_execucao'], format='mixed', errors='coerce')
         agora = datetime.now()
         
         # FILTRO: mostra apenas os últimos 7 dias (evita picos antigos)
