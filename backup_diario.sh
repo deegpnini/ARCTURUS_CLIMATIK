@@ -5,18 +5,32 @@ ROOT="/home/oikos/projetos/ARCTURUS_CLIMATIK"
 BACKUP_DIR="$ROOT/backup/$(date +%Y%m%d)"
 DATABASE="$ROOT/data/arcturus.db"
 
-if ! command -v sqlite3 >/dev/null 2>&1; then
-    echo "sqlite3 is required to create a consistent database backup." >&2
+if ! command -v pg_dump >/dev/null 2>&1; then
+    echo "pg_dump is required to back up the PostgreSQL database." >&2
     exit 1
 fi
 
-if [[ ! -s "$DATABASE" ]]; then
-    echo "SQLite database is missing or empty: $DATABASE" >&2
-    exit 1
+export PGDATABASE="${ARCTURUS_DB_NAME:-arcturus}"
+export PGUSER="${ARCTURUS_DB_USER:-oikos}"
+if [[ -n "${ARCTURUS_DB_HOST:-}" ]]; then
+    export PGHOST="$ARCTURUS_DB_HOST"
+fi
+if [[ -n "${ARCTURUS_DB_PORT:-}" ]]; then
+    export PGPORT="$ARCTURUS_DB_PORT"
+fi
+if [[ -n "${ARCTURUS_DB_PASSWORD:-}" ]]; then
+    export PGPASSWORD="$ARCTURUS_DB_PASSWORD"
 fi
 
 mkdir -p "$BACKUP_DIR/data" "$BACKUP_DIR/resultados"
-sqlite3 "$DATABASE" ".timeout 5000" ".backup '$BACKUP_DIR/arcturus.db'"
+pg_dump --format=custom --file="$BACKUP_DIR/arcturus.dump"
+if [[ -s "$DATABASE" ]]; then
+    if ! command -v sqlite3 >/dev/null 2>&1; then
+        echo "sqlite3 is required to preserve the legacy SQLite snapshot." >&2
+        exit 1
+    fi
+    sqlite3 "$DATABASE" ".timeout 5000" ".backup '$BACKUP_DIR/arcturus.db'"
+fi
 
 for relative_path in \
     data/regime_atual.json \
