@@ -412,6 +412,27 @@ Buildings + relevo** busca ajudar a investigar *por onde a água chegou e por
 quê*. É um objetivo de aprendizado e análise; não implica que todos esses
 eventos já estejam integrados ou que suas causas estejam estabelecidas.
 
+## Backup
+
+O script `backup_diario.sh` cria uma cópia diária em `backup/YYYYMMDD/` do
+banco SQLite (usando a função `.backup` do SQLite para obter uma cópia
+consistente) e dos arquivos operacionais:
+
+- `data/regime_atual.json`
+- `data/chuva_ensemble_consolidada.json`
+- `data/simulacao_probabilidade_atual.json`
+- `data/health_check.json`
+- `resultados/historico_previsoes.csv`
+
+O agendamento local é diário às 03:00. Para executar manualmente:
+
+```bash
+/home/oikos/projetos/ARCTURUS_CLIMATIK/backup_diario.sh
+```
+
+Os backups locais não devem ser versionados; `backup/` está listado no
+`.gitignore`.
+
 ## Desenvolvimento Assistido por IA (XERJ)
 
 O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.

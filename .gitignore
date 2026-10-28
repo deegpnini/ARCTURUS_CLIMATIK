@@ -21,6 +21,7 @@ logs/
 relatorios/
 backup_completo/
 backup_*/
+backup/
 *.csv
 *.jsonl
 
