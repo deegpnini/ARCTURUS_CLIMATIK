@@ -412,11 +412,46 @@ Buildings + relevo** busca ajudar a investigar *por onde a água chegou e por
 quê*. É um objetivo de aprendizado e análise; não implica que todos esses
 eventos já estejam integrados ou que suas causas estejam estabelecidas.
 
+## Banco de Dados
+
+O armazenamento operacional de leituras usa PostgreSQL no WSL; o Dash e o
+gravador conectam-se ao banco `arcturus` pelo socket Unix com autenticação
+peer como o usuário Linux `oikos` (sem senha e sem abrir acesso TCP). A
+instalação idempotente está em [docs/POSTGRES_SETUP.md](docs/POSTGRES_SETUP.md)
+e pode ser executada com `./setup_postgres_wsl.sh`.
+
+Migre as leituras existentes sem apagar o arquivo SQLite:
+
+```bash
+source .venv/bin/activate
+python src/relatorios/migrar_postgres.py --sqlite data/arcturus.db --skip-geojson
+```
+
+O script preserva IDs, timestamps, valores, regime e QC, e também migra as
+colunas de chuva e confiança presentes no SQLite. O gravador atual é
+`src/relatorios/gravar_postgres.py`; o Dash consulta as 100 leituras mais
+recentes no PostgreSQL. O SQLite permanece como cópia histórica e origem da
+migração, não como banco operacional.
+
+O PostGIS cria a tabela `inundacoes` com geometria Polygon em EPSG:4326 e
+índice GiST. Para importar a mancha de 2019, forneça um GeoJSON verificado:
+
+```bash
+python src/relatorios/migrar_postgres.py --sqlite data/arcturus.db \
+  --geojson cache/mancha_2019.geojson
+```
+
+O arquivo `cache/mancha_2019.geojson` precisa existir e representar a mancha
+de inundação observada. O `mancha_inundacao.geojson` atualmente na raiz foi
+gerado de um limiar de altitude SRTM e não deve ser tratado como o contorno
+observado do evento. Sem uma fonte verificada, use `--skip-geojson`; a tabela
+e o índice são criados sem inventar geometrias.
+
 ## Backup
 
 O script `backup_diario.sh` cria uma cópia diária em `backup/YYYYMMDD/` do
-banco SQLite (usando a função `.backup` do SQLite para obter uma cópia
-consistente) e dos arquivos operacionais:
+PostgreSQL (formato custom do `pg_dump`), preserva também um snapshot do
+SQLite legado quando o arquivo ainda existe e copia os arquivos operacionais:
 
 - `data/regime_atual.json`
 - `data/chuva_ensemble_consolidada.json`
@@ -452,7 +487,7 @@ O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
 - "Onde é calculado o Vz?"
 - "Onde o Az é escrito no JSON?"
 - "Onde o regime é atualizado?"
-- "Onde o SQLite recebe novas leituras?"
+- "Onde o PostgreSQL recebe novas leituras?"
 
 **Configuração:**
 - O arquivo `.vscode/mcp.json` contém a configuração do servidor XERJ.

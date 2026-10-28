@@ -4,9 +4,11 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import plotly.express as px
 import json
+import logging
 import subprocess
 from pathlib import Path
 import pandas as pd
+from src.relatorios.postgres_db import get_postgres_connection
 
 BASE = Path.cwd()
 DATA_DIR = BASE / "data"
@@ -15,7 +17,6 @@ FILE_COTA = BASE / "tubarao_saneamento_dados.json"
 FILE_ENSEMBLE = DATA_DIR / "chuva_ensemble_consolidada.json"
 FILE_SIMULACAO = DATA_DIR / "simulacao_probabilidade_atual.json"
 FILE_REGIME = DATA_DIR / "regime_atual.json"
-FILE_HISTORICO = BASE / "resultados" / "historico_previsoes.csv"
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG], title="ARCTURUS CLIMATIK")
 
@@ -137,16 +138,22 @@ def calcular_score_operacional():
         # Pipeline online (+25)
         if health.get("pipeline_regime", {}).get("status", "").startswith("🟢"):
             score += 25
-        # Banco online (+25) - verifica se o SQLite existe e tem dados
-        from pathlib import Path
-        if Path("data/arcturus.db").exists():
-            score += 25
+        # Banco online (+25) - verifica se o PostgreSQL possui leituras
+        connection = get_postgres_connection()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT EXISTS (SELECT 1 FROM leituras)")
+                if cursor.fetchone()[0]:
+                    score += 25
+        finally:
+            connection.close()
         # Última leitura < 20 min (+25)
         idade = health.get("sensor_erab", {}).get("idade_min", 999)
         if idade < 20:
             score += 25
         return score
     except Exception:
+        logging.exception("Não foi possível calcular o score operacional.")
         return 0
 
 def gerar_resumo_executivo(cota, vz, az, regime):
@@ -169,16 +176,43 @@ def gerar_grafico_cota():
     from datetime import datetime, timedelta
     
     try:
-        df = pd.read_csv("resultados/historico_previsoes.csv")
-        df['timestamp_execucao'] = pd.to_datetime(df['timestamp_execucao'], format='mixed', errors='coerce')
+        connection = get_postgres_connection()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT timestamp, cota_cm
+                    FROM leituras
+                    WHERE cota_cm IS NOT NULL
+                    ORDER BY timestamp DESC, id DESC
+                    LIMIT 100
+                """)
+                rows = cursor.fetchall()
+        finally:
+            connection.close()
+
+        df = pd.DataFrame(rows, columns=["timestamp", "cota_cm"])
+        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
         agora = datetime.now()
-        
-        # FILTRO: mostra apenas os últimos 7 dias (evita picos antigos)
-        df = df[df['timestamp_execucao'] >= (agora - timedelta(days=7))]
-        
+        df = df.dropna(subset=["timestamp", "cota_cm"])
+        df = df[df["timestamp"] >= (agora - timedelta(days=7))]
+        df = df.sort_values("timestamp")
+
         fig = go.Figure()
+        if df.empty:
+            fig.add_annotation(
+                text="Sem leituras recentes no PostgreSQL",
+                showarrow=False,
+                font=dict(color="#ffcc00"),
+            )
+            fig.update_layout(
+                template="plotly_dark",
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+            )
+            return fig
+
         fig.add_trace(go.Scatter(
-            x=df['timestamp_execucao'], y=df['cota_atual_cm'],
+            x=df["timestamp"], y=df["cota_cm"],
             mode='lines+markers', name='Cota (cm)',
             line=dict(color='#00d2ff', width=3), marker=dict(size=6),
             hovertemplate='<b>%{x|%d/%m/%Y %H:%M}</b><br>Cota: %{y:.1f} cm<extra></extra>'
@@ -195,13 +229,14 @@ def gerar_grafico_cota():
             title="Cota do Rio Tubarão (Tempo Real)", xaxis_title="Data / Hora", yaxis_title="Cota (cm)",
             template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
             margin=dict(l=40, r=20, t=60, b=40),
-            xaxis=dict(range=[df['timestamp_execucao'].min(), agora + timedelta(minutes=10)],
+            xaxis=dict(range=[df['timestamp'].min(), agora + timedelta(minutes=10)],
                        tickformat="%d/%m<br>%H:%M", tickangle=-45, tickfont=dict(size=9))
         )
         return fig
     except Exception as e:
+        logging.exception("Não foi possível carregar as leituras do PostgreSQL para o gráfico.")
         fig = go.Figure()
-        fig.add_annotation(text=f"Erro: {e}", showarrow=False, font=dict(color="red"))
+        fig.add_annotation(text=f"Erro PostgreSQL: {e}", showarrow=False, font=dict(color="red"))
         fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
         return fig
 
@@ -369,11 +404,23 @@ def atualizar_painel(n_clicks, n_intervals):
 
     # --- MOTOR DE INTELIGÊNCIA (INSIGHTS) ---
     try:
-        import pandas as pd
-        df = pd.read_csv("resultados/historico_previsoes.csv")
-        if len(df) >= 2:
-            cota_atual = df.iloc[-1]['cota_atual_cm']
-            cota_anterior = df.iloc[-2]['cota_atual_cm']
+        connection = get_postgres_connection()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT cota_cm
+                    FROM leituras
+                    WHERE cota_cm IS NOT NULL
+                    ORDER BY timestamp DESC, id DESC
+                    LIMIT 2
+                """)
+                ultimas_cotas = cursor.fetchall()
+        finally:
+            connection.close()
+
+        if len(ultimas_cotas) >= 2:
+            cota_atual = ultimas_cotas[0][0]
+            cota_anterior = ultimas_cotas[1][0]
             variacao = cota_atual - cota_anterior
             
             # Lê o JSON de chuva
@@ -395,8 +442,8 @@ def atualizar_painel(n_clicks, n_intervals):
             # O Resumo Executivo já foi definido acima (gerar_resumo_executivo).
             # Este bloco antigo foi removido para não sobrescrever o resumo.
             pass
-    except Exception as e:
-        pass
+    except Exception:
+        logging.exception("Não foi possível calcular os insights com dados PostgreSQL.")
     # ----------------------------------------
 
     # --- SCORE OPERACIONAL (IDEIA DO ENGENHEIRO) ---
