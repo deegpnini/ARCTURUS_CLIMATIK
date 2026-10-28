@@ -371,6 +371,47 @@ painel. A seção identifica o evento como Tubarão, maio de 2019, e oferece um
 link para abrir o arquivo original. O mapa é uma referência visual do evento,
 não um produto oficial de alerta ou delimitação cadastral.
 
+## Visão de Longo Prazo
+
+A visão de longo prazo organiza a evolução do ARCTURUS CLIMATIK em quatro
+camadas complementares. Trata-se de uma arquitetura de pesquisa e evolução:
+os componentes abaixo não constituem, em conjunto, um sistema oficial ou
+validado de alerta, e as previsões não substituem a Defesa Civil.
+
+### Camada 1 — Alerta de Curto Prazo
+
+Monitorar a dinâmica observada do rio por meio de **Vz** (velocidade de
+variação da cota), **Az** (aceleração da variação) e estimativas de **tempo até
+o limiar**. Esses indicadores experimentais podem apoiar a leitura da
+situação; decisões e alertas à população cabem às autoridades competentes,
+incluindo a Defesa Civil.
+
+### Camada 2 — Alerta de Médio Prazo
+
+Combinar o **ensemble meteorológico (Open-Meteo + ECMWF)** e o **LightGBM v2**
+com evidências espaciais: o **Mapa de Inundação** observado por Sentinel-1 e
+o **Mapa de Impacto**, que identificou 1.290 footprints de edificações
+intersectando a máscara de inundação de 2019. As estimativas dependem da
+cobertura e resolução dos dados e não equivalem a danos cadastrais verificados.
+
+### Camada 3 — Alerta de Longo Prazo
+
+Desenvolver um **Mapa de Recorrência** e um **Mapa de Risco** para investigar
+áreas e condições associadas a impactos recorrentes. A análise deverá
+considerar possíveis causas raiz — como gargalos hidráulicos e limitações de
+drenagem — e apoiar recomendações de obras a serem avaliadas por estudos
+técnicos e pelos órgãos responsáveis. Essa camada é uma direção de pesquisa,
+não um diagnóstico concluído.
+
+### Camada 4 — Aprendizado Contínuo
+
+Cada evento documentado — incluindo **2019, 2022 e 2026** — poderá contribuir
+para revisar dados, métodos e hipóteses, após validação das fontes e dos
+registros de impacto. A combinação de **mapa de inundação + Google Open
+Buildings + relevo** busca ajudar a investigar *por onde a água chegou e por
+quê*. É um objetivo de aprendizado e análise; não implica que todos esses
+eventos já estejam integrados ou que suas causas estejam estabelecidas.
+
 ## Desenvolvimento Assistido por IA (XERJ)
 
 O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
