@@ -434,18 +434,21 @@ recentes no PostgreSQL. O SQLite permanece como cópia histórica e origem da
 migração, não como banco operacional.
 
 O PostGIS cria a tabela `inundacoes` com geometria Polygon em EPSG:4326 e
-índice GiST. Para importar a mancha de 2019, forneça um GeoJSON verificado:
+índice GiST. O shapefile `cache/mancha_2019.shp` (EPSG:32722) pode ser
+reprojetado para GeoJSON WGS84 e importado assim:
 
 ```bash
+source .venv/bin/activate
+python -c 'import geopandas as gpd; gpd.read_file("cache/mancha_2019.shp").to_crs(epsg=4326).to_file("cache/mancha_2019.geojson")'
 python src/relatorios/migrar_postgres.py --sqlite data/arcturus.db \
   --geojson cache/mancha_2019.geojson
 ```
 
-O arquivo `cache/mancha_2019.geojson` precisa existir e representar a mancha
-de inundação observada. O `mancha_inundacao.geojson` atualmente na raiz foi
-gerado de um limiar de altitude SRTM e não deve ser tratado como o contorno
-observado do evento. Sem uma fonte verificada, use `--skip-geojson`; a tabela
-e o índice são criados sem inventar geometrias.
+O shapefile importado contém 85.245 polígonos válidos na área de interesse.
+O `mancha_inundacao.geojson` atualmente na raiz foi gerado de um limiar de
+altitude SRTM e não deve ser tratado como o contorno observado do evento.
+Sem uma fonte verificada, use `--skip-geojson`; a tabela e o índice são
+criados sem inventar geometrias.
 
 ## Backup
 
