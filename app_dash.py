@@ -226,13 +226,19 @@ app.layout = dbc.Container([
         dbc.Nav([
             dbc.NavLink("📊 A.C. Monitor", href="/", active="exact", className="text-white"),
             dbc.NavLink("📷 A.C. Vision (Câmera ERAB)", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="text-white"),
-            dbc.NavLink("🗺️ A.C. Geo (Mapa 2019)", href="assets/mapa_inundacao_tubarao_2019_satelite.png", target="_blank", className="text-white"),
+            dbc.Button(
+                "🗺️ A.C. Geo (Mapa 2019)",
+                id="btn-mapa-geo",
+                color="dark",
+                className="text-white text-start w-100",
+            ),
             dbc.NavLink("🛰️ A.C. Sentinel (Satélite)", href="https://earth.google.com/web/@-28.48,-49.02,100a,1000d,35y,0h,0t,0r", target="_blank", className="text-white"),
         ], vertical=True, pills=True),
     ], style={
         "backgroundColor": "#1a1a1a", 
         "padding": "20px", 
         "height": "100vh", 
+        "overflowY": "auto",
         "position": "fixed", 
         "width": "250px", 
         "left": 0, 
@@ -286,10 +292,38 @@ app.layout = dbc.Container([
             
             dbc.Row([
                 dbc.Col(dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota()), width=12)
-            ])
+            ]),
+            html.Div(
+                [
+                    html.H3("Mapa de Inundação — Tubarão, Maio/2019"),
+                    html.Img(
+                        src="/assets/mapa_inundacao_tubarao_2019_satelite.png",
+                        alt="Mapa de inundação de Tubarão em maio de 2019",
+                        style={"width": "100%", "height": "auto"},
+                    ),
+                    html.A(
+                        "Abrir arquivo original",
+                        href="/assets/mapa_inundacao_tubarao_2019_satelite.png",
+                        target="_blank",
+                        className="btn btn-outline-info mt-2",
+                    ),
+                ],
+                id="secao-mapa-geo",
+                style={"display": "none", "marginTop": "24px"},
+            ),
         ], width=10, style={"padding": "20px"})
     ], className="g-0")
 ], fluid=True, style={"minHeight": "100vh", "backgroundColor": "#000"})
+
+@app.callback(
+    Output("secao-mapa-geo", "style"),
+    Input("btn-mapa-geo", "n_clicks"),
+)
+def alternar_mapa_geo(n_clicks):
+    if n_clicks and n_clicks % 2:
+        return {"display": "block", "marginTop": "24px"}
+    return {"display": "none", "marginTop": "24px"}
+
 
 @app.callback(
     [Output("cota-val", "children"), Output("cota-sub", "children"),
