@@ -8,6 +8,7 @@ if str(ROOT) not in sys.path:
 from src.relatorios.monitor_continuo import salvar_no_historico
 from playwright.sync_api import sync_playwright
 import json
+import math
 from datetime import datetime
 
 def coletar_cota():
@@ -26,27 +27,44 @@ def coletar_cota():
         
         if elemento:
             texto = elemento.inner_text().strip()
-            # Converter a vírgula para ponto, se necessário
-            cota_metros = float(texto.replace(",", "."))
-            cota_cm = cota_metros * 100
-            
-            print(f"✅ Cota extraída: {cota_metros:.2f} metros ({cota_cm:.0f} cm)")
-            
-            resultado = {
-                "fonte": "Tubarão Saneamento (ERAB)",
-                "cota_metros": cota_metros,
-                "cota_cm": cota_cm,
-                "data_extracao": datetime.now().isoformat()
-            }
-            
-            with open("tubarao_saneamento_dados.json", "w") as f:
-                json.dump(resultado, f, indent=2)
-            print("Salvo em tubarao_saneamento_dados.json")
+            try:
+                cota_metros = float(texto.replace(",", "."))
+                cota_cm = cota_metros * 100
+                if not math.isfinite(cota_cm) or cota_cm <= 0:
+                    raise ValueError("cota fora do domínio numérico válido")
+                resultado = {
+                    "fonte": "Tubarão Saneamento (ERAB)",
+                    "cota_metros": cota_metros,
+                    "cota_cm": cota_cm,
+                    "data_extracao": datetime.now().isoformat(),
+                    "qc": "VALIDO",
+                }
+                with open("tubarao_saneamento_dados.json", "w", encoding="utf-8") as f:
+                    json.dump(resultado, f, indent=2)
+
+                qc = salvar_no_historico(resultado)
+                resultado["qc"] = qc
+                with open("tubarao_saneamento_dados.json", "w", encoding="utf-8") as f:
+                    json.dump(resultado, f, indent=2)
+                print(
+                    f"✅ Cota extraída: {cota_metros:.2f} metros "
+                    f"({cota_cm:.0f} cm; QC={qc})"
+                )
+                print("Salvo em tubarao_saneamento_dados.json")
+            except (TypeError, ValueError):
+                resultado = {
+                    "fonte": "Tubarão Saneamento (ERAB)",
+                    "cota_metros": None,
+                    "cota_cm": None,
+                    "data_extracao": datetime.now().isoformat(),
+                    "qc": "CORROMPIDO",
+                }
+                salvar_no_historico(resultado)
+                print("⚠️ Valor extraído inválido; leitura registrada como CORROMPIDO.")
         else:
             print("⚠️ Elemento .chartjs-value não encontrado. O site pode ter mudado.")
         
         browser.close()
-    salvar_no_historico()  # grava cota no histórico para o Vz
 
 if __name__ == "__main__":
     coletar_cota()

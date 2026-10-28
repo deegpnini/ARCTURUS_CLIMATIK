@@ -1,5 +1,6 @@
 import time
 import subprocess
+import math
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
@@ -8,20 +9,55 @@ BASE = Path(__file__).resolve().parents[2]
 INTERVALO_MIN = 30
 HISTORICO = BASE / "resultados" / "historico_previsoes.csv"
 
-def salvar_no_historico():
+def determinar_qc(cota, cota_anterior=None, qc_existente=None):
+    status = str(qc_existente or "").strip().upper()
+    if status in {"MANUAL", "CORROMPIDO", "SUSPEITO"}:
+        return status
+
+    try:
+        valor = float(cota)
+    except (TypeError, ValueError):
+        return "CORROMPIDO"
+    if not math.isfinite(valor) or valor <= 0:
+        return "CORROMPIDO"
+
+    if cota_anterior is not None:
+        try:
+            anterior = float(cota_anterior)
+        except (TypeError, ValueError):
+            anterior = None
+        if (
+            anterior is not None
+            and math.isfinite(anterior)
+            and abs(valor - anterior) > 30
+        ):
+            return "SUSPEITO"
+    return "VALIDO"
+
+
+def salvar_no_historico(dados_override=None):
     """Lê a cota atual do JSON e salva no histórico."""
     import json
     json_path = BASE / "tubarao_saneamento_dados.json"
-    if not json_path.exists():
-        return
-    
-    with open(json_path, "r") as f:
-        dados = json.load(f)
-    
-    cota = dados.get("cota_cm", 0)
+    if dados_override is None:
+        if not json_path.exists():
+            return None
+        with json_path.open("r", encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
+    else:
+        dados = dados_override
+
+    cota = dados.get("cota_cm")
+    cota_anterior = None
+    if HISTORICO.exists():
+        historico = pd.read_csv(HISTORICO)
+        if "cota_atual_cm" in historico.columns:
+            cotas = pd.to_numeric(historico["cota_atual_cm"], errors="coerce").dropna()
+            if not cotas.empty:
+                cota_anterior = cotas.iloc[-1]
+    qc = determinar_qc(cota, cota_anterior, dados.get("qc"))
     timestamp = datetime.now().isoformat()
-    
-    # Criar a linha
+
     linha = {
         "timestamp_execucao": timestamp,
         "cota_atual_cm": cota,
@@ -31,16 +67,19 @@ def salvar_no_historico():
         "delta_3h_cm": None,
         "cota_6h_cm": None,
         "delta_6h_cm": None,
-        "qc": "ok",
+        "qc": qc,
     }
-    
-    # Salvar no CSV (append)
+
     df_novo = pd.DataFrame([linha])
     if HISTORICO.exists():
-        df_novo.to_csv(HISTORICO, mode='a', header=False, index=False)
+        df_novo.to_csv(HISTORICO, mode="a", header=False, index=False)
     else:
         df_novo.to_csv(HISTORICO, index=False)
-    print(f"✅ Cota salva no histórico: {cota:.0f} cm")
+    if qc == "CORROMPIDO":
+        print(f"⚠️ Leitura salva no histórico com QC={qc}.")
+    else:
+        print(f"✅ Cota salva no histórico: {float(cota):.0f} cm (QC={qc})")
+    return qc
 
 def rodar_ciclo():
     print(f"\n{'='*50}")
