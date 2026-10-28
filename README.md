@@ -337,6 +337,40 @@ Com a cota em 26 cm e a chuva prevista de 56.9 mm em 48h, o classificador de che
 
 ---
 
+## Mapa de Impacto (Google Open Buildings)
+
+O fluxo `baixar_open_buildings.py` consulta a coleção
+`GOOGLE/Research/open-buildings/v3/polygons` no Google Earth Engine para a
+caixa de coordenadas entre longitudes -49.2 e -48.6 e latitudes -28.8 e -28.2.
+O GeoPackage gerado localmente é `cache/buildings_open_buildings.gpkg`.
+
+No cruzamento com a máscara binária de inundação de maio de 2019, foram
+identificadas **1.290 edificações afetadas entre 360.920 footprints (0,36%)**.
+Essa estimativa substitui a contagem preliminar de 2 prédios baseada em OSM;
+os footprints são atribuídos a um único tile por ponto representativo para
+evitar duplicações nas bordas do download. O resultado depende da cobertura
+do conjunto de footprints e da resolução de 30 m da máscara, e não constitui
+validação cadastral ou levantamento de danos.
+
+Para recalcular a interseção sem baixar novamente a coleção:
+
+```bash
+source .venv/bin/activate
+python baixar_open_buildings.py --reprocess-cache
+```
+
+O resultado JSON é salvo em
+`resultados/dano_inundacao_tubarao_2019_edificacoes.json`. O GeoPackage fica
+no cache local e não é versionado.
+
+## A.C. Geo (Mapa de Inundação)
+
+No painel Dash, o botão **A.C. Geo (Mapa 2019)** na barra lateral alterna a
+exibição do mapa `assets/mapa_inundacao_tubarao_2019_satelite.png` dentro do
+painel. A seção identifica o evento como Tubarão, maio de 2019, e oferece um
+link para abrir o arquivo original. O mapa é uma referência visual do evento,
+não um produto oficial de alerta ou delimitação cadastral.
+
 ## Desenvolvimento Assistido por IA (XERJ)
 
 O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
@@ -361,4 +395,3 @@ O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
 **Configuração:**
 - O arquivo `.vscode/mcp.json` contém a configuração do servidor XERJ.
 - O XERJ roda na porta `9200` (MCP stdio server).
-
