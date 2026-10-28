@@ -112,6 +112,7 @@ treinar
 *.pyd
 .env.*
 *.env
+!.env.example
 token.json
 secrets.json
 credentials.json
