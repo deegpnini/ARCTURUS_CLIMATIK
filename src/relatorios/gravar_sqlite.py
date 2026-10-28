@@ -1,13 +1,17 @@
 import json
 import math
 import sqlite3
+import sys
 from datetime import datetime
 from pathlib import Path
+
+BASE = Path(__file__).resolve().parents[2]
+if str(BASE) not in sys.path:
+    sys.path.insert(0, str(BASE))
 
 from src.relatorios.monitor_continuo import determinar_qc
 
 
-BASE = Path(__file__).resolve().parents[2]
 DB_PATH = BASE / "data" / "arcturus.db"
 REGIME_FILE = BASE / "data" / "regime_atual.json"
 COTA_FILE = BASE / "tubarao_saneamento_dados.json"
