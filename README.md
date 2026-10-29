@@ -495,3 +495,79 @@ O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
 **Configuração:**
 - O arquivo `.vscode/mcp.json` contém a configuração do servidor XERJ.
 - O XERJ roda na porta `9200` (MCP stdio server).
+
+## Arquitetura
+
+```mermaid
+flowchart TD
+    subgraph COLETA["Coleta"]
+        ERAB["ERAB / Tubarão Saneamento"] --> PLAYWRIGHT["Coletor ERAB via Playwright"]
+        OPEN_METEO["Open-Meteo"]
+        ECMWF["ECMWF"]
+    end
+
+    subgraph PROCESSAMENTO["Processamento"]
+        ENSEMBLE["Ensemble de chuva"]
+        LIGHTGBM["LightGBM v2"]
+        DERIVADAS["Vz / Az<br/>Theil-Sen"]
+    end
+
+    subgraph BANCO["Banco de dados"]
+        POSTGRES["PostgreSQL"]
+        POSTGIS["PostGIS<br/>geometrias e índices espaciais"]
+        POSTGRES --- POSTGIS
+    end
+
+    subgraph FRONTEND["Frontend — Dash"]
+        MONITOR["A.C. Monitor"]
+        GEO["A.C. Geo"]
+        VISION["A.C. Vision"]
+        SENTINEL["A.C. Sentinel"]
+    end
+
+    subgraph INTEGRACOES["Integrações"]
+        XERJ["XERJ<br/>busca local de código"]
+        NYLAS["Nylas MCP"]
+        COPILOT["Copilot / VS Code"]
+    end
+
+    subgraph AUTOMACAO["Automação"]
+        CRON["Cron do motor<br/>a cada 15 min"]
+        BACKUP["Backup diário<br/>pg_dump + arquivos operacionais"]
+        HEALTH["Health Check"]
+    end
+
+    OPEN_METEO --> ENSEMBLE
+    ECMWF --> ENSEMBLE
+    ENSEMBLE --> LIGHTGBM
+    PLAYWRIGHT --> DERIVADAS
+    PLAYWRIGHT --> POSTGRES
+    LIGHTGBM --> POSTGRES
+    DERIVADAS --> POSTGRES
+    POSTGRES --> MONITOR
+    POSTGIS --> GEO
+    VISION -. "câmera ERAB" .-> ERAB
+    SENTINEL -. "visualização satelital" .-> GEO
+    XERJ <--> COPILOT
+    NYLAS <--> COPILOT
+    CRON -. "coleta e processamento" .-> PLAYWRIGHT
+    CRON -. "executa modelo" .-> LIGHTGBM
+    CRON -. "grava leituras" .-> POSTGRES
+    BACKUP -. "cópia de segurança" .-> POSTGRES
+    HEALTH -. "verifica serviços" .-> POSTGRES
+    HEALTH -. "estado operacional" .-> MONITOR
+
+    classDef coleta fill:#dbeafe,stroke:#2563eb,color:#172554
+    classDef processamento fill:#ffedd5,stroke:#ea580c,color:#7c2d12
+    classDef banco fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef frontend fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef integracoes fill:#e2e8f0,stroke:#475569,color:#1e293b
+    classDef automacao fill:#fef9c3,stroke:#ca8a04,color:#713f12
+
+    class ERAB,PLAYWRIGHT,OPEN_METEO,ECMWF coleta
+    class ENSEMBLE,LIGHTGBM,DERIVADAS processamento
+    class POSTGRES,POSTGIS banco
+    class MONITOR,GEO,VISION,SENTINEL frontend
+    class XERJ,NYLAS,COPILOT integracoes
+    class CRON,BACKUP,HEALTH automacao
+```
