@@ -1,51 +1,65 @@
-# Ensemble de Especialistas — modo experimental
+# Ensemble de Especialistas — ANA diária
 
-O módulo `src/modelo/ensemble_especialistas.py` treina quatro regressores
-LightGBM para prever a cota em 1 hora: cheia relâmpago, cheia gradual, inverno
-e verão. Cada fold Leave-One-Event-Out (LOEO) deixa de fora um evento inteiro;
-o LightGBM de cada fold é treinado exclusivamente com as janelas dos demais
-eventos daquele especialista. O comparador é a extrapolação Vz/Az
-(`cota + delta_60m + 0,5 × aceleracao_1h`).
+## Fonte e alvo
 
-## Eventos e limites dos dados
+O treino e a validação deste ensemble usam **exclusivamente**
+`data/ana_longa84580000.csv`. A coluna de cota é interpretada em centímetros,
+conforme a especificação da série; não há conversão de unidade. Os dados
+operacionais da ERAB não são lidos pelo script.
 
-A série ANA diária cobre **1939-05-26 a 2026-01-31**. Para resumir eventos
-históricos, o script agrupa dias com cota ≥200 cm e separa episódios por lacunas
-maiores que 3 dias: foram identificados **574 episódios**, dos quais 85 tiveram
-pico em junho-agosto, 280 em dezembro-março e 209 nos demais meses.
+Uma cheia é um episódio de dias consecutivos em que a média diária é
+**≥300 cm**. O alvo dos modelos LightGBM é binário: se a cota média do dia
+seguinte será ≥300 cm. As features são valores ANA observados até o dia atual
+(cota, variações de 1/3/7 dias, aceleração diária, máximas móveis e calendário).
+Cada amostra de treino pertence à janela de um evento do especialista: os sete
+dias anteriores e os dias do episódio. Cotas ausentes não são interpoladas.
 
-Como a ANA está em resolução diária, ela não permite calcular Vz em cm/h nem
-classificar retrospectivamente cheias relâmpago e graduais. Para isso, foram
-usados os 27 eventos com dados de alta resolução disponíveis entre
-2024-10-03 e 2026-09-14: 10 relâmpago (pico observado de Vz >50 cm/h), 14
-graduais (12–50 cm/h), 9 de inverno e 9 de verão. As categorias sazonais podem
-se sobrepor às categorias pela velocidade de subida.
+## Tipos e contagens identificados
 
-## Validação LOEO observada
+O período com cota observada vai de **1939-05-26 a 2026-01-31**, com 30.977
+leituras válidas e 711 dias sem leitura no intervalo diário completo. Foram
+identificados **220 episódios** ≥300 cm.
 
-| Especialista | Eventos / folds | MAE LightGBM (cm) | MAE Vz/Az (cm) | Seleção |
+- **Relâmpago:** Vz no primeiro dia do episódio >50 cm/dia — **210 eventos**.
+- **Gradual:** Vz no primeiro dia do episódio entre 12 e 50 cm/dia, inclusive
+  — **10 eventos**.
+- **Inverno:** pico diário em junho, julho ou agosto — **33 eventos**.
+- **Verão:** pico diário entre dezembro e março — **105 eventos**.
+
+As categorias de estação se sobrepõem às categorias por Vz. Episódios sem
+medição válida no dia anterior não recebem rótulo relâmpago/gradual, mas ainda
+podem receber rótulo sazonal.
+
+## LOEO por evento e comparação com fallback
+
+Cada fold deixa um episódio inteiro de fora. O treino daquele fold contém
+somente as janelas ANA dos demais eventos do mesmo especialista. A avaliação é
+agregada sobre as predições out-of-fold (OOF), com limiar de classificação 0,5.
+O fallback Vz/Az extrapola a cota diária como `cota + Vz + 0,5 × Az` e prevê
+cheia quando essa projeção atinge 300 cm.
+
+| Especialista | Eventos / folds | PR-AUC LOEO (modelo / fallback) | F1 OOF (modelo / fallback) | Decisão |
 |---|---:|---:|---:|---|
-| Relâmpago | 10 / 10 | 2,52 | 3,80 | LightGBM |
-| Gradual | 14 / 14 | 2,07 | 2,60 | LightGBM |
-| Inverno | 9 / 9 | 2,64 | 3,04 | LightGBM |
-| Verão | 9 / 9 | 2,25 | 3,24 | LightGBM |
+| Relâmpago | 210 / 210 | 0,474 / 0,315 | 0,194 / 0,455 | Fallback Vz/Az |
+| Gradual | 10 / 10 | 0,882 / 0,491 | 0,842 / 0,667 | LightGBM |
+| Inverno | 33 / 33 | 0,572 / 0,356 | 0,409 / 0,504 | Fallback Vz/Az |
+| Verão | 105 / 105 | 0,426 / 0,313 | 0,210 / 0,449 | Fallback Vz/Az |
 
-O relatório fold a fold, os metadados e o estado de ativação estão em
-`resultados/ensemble_especialistas.json`. Os modelos ativados são os arquivos
-LightGBM em `modelos/especialistas/`.
+O modelo só atua quando tem ao menos quatro folds válidos e supera o fallback
+em **PR-AUC e F1**. Assim, somente o especialista gradual fica ativo; nos outros
+casos o roteador usa o fallback Vz/Az. Os quatro LightGBMs finais foram
+treinados apenas nos eventos ANA correspondentes e salvos em
+`modelos/especialistas/`. O relatório OOF/fold a fold está em
+`resultados/ensemble_especialistas.json`.
 
-Um especialista só é selecionado se tiver pelo menos quatro eventos e quatro
-folds LOEO válidos e sua MAE média por evento for inferior à do fallback. A API
-`prever_cota_1h(features)` aplica a regra de roteamento e devolve a previsão do
-especialista selecionado ou o fallback Vz/Az. Se não existir especialista
-adequado para o mês/Vz, usa o fallback.
+## Execução e limitações
 
-## Segurança operacional
+Execute da raiz do projeto com `source .venv/bin/activate` e
+`python -m src.modelo.ensemble_especialistas`. A função `prever_cheia(features)`
+carrega o registro validado e escolhe um especialista ativo ou o fallback.
 
-Este resultado é **experimental e em modo sombra**, não é um sistema de alerta
-e não foi conectado à lógica de envio do Telegram. As métricas são regressão
-de cota em janelas de eventos recentes, não avaliação de probabilidade,
-antecedência ou desempenho para eventos futuros. A ativação por melhora de MAE
-em poucos eventos não demonstra, isoladamente, robustez operacional; os
-especialistas devem continuar fora de decisões de segurança pública até
-validação externa e revisão hidrológica.
+O modo permanece **experimental/sombra** e não está conectado ao Dash, ao
+Telegram nem a alertas públicos. A série diária tem lacunas e não representa
+medições horárias. A validação estima desempenho somente nas janelas dos
+episódios históricos identificados, não demonstra generalização para novas
+cheias nem constitui validação operacional de segurança.
