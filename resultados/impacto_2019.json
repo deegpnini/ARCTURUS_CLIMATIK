@@ -1,0 +1,22 @@
+{
+  "evento": "Tubarão, maio de 2019",
+  "codigo_municipio_ibge": "4218707",
+  "edificacoes_totais": 360920,
+  "edificacoes_afetadas": 1290,
+  "percentual_edificacoes_afetadas": 0.36,
+  "escolas_osm_analisadas": 31,
+  "colegios_osm_analisados": 2,
+  "escolas_afetadas": 0,
+  "unidades_saude_osm_analisadas": 13,
+  "ubs_afetadas": 0,
+  "populacao_estimada_afetada": null,
+  "populacao_limitacao": "Não estimada: o CNEFE 2022 não foi obtido e a densidade municipal média do IBGE não permite alocar moradores ao polígono inundado. A máscara binária tem extensão regional e pode incluir água permanente; usar a densidade municipal sobre essa área geraria uma estimativa sem validade espacial.",
+  "raster_inundacao": "mapa_inundacao_tubarao_2019_binario.tif",
+  "metodo_instalacoes": "Elementos OSM dentro do limite administrativo de Tubarão (relação 296517); pontos testados no pixel correspondente e polígonos cruzados com pixels positivos da máscara (all_touched).",
+  "consulta_osm_em": "2026-10-30T17:35:01Z",
+  "fonte_osm": "OpenStreetMap via Overpass API; © OpenStreetMap contributors",
+  "escola_afetada_na_area_regional": {
+    "nome": "Escola de Educação Básica de São Ludgero",
+    "nota": "Encontrada na consulta à bbox regional original, mas fica fora do limite municipal de Tubarão; não incluída no total municipal."
+  }
+}

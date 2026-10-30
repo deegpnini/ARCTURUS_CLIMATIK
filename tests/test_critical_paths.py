@@ -83,6 +83,29 @@ def test_last_alert_card_shows_telegram_alert_and_vz():
             )
 
 
+def test_atlas_impact_card_shows_reported_2019_metrics():
+    response = app_dash.app.server.test_client().get("/_dash-layout")
+
+    assert response.status_code == 200
+    layout = response.get_json()
+
+    def collect_strings(value):
+        if isinstance(value, str):
+            return [value]
+        if isinstance(value, dict):
+            return [text for item in value.values() for text in collect_strings(item)]
+        if isinstance(value, list):
+            return [text for item in value for text in collect_strings(item)]
+        return []
+
+    layout_text = " ".join(collect_strings(layout))
+    assert "A.C. Atlas — Impacto 2019" in layout_text
+    assert "Edificações afetadas: 1.290" in layout_text
+    assert "Escolas afetadas: 0" in layout_text
+    assert "UBS afetadas: 0" in layout_text
+    assert "População estimada: N/D" in layout_text
+
+
 def test_postgres_writer_uses_mock_connection():
     connection = MagicMock()
     cursor = connection.cursor.return_value.__enter__.return_value

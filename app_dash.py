@@ -18,6 +18,7 @@ FILE_ENSEMBLE = DATA_DIR / "chuva_ensemble_consolidada.json"
 FILE_SIMULACAO = DATA_DIR / "simulacao_probabilidade_atual.json"
 FILE_REGIME = DATA_DIR / "regime_atual.json"
 FILE_HEALTH = DATA_DIR / "health_check.json"
+FILE_IMPACT_2019 = BASE / "resultados" / "impacto_2019.json"
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG], title="ARCTURUS CLIMATIK")
 
@@ -125,6 +126,33 @@ def ler_ultimo_alerta():
             vz_text = "indisponível"
         return f"⚠️ Alerta enviado ao Telegram (Vz = {vz_text} cm/h)"
     return "Status do alerta indisponível"
+
+
+def ler_resumo_impacto_2019():
+    try:
+        with FILE_IMPACT_2019.open("r", encoding="utf-8") as arquivo:
+            impacto = json.load(arquivo)
+    except (OSError, json.JSONDecodeError):
+        logging.exception("Não foi possível ler o relatório de impacto de 2019.")
+        return None
+
+    try:
+        edificacoes = int(impacto["edificacoes_afetadas"])
+        escolas = int(impacto["escolas_afetadas"])
+        ubs = int(impacto["ubs_afetadas"])
+        populacao = impacto["populacao_estimada_afetada"]
+        limitacao = impacto["populacao_limitacao"]
+    except (KeyError, TypeError, ValueError):
+        logging.error("O relatório de impacto de 2019 contém campos inválidos.")
+        return None
+
+    return {
+        "edificacoes": f"{edificacoes:,}".replace(",", "."),
+        "escolas": escolas,
+        "ubs": ubs,
+        "populacao": "N/D" if populacao is None else f"{int(populacao):,}".replace(",", "."),
+        "limitacao_populacao": limitacao,
+    }
 
 
 
@@ -319,6 +347,39 @@ app.layout = dbc.Container([
                     html.P(ler_ultimo_alerta(), id="ultimo-alerta-val", className="card-text"),
                 ], className="card-body"), width=3),
                 dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
+            ], className="mb-4"),
+
+            dbc.Row([
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([
+                            html.H5("A.C. Atlas — Impacto 2019", className="card-title"),
+                            html.Div(
+                                [
+                                    html.P(
+                                        f"Edificações afetadas: {impacto['edificacoes']}"
+                                    ),
+                                    html.P(
+                                        f"Escolas afetadas: {impacto['escolas']}"
+                                    ),
+                                    html.P(f"UBS afetadas: {impacto['ubs']}"),
+                                    html.P(
+                                        f"População estimada: {impacto['populacao']}"
+                                    ),
+                                    html.Small(
+                                        impacto["limitacao_populacao"],
+                                        className="text-muted",
+                                    ),
+                                ]
+                                if (impacto := ler_resumo_impacto_2019())
+                                else [html.P("Relatório de impacto indisponível.")]
+                            ),
+                        ]),
+                        color="dark",
+                        outline=True,
+                    ),
+                    width=12,
+                )
             ], className="mb-4"),
             
             dbc.Row([
