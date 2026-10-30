@@ -107,30 +107,24 @@ def ler_dados():
     return cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color
 
 
-def ler_status_camera():
-    fallback = "Câmera ERAB (link na barra lateral)"
+def ler_ultimo_alerta():
     try:
         with FILE_HEALTH.open("r", encoding="utf-8") as arquivo:
             health = json.load(arquivo)
-    except FileNotFoundError:
-        return fallback
     except (OSError, json.JSONDecodeError):
-        logging.exception("Não foi possível ler o status da câmera no health check.")
-        return fallback
+        logging.exception("Não foi possível ler o último alerta do health check.")
+        return "Status do alerta indisponível"
 
-    status = health.get("camera_status")
-    if status is None and isinstance(health.get("camera"), dict):
-        status = health["camera"].get("status")
-
-    if isinstance(status, bool):
-        status = "online" if status else "offline"
-    if isinstance(status, str):
-        normalized = status.strip().lower()
-        if normalized in {"online", "ok"} or "online" in normalized:
-            return "Câmera ERAB: Online"
-        if normalized in {"offline", "error", "erro"} or "offline" in normalized:
-            return "Câmera ERAB: Offline"
-    return fallback
+    if health.get("status") == "OK":
+        return "✅ Nenhum alerta recente"
+    if health.get("status") == "ALERTA":
+        vz_cm_h = health.get("vz_cm_h")
+        try:
+            vz_text = f"{float(vz_cm_h):g}"
+        except (TypeError, ValueError):
+            vz_text = "indisponível"
+        return f"⚠️ Alerta enviado ao Telegram (Vz = {vz_text} cm/h)"
+    return "Status do alerta indisponível"
 
 
 
@@ -321,8 +315,8 @@ app.layout = dbc.Container([
                 dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
                 dbc.Col(html.Div([
-                    html.H5("A.C. Vision", className="card-title"),
-                    html.P(ler_status_camera(), className="card-text"),
+                    html.H5("Último Alerta", className="card-title"),
+                    html.P(ler_ultimo_alerta(), id="ultimo-alerta-val", className="card-text"),
                 ], className="card-body"), width=3),
                 dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
             ], className="mb-4"),
@@ -382,7 +376,8 @@ def alternar_mapa_geo(n_clicks):
      Output("regime-val", "children"), Output("regime-val", "className"), Output("regime-sub", "children"),
      Output("status-msg", "children"), Output("grafico-cota", "figure"),
      Output("health-val", "children"), Output("health-sub", "children"), Output("health-val", "className"),
-     Output("score-val", "children"), Output("score-sub", "children"), Output("score-val", "className")],
+     Output("score-val", "children"), Output("score-sub", "children"), Output("score-val", "className"),
+     Output("ultimo-alerta-val", "children")],
     [Input("btn-atualizar", "n_clicks"),
      Input("intervalo-atualizacao", "n_intervals")]
 )
@@ -476,7 +471,7 @@ def atualizar_painel(n_clicks, n_intervals):
         score_color = "text-danger"
         score_status = f"🔴 {score}/100 (Crítico)"
 
-    return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color, score_status, score_status, score_color
+    return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color, score_status, score_status, score_color, ler_ultimo_alerta()
 
 
 if __name__ == "__main__":

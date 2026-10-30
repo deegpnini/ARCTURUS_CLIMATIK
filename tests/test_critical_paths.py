@@ -5,6 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import MagicMock, Mock, patch
 
+import app_dash
 from src.relatorios import coletar_tubarao_saneamento
 from src.relatorios.gravar_postgres import gravar_leitura
 from src.relatorios.monitor_continuo import determinar_qc
@@ -59,6 +60,27 @@ def test_theil_sen_vz_and_az_for_constant_rise():
 
 def test_abrupt_cota_jump_is_marked_suspect():
     assert determinar_qc(cota=111, cota_anterior=80) == "SUSPEITO"
+
+
+def test_last_alert_card_shows_no_recent_alert_for_ok_health_status():
+    with TemporaryDirectory() as temp_dir:
+        health_file = Path(temp_dir) / "health_check.json"
+        health_file.write_text('{"status": "OK"}', encoding="utf-8")
+        with patch.object(app_dash, "FILE_HEALTH", health_file):
+            assert app_dash.ler_ultimo_alerta() == "✅ Nenhum alerta recente"
+
+
+def test_last_alert_card_shows_telegram_alert_and_vz():
+    with TemporaryDirectory() as temp_dir:
+        health_file = Path(temp_dir) / "health_check.json"
+        health_file.write_text(
+            '{"status": "ALERTA", "vz_cm_h": 12.5}',
+            encoding="utf-8",
+        )
+        with patch.object(app_dash, "FILE_HEALTH", health_file):
+            assert app_dash.ler_ultimo_alerta() == (
+                "⚠️ Alerta enviado ao Telegram (Vz = 12.5 cm/h)"
+            )
 
 
 def test_postgres_writer_uses_mock_connection():
