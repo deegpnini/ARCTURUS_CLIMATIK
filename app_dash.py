@@ -132,24 +132,13 @@ def calcular_score_operacional():
         with open("data/health_check.json", "r") as f:
             health = json.load(f)
         score = 0
-        # Sensor ERAB online (+25)
-        if health.get("sensor_erab", {}).get("status", "").startswith("🟢"):
-            score += 25
-        # Pipeline online (+25)
-        if health.get("pipeline_regime", {}).get("status", "").startswith("🟢"):
-            score += 25
-        # Banco online (+25) - verifica se o PostgreSQL possui leituras
-        connection = get_postgres_connection()
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT EXISTS (SELECT 1 FROM leituras)")
-                if cursor.fetchone()[0]:
-                    score += 25
-        finally:
-            connection.close()
-        # Última leitura < 20 min (+25)
-        idade = health.get("sensor_erab", {}).get("idade_min", 999)
+        if health.get("status") == "OK":
+            score += 50
+        idade = float(health["idade_min"])
         if idade < 20:
+            score += 25
+        vz_cm_h = float(health["vz_cm_h"])
+        if vz_cm_h < 12:
             score += 25
         return score
     except Exception:
