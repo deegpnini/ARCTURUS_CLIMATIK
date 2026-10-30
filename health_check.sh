@@ -31,11 +31,10 @@ if [[ ! "$IDADE" =~ ^[0-9]+$ ]]; then
     exit 1
 fi
 
-# 2. Suaviza o Vz com a média móvel de 3 leituras e exige 2 médias altas
-# consecutivas para confirmar um alerta de cheia.
+# 2. Suaviza o Vz, exige cota ascendente e confirma em duas leituras.
 VZ_DATA="$(psql -XAtq -F '|' -v ON_ERROR_STOP=1 -U oikos -d arcturus \
     -c "WITH rolling AS (
-            SELECT timestamp, id,
+            SELECT timestamp, id, cota_cm,
                    AVG(vz_cm_h) OVER (
                        ORDER BY timestamp, id
                        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
@@ -46,31 +45,71 @@ VZ_DATA="$(psql -XAtq -F '|' -v ON_ERROR_STOP=1 -U oikos -d arcturus \
                    ) AS leituras_validas
             FROM leituras
         ),
-        ultimas AS (
-            SELECT vz_suavizado, leituras_validas
+        ordenadas AS (
+            SELECT *, LAG(cota_cm) OVER (ORDER BY timestamp, id) AS cota_anterior
             FROM rolling
-            ORDER BY timestamp DESC, id DESC
-            LIMIT 2
         )
-        SELECT COALESCE(
-                   (SELECT ROUND(vz_suavizado::numeric, 2)::text
-                    FROM rolling
-                    ORDER BY timestamp DESC, id DESC
-                    LIMIT 1),
-                   '0'
-               ),
-               CASE
-                   WHEN COUNT(*) = 2
-                    AND BOOL_AND(leituras_validas = 3 AND vz_suavizado > 12)
-                   THEN 'true'
-                   ELSE 'false'
-               END
-        FROM ultimas;" 2>/dev/null)"
-IFS='|' read -r VZ_SUAVIZADO ALERTA_CHEIA <<< "$VZ_DATA"
+        SELECT COALESCE(ROUND((SELECT vz_suavizado FROM ordenadas
+                               ORDER BY timestamp DESC, id DESC LIMIT 1)::numeric, 2)::text, '0'),
+               COALESCE((SELECT (cota_cm > cota_anterior)::text
+                         FROM ordenadas ORDER BY timestamp DESC, id DESC LIMIT 1), 'false'),
+               COALESCE((SELECT BOOL_AND(leituras_validas = 3
+                                         AND vz_suavizado > 12
+                                         AND cota_cm > cota_anterior)::text
+                         FROM (SELECT * FROM ordenadas
+                               ORDER BY timestamp DESC, id DESC LIMIT 2) recentes
+                         HAVING COUNT(*) = 2), 'false'),
+               COALESCE((SELECT BOOL_AND(leituras_validas = 3
+                                         AND vz_suavizado > 52
+                                         AND cota_cm > cota_anterior)::text
+                         FROM (SELECT * FROM ordenadas
+                               ORDER BY timestamp DESC, id DESC LIMIT 2) recentes
+                         HAVING COUNT(*) = 2), 'false'),
+               COALESCE((SELECT BOOL_AND(leituras_validas = 3
+                                         AND vz_suavizado > 12
+                                         AND cota_cm > cota_anterior)::text
+                         FROM (SELECT * FROM ordenadas
+                               ORDER BY timestamp DESC, id DESC LIMIT 4) recentes
+                         HAVING COUNT(*) = 4), 'false')
+        ;" 2>/dev/null)"
+IFS='|' read -r VZ_SUAVIZADO COTA_SUBINDO ALERTA_CHEIA ALERTA_EXTREMO ALERTA_PERSISTENTE <<< "$VZ_DATA"
 if [[ ! "${VZ_SUAVIZADO:-}" =~ ^-?[0-9]+([.][0-9]+)?$ ]] \
-    || [[ "${ALERTA_CHEIA:-}" != "true" && "${ALERTA_CHEIA:-}" != "false" ]]; then
+    || [[ "${COTA_SUBINDO:-}" != "true" && "${COTA_SUBINDO:-}" != "false" ]] \
+    || [[ "${ALERTA_CHEIA:-}" != "true" && "${ALERTA_CHEIA:-}" != "false" ]] \
+    || [[ "${ALERTA_EXTREMO:-}" != "true" && "${ALERTA_EXTREMO:-}" != "false" ]] \
+    || [[ "${ALERTA_PERSISTENTE:-}" != "true" && "${ALERTA_PERSISTENTE:-}" != "false" ]]; then
     log "ERRO: Vz suavizado ou confirmação de cheia indisponível/inválida."
     exit 1
+fi
+
+# Chuva a montante é um dado auxiliar; indisponibilidade não confirma chuva.
+CHUVA_DATA="$(python3 - "$BASE_DIR/data/chuva_montante.csv" <<'PY'
+import csv
+import datetime
+import sys
+
+try:
+    with open(sys.argv[1], newline="", encoding="utf-8") as source:
+        rows = list(csv.DictReader(source))
+    rows = sorted(
+        (row for row in rows if row.get("data") and row.get("chuva_montante_24h")),
+        key=lambda row: row["data"],
+    )
+    if not rows:
+        raise ValueError("no rainfall rows")
+    latest = rows[-1]
+    age = (datetime.date.today() - datetime.date.fromisoformat(latest["data"])).days
+    if age < 0 or age > 1:
+        raise ValueError("rainfall data is stale")
+    print(latest["chuva_montante_24h"])
+except (OSError, ValueError, KeyError):
+    print("N/A")
+PY
+)"
+if [[ "$CHUVA_DATA" =~ ^-?[0-9]+([.][0-9]+)?$ ]]; then
+    CHUVA_MONTANTE_24H="$CHUVA_DATA"
+else
+    CHUVA_MONTANTE_24H="N/A"
 fi
 
 # 3. Verifica o regime
@@ -81,18 +120,34 @@ REGIME="$(psql -XAtq -v ON_ERROR_STOP=1 -U oikos -d arcturus \
 STATUS="OK"
 MSG=""
 MOTIVO=""
+NIVEL_ALERTA="NORMAL"
 if (( IDADE >= LIMIT_MIN )); then
     STATUS="ALERTA"
     MSG="⚠️ ALERTA ARCTURUS: última leitura há $IDADE min (limite: $LIMIT_MIN min). O cron pode estar parado."
     MOTIVO="alerta disparado por leitura atrasada ($IDADE min; limite: $LIMIT_MIN min)"
 elif [[ "$ALERTA_CHEIA" == "true" ]]; then
     STATUS="ALERTA"
-    MSG="⚠️ ALERTA DE CHEIA: Vz suavizado = $VZ_SUAVIZADO cm/h em 2 leituras consecutivas. O rio está subindo rápido."
-    MOTIVO="alerta de cheia disparado: Vz suavizado acima de 12 cm/h em 2 leituras consecutivas"
+    NIVEL_ALERTA="ATENCAO"
+    if [[ "$ALERTA_EXTREMO" == "true" ]]; then
+        NIVEL_ALERTA="EXTREMO"
+    fi
+    MSG="⚠️ ALERTA DE CHEIA ($NIVEL_ALERTA): Vz suavizado = $VZ_SUAVIZADO cm/h em 2 leituras consecutivas; cota subindo."
+    REGIME="$NIVEL_ALERTA"
+    MOTIVO="alerta de cheia disparado ($NIVEL_ALERTA): Vz suavizado acima do limiar em 2 leituras consecutivas e cota subindo"
+    if [[ "$ALERTA_PERSISTENTE" == "true" ]]; then
+        MOTIVO="$MOTIVO; persistente por mais de 3 leituras consecutivas"
+    fi
+    if [[ "$CHUVA_MONTANTE_24H" =~ ^[0-9]+([.][0-9]+)?$ ]] \
+        && awk -v chuva="$CHUVA_MONTANTE_24H" 'BEGIN { exit !(chuva > 50) }'; then
+        MSG="$MSG ALERTA REFORÇADO: Vz alto + chuva a montante (${CHUVA_MONTANTE_24H} mm/24h)."
+        MOTIVO="$MOTIVO; alerta reforçado por chuva a montante acima de 50 mm/24h"
+    fi
 else
-    MOTIVO="alerta de cheia não disparado: são necessárias 2 médias móveis consecutivas acima de 12 cm/h"
+    MOTIVO="alerta de cheia não disparado: requer Vz suavizado acima de 12 cm/h em 2 leituras consecutivas e cota subindo"
 fi
 log "Vz suavizado (média móvel de 3 leituras): $VZ_SUAVIZADO cm/h."
+log "Cota subindo: $COTA_SUBINDO; alerta extremo confirmado: $ALERTA_EXTREMO; persistente (>3 leituras): $ALERTA_PERSISTENTE."
+log "Chuva a montante 24h: $CHUVA_MONTANTE_24H mm."
 log "Decisão: $MOTIVO."
 
 # 5. Se houver alerta, envia para o Telegram
@@ -110,6 +165,10 @@ cat > "$JSON_FILE" << JSONEOF
   "idade_min": $IDADE,
   "limite_min": $LIMIT_MIN,
   "vz_cm_h": $VZ_SUAVIZADO,
+  "cota_subindo": $COTA_SUBINDO,
+  "nivel_alerta": "$NIVEL_ALERTA",
+  "alerta_persistente": $ALERTA_PERSISTENTE,
+  "chuva_montante_24h_mm": "$CHUVA_MONTANTE_24H",
   "regime": "$REGIME",
   "mensagem": "$MSG"
 }

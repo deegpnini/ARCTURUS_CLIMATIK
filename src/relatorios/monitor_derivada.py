@@ -11,13 +11,12 @@ import pandas as pd
 BASE = Path(__file__).resolve().parents[2]
 HISTORICO = BASE / "resultados" / "historico_previsoes.csv"
 REGIME_FILE = BASE / "data" / "regime_atual.json"
-ENSEMBLE_FILE = BASE / "data" / "chuva_ensemble_consolidada.json"
+CHUVA_MONTANTE_FILE = BASE / "data" / "chuva_montante.csv"
 
 # Limiares calibrados
-LIMIAR_ATENCAO = 20.0   # P95
 LIMIAR_EXTREMO = 52.0   # P99
-LIMIAR_CHEIA_RELAMPAGO = 100.0
 MIN_CICLOS_CONFIRMACAO = 2
+MIN_CICLOS_PERSISTENCIA = 4
 INTERVALO_MIN_AZ_H = 0.5
 
 
@@ -87,6 +86,57 @@ def az_robusto(t_h, cota, n=4, janela_min_h=0.5):
     return (vz_atual - vz_anterior) / intervalo_h
 
 
+def vz_suavizado_3(t_h, cota):
+    """Média dos três últimos Vz entre leituras consecutivas, em cm/h."""
+    observacoes = {}
+    for tempo, nivel in zip(t_h, cota):
+        try:
+            tempo = float(tempo)
+            nivel = float(nivel)
+        except (TypeError, ValueError):
+            continue
+        if math.isfinite(tempo) and math.isfinite(nivel):
+            observacoes[tempo] = nivel
+
+    pontos = sorted(observacoes.items())
+    if len(pontos) < 4:
+        return None
+
+    taxas = []
+    for (tempo_a, nivel_a), (tempo_b, nivel_b) in zip(pontos[-4:-1], pontos[-3:]):
+        intervalo = tempo_b - tempo_a
+        if intervalo <= 0:
+            return None
+        taxas.append((nivel_b - nivel_a) / intervalo)
+    return statistics.mean(taxas)
+
+
+def ler_chuva_montante_24h(timestamp_referencia=None):
+    """Return fresh upstream 24h rainfall in mm, or None when unavailable."""
+    if not CHUVA_MONTANTE_FILE.exists():
+        return None
+    try:
+        chuva = pd.read_csv(CHUVA_MONTANTE_FILE, parse_dates=["data"])
+    except (OSError, ValueError, pd.errors.ParserError):
+        return None
+    if not {"data", "chuva_montante_24h"}.issubset(chuva.columns):
+        return None
+
+    chuva["chuva_montante_24h"] = pd.to_numeric(
+        chuva["chuva_montante_24h"], errors="coerce"
+    )
+    chuva = chuva.dropna(subset=["data", "chuva_montante_24h"]).sort_values("data")
+    if chuva.empty:
+        return None
+
+    referencia = pd.Timestamp(timestamp_referencia or datetime.now())
+    data_chuva = pd.Timestamp(chuva.iloc[-1]["data"])
+    idade_dias = (referencia.date() - data_chuva.date()).days
+    if idade_dias < 0 or idade_dias > 1:
+        return None
+    return float(chuva.iloc[-1]["chuva_montante_24h"])
+
+
 def atualizar_confirmacao(
     regime_atual,
     candidato_anterior,
@@ -103,7 +153,7 @@ def atualizar_confirmacao(
             return regime_atual, candidato_anterior, contador_anterior
 
     contador = contador_anterior + 1 if candidato == candidato_anterior else 1
-    contador = min(contador, MIN_CICLOS_CONFIRMACAO)
+    contador = min(contador, MIN_CICLOS_PERSISTENCIA)
     confirmado = candidato if contador >= MIN_CICLOS_CONFIRMACAO else regime_atual
     return confirmado, candidato, contador
 
@@ -142,7 +192,9 @@ def calcular_derivada():
     cotas = df["cota_atual_cm"].astype(float)
 
     vz = vz_robusto(horas, cotas)
+    vz_suavizado = vz_suavizado_3(horas, cotas)
     az = az_robusto(horas, cotas, janela_min_h=INTERVALO_MIN_AZ_H)
+    cota_subindo = len(cotas) >= 2 and float(cotas.iloc[-1]) > float(cotas.iloc[-2])
 
     estado = {}
     if REGIME_FILE.exists():
@@ -153,28 +205,30 @@ def calcular_derivada():
     contador_anterior = int(estado.get("contador_candidato", 0))
     timestamp_anterior = estado.get("timestamp_ultima_observacao")
 
-    motivo = "Vz robusto indisponível: histórico precisa cobrir pelo menos 30 min."
+    motivo = "Vz suavizado indisponível: são necessárias quatro leituras válidas."
     regime_candidato = None
-    if vz is not None:
-        incerteza_alta = False
-        if ENSEMBLE_FILE.exists():
-            with ENSEMBLE_FILE.open(encoding="utf-8") as arquivo:
-                ensemble = json.load(arquivo)
-            incerteza_alta = ensemble.get("incerteza_alta", False)
-
-        limiar_atencao = 12.0 if incerteza_alta else LIMIAR_ATENCAO
-        if vz > LIMIAR_CHEIA_RELAMPAGO:
+    chuva_montante_24h = ler_chuva_montante_24h(timestamp_atual)
+    alerta_reforcado = False
+    if vz_suavizado is not None:
+        if not cota_subindo:
+            regime_candidato = "NORMAL"
+            motivo_candidato = (
+                f"Vz suavizado = {vz_suavizado:+.1f} cm/h, mas a cota não está subindo"
+            )
+        elif vz_suavizado > LIMIAR_EXTREMO:
             regime_candidato = "EXTREMO"
-            motivo_candidato = f"Vz robusto = {vz:+.1f} cm/h (cheia relâmpago)"
-        elif vz > LIMIAR_EXTREMO:
-            regime_candidato = "EXTREMO"
-            motivo_candidato = f"Vz robusto = {vz:+.1f} cm/h (evento extremo)"
-        elif vz > limiar_atencao:
+            motivo_candidato = (
+                f"Vz suavizado = {vz_suavizado:+.1f} cm/h (acima de "
+                f"{LIMIAR_EXTREMO:.0f} cm/h)"
+            )
+        elif vz_suavizado > 12.0:
             regime_candidato = "ATENCAO"
-            motivo_candidato = f"Vz robusto = {vz:+.1f} cm/h (subida anormal)"
+            motivo_candidato = (
+                f"Vz suavizado = {vz_suavizado:+.1f} cm/h (subida confirmável)"
+            )
         else:
             regime_candidato = "NORMAL"
-            motivo_candidato = f"Vz robusto = {vz:+.1f} cm/h"
+            motivo_candidato = f"Vz suavizado = {vz_suavizado:+.1f} cm/h"
 
         regime_atual, candidato_anterior, contador_anterior = atualizar_confirmacao(
             regime_atual,
@@ -191,6 +245,17 @@ def calcular_derivada():
             )
         else:
             motivo = motivo_candidato
+        alerta_reforcado = (
+            regime_atual in {"ATENCAO", "EXTREMO"}
+            and vz_suavizado > 12.0
+            and chuva_montante_24h is not None
+            and chuva_montante_24h > 50.0
+        )
+        if alerta_reforcado:
+            motivo += (
+                "; ALERTA REFORÇADO: Vz alto + chuva a montante "
+                f"({chuva_montante_24h:.1f} mm/24h)"
+            )
     else:
         candidato_anterior = None
         contador_anterior = 0
@@ -212,8 +277,23 @@ def calcular_derivada():
         "timestamp_ultima_observacao": timestamp_atual.isoformat(),
         "delta_60m": round(vz, 2) if vz is not None else None,
         "vz_robusto": round(vz, 2) if vz is not None else None,
+        "vz_suavizado": (
+            round(vz_suavizado, 2) if vz_suavizado is not None else None
+        ),
         "aceleracao_az": round(az, 2) if az is not None else None,
         "az_robusto": round(az, 2) if az is not None else None,
+        "cota_subindo": cota_subindo,
+        "leituras_altas_consecutivas": contador_anterior,
+        "alerta_persistente": (
+            regime_candidato in {"ATENCAO", "EXTREMO"}
+            and contador_anterior >= MIN_CICLOS_PERSISTENCIA
+        ),
+        "chuva_montante_24h_mm": (
+            round(chuva_montante_24h, 2)
+            if chuva_montante_24h is not None
+            else None
+        ),
+        "alerta_reforcado": alerta_reforcado,
         "tempo_para_200h": round(tempo_200, 1) if tempo_200 is not None else None,
         "tempo_para_300h": round(tempo_300, 1) if tempo_300 is not None else None,
         "motivo": motivo,
@@ -227,6 +307,11 @@ def calcular_derivada():
     print("=== MONITOR DE DERIVADA (Vz robusto) ===")
     print(f"Cota atual: {cota_atual:.1f} cm")
     print(f"Vz robusto: {vz:+.1f} cm/h" if vz is not None else "Vz robusto: indisponível")
+    print(
+        f"Vz suavizado: {vz_suavizado:+.1f} cm/h"
+        if vz_suavizado is not None
+        else "Vz suavizado: indisponível"
+    )
     print(f"Az robusto: {az:+.2f} cm/h²" if az is not None else "Az robusto: indisponível")
     print(f"Regime: {regime_atual} (candidato: {regime_candidato or 'indisponível'})")
     print(motivo)

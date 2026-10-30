@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -11,6 +12,7 @@ from src.relatorios.monitor_derivada import (
     atualizar_confirmacao,
     az_robusto,
     vz_robusto,
+    vz_suavizado_3,
 )
 
 
@@ -48,6 +50,15 @@ class VzRobustoTests(unittest.TestCase):
 
     def test_acceleration_is_unavailable_without_an_older_rate(self):
         self.assertIsNone(az_robusto([0, 0.25, 0.5], [10, 10.5, 11]))
+
+    def test_smoothed_vz_averages_the_three_latest_rates(self):
+        self.assertAlmostEqual(
+            vz_suavizado_3([0, 0.5, 1, 1.5], [10, 11, 12, 14]),
+            2.6666666667,
+        )
+
+    def test_smoothed_vz_requires_four_readings(self):
+        self.assertIsNone(vz_suavizado_3([0, 0.5, 1], [10, 11, 12]))
 
 
 class RegimeConfirmationTests(unittest.TestCase):
@@ -89,6 +100,22 @@ class RegimeConfirmationTests(unittest.TestCase):
         )
         self.assertEqual(result, ("NORMAL", "ATENCAO", 1))
 
+    def test_persistence_is_recorded_after_four_confirmed_cycles(self):
+        regime, candidate, count = "NORMAL", None, 0
+        previous_timestamp = None
+        for index in range(4):
+            timestamp = f"2026-10-27T0{index}:00:00"
+            regime, candidate, count = atualizar_confirmacao(
+                regime,
+                candidate,
+                count,
+                previous_timestamp,
+                "EXTREMO",
+                timestamp,
+            )
+            previous_timestamp = timestamp
+        self.assertEqual((regime, candidate, count), ("EXTREMO", "EXTREMO", 4))
+
 
 class MonitorIntegrationTests(unittest.TestCase):
     def test_short_history_keeps_regime_and_stores_null_metrics(self):
@@ -96,7 +123,6 @@ class MonitorIntegrationTests(unittest.TestCase):
             root = Path(temp_dir)
             history_path = root / "history.csv"
             regime_path = root / "regime.json"
-            ensemble_path = root / "ensemble.json"
             pd.DataFrame(
                 {
                     "timestamp_execucao": [
@@ -120,7 +146,6 @@ class MonitorIntegrationTests(unittest.TestCase):
             with (
                 patch.object(monitor, "HISTORICO", history_path),
                 patch.object(monitor, "REGIME_FILE", regime_path),
-                patch.object(monitor, "ENSEMBLE_FILE", ensemble_path),
             ):
                 monitor.calcular_derivada()
 
@@ -138,7 +163,6 @@ class MonitorIntegrationTests(unittest.TestCase):
             root = Path(temp_dir)
             history_path = root / "history.csv"
             regime_path = root / "regime.json"
-            ensemble_path = root / "ensemble.json"
             timestamps = pd.date_range("2026-10-27T00:00:00", periods=4, freq="30min")
             history = pd.DataFrame(
                 {
@@ -161,7 +185,6 @@ class MonitorIntegrationTests(unittest.TestCase):
             with (
                 patch.object(monitor, "HISTORICO", history_path),
                 patch.object(monitor, "REGIME_FILE", regime_path),
-                patch.object(monitor, "ENSEMBLE_FILE", ensemble_path),
             ):
                 monitor.calcular_derivada()
                 state = json.loads(regime_path.read_text(encoding="utf-8"))
@@ -170,6 +193,8 @@ class MonitorIntegrationTests(unittest.TestCase):
                 self.assertEqual(state["contador_candidato"], 1)
                 self.assertEqual(state["delta_60m"], 40.0)
                 self.assertEqual(state["vz_robusto"], 40.0)
+                self.assertEqual(state["vz_suavizado"], 40.0)
+                self.assertTrue(state["cota_subindo"])
                 self.assertEqual(state["az_robusto"], 0.0)
 
                 history.loc[len(history)] = [
@@ -188,10 +213,138 @@ class MonitorIntegrationTests(unittest.TestCase):
             self.assertEqual(state["regime"], "ATENCAO", state)
             self.assertEqual(state["regime_candidato"], "ATENCAO")
             self.assertEqual(state["contador_candidato"], 2)
+            self.assertFalse(state["alerta_persistente"])
             self.assertEqual(
                 state["timestamp_ultima_observacao"],
                 "2026-10-27T02:00:00",
             )
+
+    def test_high_smoothed_vz_does_not_activate_when_level_is_falling(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            history_path = root / "history.csv"
+            regime_path = root / "regime.json"
+            rainfall_path = root / "rain.csv"
+            timestamps = pd.date_range("2026-10-27T00:00:00", periods=4, freq="30min")
+            pd.DataFrame(
+                {
+                    "timestamp_execucao": timestamps.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "cota_atual_cm": [10, 30, 50, 40],
+                }
+            ).to_csv(history_path, index=False)
+            rainfall_path.write_text(
+                "data,chuva_montante_24h\n2026-10-27,60\n", encoding="utf-8"
+            )
+
+            with (
+                patch.object(monitor, "HISTORICO", history_path),
+                patch.object(monitor, "REGIME_FILE", regime_path),
+                patch.object(monitor, "CHUVA_MONTANTE_FILE", rainfall_path),
+            ):
+                monitor.calcular_derivada()
+
+            state = json.loads(regime_path.read_text(encoding="utf-8"))
+            self.assertEqual(state["vz_suavizado"], 20.0)
+            self.assertFalse(state["cota_subindo"])
+            self.assertEqual(state["regime_candidato"], "NORMAL")
+            self.assertFalse(state["alerta_reforcado"])
+
+    def test_confirmed_rising_vz_is_reinforced_by_upstream_rain(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            history_path = root / "history.csv"
+            regime_path = root / "regime.json"
+            rainfall_path = root / "rain.csv"
+            timestamps = pd.date_range(
+                pd.Timestamp.now().floor("min") - pd.Timedelta(hours=2),
+                periods=4,
+                freq="30min",
+            )
+            history = pd.DataFrame(
+                {
+                    "timestamp_execucao": timestamps.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "cota_atual_cm": [10, 20, 30, 40],
+                }
+            )
+            history.to_csv(history_path, index=False)
+            rainfall_path.write_text(
+                f"data,chuva_montante_24h\n{datetime.now():%Y-%m-%d},60\n",
+                encoding="utf-8",
+            )
+            regime_path.write_text(
+                json.dumps(
+                    {
+                        "regime": "NORMAL",
+                        "regime_candidato": "ATENCAO",
+                        "contador_candidato": 1,
+                        "timestamp_ultima_observacao": timestamps[-1].isoformat(),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            next_timestamp = timestamps[-1] + pd.Timedelta(minutes=30)
+            history.loc[len(history)] = [
+                next_timestamp.strftime("%Y-%m-%dT%H:%M:%S"),
+                50,
+            ]
+            history.to_csv(history_path, index=False)
+
+            with (
+                patch.object(monitor, "HISTORICO", history_path),
+                patch.object(monitor, "REGIME_FILE", regime_path),
+                patch.object(monitor, "CHUVA_MONTANTE_FILE", rainfall_path),
+            ):
+                monitor.calcular_derivada()
+
+            state = json.loads(regime_path.read_text(encoding="utf-8"))
+            self.assertEqual(state["regime"], "ATENCAO")
+            self.assertEqual(state["chuva_montante_24h_mm"], 60.0)
+            self.assertTrue(state["alerta_reforcado"])
+            self.assertIn("ALERTA REFORÇADO: Vz alto + chuva a montante", state["motivo"])
+
+    def test_extreme_regime_requires_two_rising_cycles_above_52(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            history_path = root / "history.csv"
+            regime_path = root / "regime.json"
+            timestamps = pd.date_range(
+                pd.Timestamp.now().floor("min") - pd.Timedelta(hours=2),
+                periods=4,
+                freq="30min",
+            )
+            history = pd.DataFrame(
+                {
+                    "timestamp_execucao": timestamps.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "cota_atual_cm": [10, 40, 70, 100],
+                }
+            )
+            history.to_csv(history_path, index=False)
+
+            with (
+                patch.object(monitor, "HISTORICO", history_path),
+                patch.object(monitor, "REGIME_FILE", regime_path),
+                patch.object(
+                    monitor, "CHUVA_MONTANTE_FILE", root / "missing-rain.csv"
+                ),
+            ):
+                monitor.calcular_derivada()
+                state = json.loads(regime_path.read_text(encoding="utf-8"))
+                self.assertEqual(state["regime"], "INDEFINIDO")
+                self.assertEqual(state["contador_candidato"], 1)
+
+                next_timestamp = timestamps[-1] + pd.Timedelta(minutes=30)
+                history.loc[len(history)] = [
+                    next_timestamp.strftime("%Y-%m-%dT%H:%M:%S"),
+                    130,
+                ]
+                history.to_csv(history_path, index=False)
+                monitor.calcular_derivada()
+                state = json.loads(regime_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(state["vz_suavizado"], 60.0)
+            self.assertEqual(state["regime"], "EXTREMO")
+            self.assertEqual(state["regime_candidato"], "EXTREMO")
+            self.assertEqual(state["contador_candidato"], 2)
 
 
 if __name__ == "__main__":
