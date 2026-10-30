@@ -339,7 +339,22 @@ app.layout = dbc.Container([
             dbc.Row([
                 dbc.Col(criar_card("Cota Atual (ERAB)", "cota-val", "cota-sub"), width=3),
                 dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
-                dbc.Col(criar_card("Probabilidade de Cheia", "prob-val", "prob-sub", "text-success"), width=3),
+                dbc.Col(
+                    html.Div([
+                        criar_card(
+                            "Probabilidade de Cheia",
+                            "prob-val",
+                            "prob-sub",
+                            "text-success",
+                        ),
+                        html.Small(
+                            "Modo Sombra — Não é sistema de alerta "
+                            "(LOEO reprovado: PR-AUC 0.30, Recall 0.16)",
+                            className="text-warning d-block mt-2",
+                        ),
+                    ]),
+                    width=3,
+                ),
                 dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
                 dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
                 dbc.Col(html.Div([

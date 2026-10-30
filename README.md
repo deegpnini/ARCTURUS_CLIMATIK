@@ -1,500 +1,423 @@
-# ARCTURUS CLIMATIK
-
-## Evolução: ARCTURUS v2 (Integração de Montante)
-**Data:** 23/10/2026
-
-Após a descontinuação da estação âncora ANA 84580000 (encerramento do contrato ANA/IGAM), o modelo foi re-treinado utilizando dados de 3 estações vivas a montante (CGH São Maurício, PCH Rio Fortuna e CGH Invernadinha). 
-
-**Descoberta Científica (Tempo de Viagem):**
-Através de um teste A/B focado em momentos de subida (delta > 5cm), descobrimos que o tempo de viagem da água a montante para a bacia do Tubarão é de **2 horas**. Modelos com lag de 6h ou 12h pioravam a previsão; o lag de 2h reduziu o erro.
-
-**Resultados do v2 (Backtest 2025-2026):**
-- **Features:** 30 (adicionadas as variações de cota de montante com lag de 2h).
-- **RMSE Geral:** 3.77 cm (ante 6.90 cm do modelo antigo sem montante).
-- **RMSE em Subidas:** 11.53 cm (foco no que realmente importa para alertas).
-- **R²:** 0.98 (o modelo explica 98% da variação local).
-
-O arquivo do modelo está salvo em `modelos/modelo_delta_1h_com_montante.txt` com o respectivo manifesto de reprodutibilidade.
-
----
-
-**Projeto experimental de pesquisa hidrológica para Santa Catarina.**
-
-O ARCTURUS CLIMATIK investiga se dados históricos, telemetria dos rios e
-informações meteorológicas podem ajudar a antecipar a elevação do nível
-da água.
-
-É um projeto pessoal de pesquisa. Não é um sistema oficial de alerta, não
-substitui a Defesa Civil, o CEMADEN ou os órgãos responsáveis e ainda não
-demonstrou desempenho prospectivo suficiente para orientar decisões de
-emergência.
-
-## Objetivo
-
-Estimar a variação do nível de uma estação fluviométrica com 1, 3 e 6 horas
-de antecedência e reconstruir a cota prevista:
-
-`cota_prevista = cota_atual + delta_previsto`
-
-A meta é demonstrar ganho sobre referências simples, como persistência e
-tendência, e verificar se esse ganho oferece antecedência útil para
-identificar elevações perigosas do rio.
-
-Prever o nível do rio não é o mesmo que prever inundação urbana. Para estudar
-impactos, também são necessários registros dos locais atingidos, chuva,
-condições do terreno e informações sobre os danos.
-
-## Estado atual
-
-- Estação de referência: ANA 84580000, Rio do Pouso, bacia do Rio Tubarão.
-- Algoritmo de referência: LightGBM, com alvo delta.
-- Modelo de produção documentado: 26 features, sem a variável `vazao`.
-- Avaliação histórica: leave-one-event-out (LOEO), com 27 eventos.
-- Estado operacional: não considerar o sistema pronto para previsão pública
-  em tempo real. A atual disponibilidade e a qualidade da telemetria precisam
-  ser verificadas antes de qualquer operação ao vivo.
-- O projeto não emite alertas oficiais.
-
-## Registros históricos em investigação
-
-A extração local do arquivo
-`data/_backup/cache/historico_84580000_MASTER.csv` contém os valores abaixo:
-
-| Data registrada | Cota no arquivo local |
-|---|---:|
-| 24/03/1974 | 727 cm |
-| 01/10/2001 | 730 cm |
-| 05/05/2022 | 700 cm |
-| 01/12/2022 | 746 cm |
-
-Esses valores documentam o conteúdo da extração local. Não devem ser tratados
-como classificação oficial dos maiores desastres ou como prova isolada de
-inundação urbana. A unidade, o significado do campo, a consistência e a
-resolução temporal precisam ser confirmados junto à fonte original.
-
-A maior tragédia urbana e a maior cota de uma estação são medidas diferentes.
-Uma leitura diária também não revela necessariamente o pico intradiário.
-
-### Caso de setembro de 2026
-
-A análise local identificou uma leitura de 446 cm na estação 84580000 após
-uma lacuna de telemetria. O nível máximo ocorrido durante o intervalo sem
-dados não foi observado e permanece desconhecido.
-
-Portanto, 446 cm não deve ser apresentado como o pico máximo real da cheia,
-nem como prova isolada de inundação urbana. O caso permanece como uma
-investigação de qualidade da série e do comportamento do modelo diante de
-dados incompletos.
-
-## Resultados históricos e validação
-
-O modelo LightGBM prevê `delta`, a mudança estimada da cota. Os resultados
-abaixo são retrospectivos e não garantem desempenho em novas tempestades.
-
-Na versão sem `vazao`, quatro execuções (padrão e sementes 11, 22 e 33)
-produziram as seguintes faixas:
-
-| Horizonte | MAE médio do delta por evento | Vitórias sobre persistência | Vitórias sobre modelo absoluto |
-|---|---:|---:|---:|
-| 1h | 2,09–2,10 cm | 26–27 de 27 | 18–20 de 27 |
-| 3h | 6,15–6,20 cm | 26 de 27 | 17–22 de 27 |
-| 6h | 10,07–10,35 cm | 23–24 de 27 | 16–20 de 27 |
-
-As faixas mostram variação entre execuções. As contagens de vitórias usam
-margens de empate definidas no relatório técnico. O MAE apresentado é a
-média dos MAEs por evento, não uma métrica ponderada pelo número de leituras.
-
-### Análise da remoção de `vazao`
-
-A diferença é calculada como MAE do modelo sem `vazao` menos MAE do modelo
-com `vazao`. Valor positivo significa erro maior após remover a variável.
-
-| Horizonte | Diferença média | IC 95% bootstrap |
-|---|---:|---:|
-| 1h | -0,001 cm | -0,021 a +0,016 cm |
-| 3h | -0,060 cm | -0,131 a +0,004 cm |
-| 6h | +0,205 cm | +0,035 a +0,410 cm |
-
-O resultado de 6h sugere um pequeno custo médio após remover `vazao`.
-A versão com 26 features favorece a simplicidade e reduz a dependência de
-uma variável considerada redundante na auditoria. Isso não prova que as
-duas versões sejam equivalentes em todas as situações.
-
-Os intervalos são estimativas exploratórias baseadas na avaliação por
-eventos. Não eliminam a incerteza causada por novas cheias, diferenças entre
-eventos ou escolhas de treinamento.
-
-## Limitações
-
-- Uma estação de referência e 27 eventos na avaliação documentada.
-- Poucos eventos severos para concluir que o modelo antecipa cheias extremas.
-- A avaliação retrospectiva não comprova desempenho em operação real.
-- A série histórica diária não substitui dados sub-horários para avaliar
-  previsões de 1h, 3h e 6h.
-- Valores ausentes podem permitir que o modelo gere uma saída sem informação
-  suficiente. A operação deve identificar essas situações e bloquear
-  previsões que não cumpram critérios de qualidade previamente definidos.
-- Estações distintas podem ter referências de nível e características
-  próprias. O modelo não deve ser transferido sem calibração e validação.
-- O projeto ainda não demonstrou capacidade validada de prever inundação
-  em uma rua ou bairro específico.
-
-## Dados e reprodutibilidade
-
-As pastas locais `data/` e `resultados/` não fazem parte deste commit público.
-Dados brutos, respostas de API e configurações locais devem ser preservados
-e auditados separadamente. Credenciais nunca devem ser publicadas.
-
-Resultados públicos devem indicar os arquivos de referência, versões,
-configurações, hashes e protocolo usados. Métricas de execuções distintas
-não devem ser combinadas sem explicitar a regra de comparação.
-
-## Fontes de dados em investigação
-
-- ANA HidroWebService: dados fluviométricos, cotas e chuva.
-- INMET: observações meteorológicas.
-- CEMADEN: monitoramento de chuva e referências de eventos.
-- EPAGRI/CIRAM e órgãos de defesa civil: estações, boletins e registros de
-  impactos, sujeitos a verificação.
-- Registros oficiais de desastres: datas dos eventos, locais atingidos e
-  descrição dos impactos.
-
-Disponibilidade, qualidade, horários e significado de cada campo precisam
-ser verificados antes da integração ao conjunto de treinamento.
-
-## Próximas etapas
-
-1. Auditar os registros históricos e os códigos de consistência da ANA.
-2. Montar um catálogo de eventos com níveis, chuva e impactos documentados.
-3. Testar a antecipação de ultrapassagens de níveis de referência em eventos
-   que não participaram do treinamento.
-4. Medir eventos detectados, falsos alarmes e antecedência útil.
-5. Expandir para outras bacias somente após auditar e validar cada estação.
-
-## Princípios de trabalho
-
-- Raw Evidence First: a evidência observada prevalece sobre a memória.
-- Correlação não implica causalidade.
-- Backtest não substitui avaliação prospectiva.
-- Dados de referência não são sobrescritos.
-- Dados ausentes não são preenchidos sem regra explícita.
-- Limitações devem ser declaradas antes dos resultados.
-
-## Licença
-
-Consulte o arquivo `LICENSE`.
-
----
-
-## Testes que não funcionaram (Honestidade Radical)
-
-Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
-
-### GloFAS (Vazão Simulada do Copernicus)
-- **O que foi testado:** Adicionar a vazão simulada do GloFAS (Open-Meteo Flood API) como feature do modelo.
-- **Resultado:** Não agregou valor. No 3h, o RMSE piorou de 8.49 para 8.55. No 6h, empatou (14.43 vs 14.42), mas a performance na subida piorou (50.72 vs 51.50).
-- **Conclusão:** A cota local (e seus lags) já capturam a informação que o GloFAS tentaria adicionar. O GloFAS é uma simulação global que não tem a resolução temporal nem a precisão da cota local.
-
-### LSTM e GRU (Redes Neurais)
-- **O que foi testado:** Treinar LSTM e GRU com janelas de 48 passos (12h) para prever o delta de 6h.
-- **Resultado:** O LightGBM venceu com folga. RMSE de 14.60 cm (LightGBM) vs 15.92 cm (GRU) e 16.92 cm (LSTM). O tempo de treino foi 1.385x maior para as redes.
-- **Conclusão:** Para dados tabulares com features bem construídas, o gradient boosting (LightGBM/XGBoost) é mais eficiente e preciso que as redes neurais. A literatura confirma isso para datasets com menos de 10.000 amostras.
-
-### Invernadinha (Estação de Montante)
-- **O que foi testado:** Usar a CGH Invernadinha (70110000) como feature de montante.
-- **Resultado:** A estação é da Bacia do Uruguai (prefixo 7x), não da Bacia do Tubarão (prefixo 84). A correlação com o Rio do Pouso era espúria.
-- **Conclusão:** Removida do modelo. A chuva da bacia (Open-Meteo) carrega a informação que a Invernadinha deveria fornecer.
-
-### CEMADEN (Pluviômetros Densos)
-- **O que foi testado:** Coletar dados de pluviômetros do CEMADEN via API.
-- **Resultado:** O IP da API (`150.163.255.240`) está fora do ar. O fallback para Open-Meteo foi implementado.
-- **Conclusão:** O CEMADEN é uma fonte instável. O HydroBR (pacote R) é a rota recomendada para o futuro.
-
----
-
-## Campeonato de Modelos (1 passo à frente = 15 min)
-
-| Modelo | RMSE (cm) | Tempo (s) |
-| :--- | :--- | :--- |
-| **LightGBM** | **0.09** | 0.3 |
-| XGBoost | 0.38 | 0.2 |
-| LSTM | 2.00 | 179.5 |
-| GRU | 2.18 | 279.7 |
-
-## Campeonato de Modelos (6h à frente)
-
-| Modelo | RMSE (cm) | Tempo (s) |
-| :--- | :--- | :--- |
-| **LightGBM** | **14.60** | 0.2 |
-| XGBoost | 15.26 | 0.2 |
-| GRU | 15.92 | 277.1 |
-| LSTM | 16.92 | 148.7 |
-
-**Veredito:** O LightGBM é o modelo de produção. As redes neurais (LSTM/GRU) foram lentas e imprecisas para este dataset.
-
----
-
-
-
-Esta seção documenta os testes que foram feitos, mas que **não agregaram valor** ao modelo. Ela existe porque a ciência não é feita só de acertos. Cada teste descartado é uma prova de rigor.
-
-### GloFAS (Vazão Simulada do Copernicus)
-- **O que foi testado:** Adicionar a vazão simulada do GloFAS (Open-Meteo Flood API) como feature do modelo.
-- **Resultado:** Não agregou valor. No 3h, o RMSE piorou de 8.49 para 8.55. No 6h, empatou (14.43 vs 14.42), mas a performance na subida piorou (50.72 vs 51.50).
-- **Conclusão:** A cota local (e seus lags) já capturam a informação que o GloFAS tentaria adicionar. O GloFAS é uma simulação global que não tem a resolução temporal nem a precisão da cota local.
-
-### LSTM e GRU (Redes Neurais)
-- **O que foi testado:** Treinar LSTM e GRU com janelas de 48 passos (12h) para prever o delta de 6h.
-- **Resultado:** O LightGBM venceu com folga. RMSE de 14.60 cm (LightGBM) vs 15.92 cm (GRU) e 16.92 cm (LSTM). O tempo de treino foi 1.385x maior para as redes.
-- **Conclusão:** Para dados tabulares com features bem construídas, o gradient boosting (LightGBM/XGBoost) é mais eficiente e preciso que as redes neurais. A literatura confirma isso para datasets com menos de 10.000 amostras.
-
-### Invernadinha (Estação de Montante)
-- **O que foi testado:** Usar a CGH Invernadinha (70110000) como feature de montante.
-- **Resultado:** A estação é da Bacia do Uruguai (prefixo 7x), não da Bacia do Tubarão (prefixo 84). A correlação com o Rio do Pouso era espúria.
-- **Conclusão:** Removida do modelo. A chuva da bacia (Open-Meteo) carrega a informação que a Invernadinha deveria fornecer.
-
-### CEMADEN (Pluviômetros Densos)
-- **O que foi testado:** Coletar dados de pluviômetros do CEMADEN via API.
-- **Resultado:** O IP da API (`150.163.255.240`) está fora do ar. O fallback para Open-Meteo foi implementado.
-- **Conclusão:** O CEMADEN é uma fonte instável. O HydroBR (pacote R) é a rota recomendada para o futuro.
-
----
-
-## Campeonato de Modelos (1 passo à frente = 15 min)
-
-| Modelo | RMSE (cm) | Tempo (s) |
-| :--- | :--- | :--- |
-| **LightGBM** | **0.09** | 0.3 |
-| XGBoost | 0.38 | 0.2 |
-| LSTM | 2.00 | 179.5 |
-| GRU | 2.18 | 279.7 |
-
-## Campeonato de Modelos (6h à frente)
-
-| Modelo | RMSE (cm) | Tempo (s) |
-| :--- | :--- | :--- |
-| **LightGBM** | **14.60** | 0.2 |
-| XGBoost | 15.26 | 0.2 |
-| GRU | 15.92 | 277.1 |
-| LSTM | 16.92 | 148.7 |
-
-**Veredito:** O LightGBM é o modelo de produção. As redes neurais (LSTM/GRU) foram lentas e imprecisas para este dataset.
-
----
-
-## Calibração ERAB x 84580000 (Bloqueio Atual)
-
-O modelo v8 foi treinado na régua do Rio do Pouso (84580000). O painel de produção usa a cota da ERAB (Tubarão Saneamento), que é outro ponto do rio, com outra escala.
-
-**O problema:** Não existe período de sobreposição entre as duas séries. O cache da ANA termina em 22/09/2026. O JSON da ERAB tem um único ponto (23/10/2026, 67 cm).
-
-**Consequência:** O modelo não pode ser operado em tempo real com a cota da ERAB até que a Tubarão Saneamento forneça o histórico da ERAB (pelo menos 12 meses, incluindo o período de 18 a 26/09/2026).
-
-**Ação:** Pedido formal enviado à Tubarão Saneamento. Enquanto isso, o painel deve exibir o rótulo **"EXPERIMENTAL — ERAB NÃO CALIBRADA"** e bloquear a previsão se o dado tiver mais de 45 minutos.
-
----
-
----
-
-## Limitações Conhecidas
-
-### Julho/2024 (Evento Perdido)
-O evento de julho/2024 (cota máxima diária de 335 cm) está presente na série longa da ANA (1939-2026), mas **não está no cache de telemetria de 15 min**. A API da ANA não retornou os dados desse período, e o `build_dataset.py` não pôde incluí-lo no dataset de treino.
-
-**Consequência:** O modelo de 15 min nunca viu o maior evento do período 2023-2026. Ele foi treinado em um período calmo (cota máxima de 253 cm) e testado em um período com eventos extremos (cota máxima de 312 cm), mas sem o evento de 335 cm de julho/2024.
-
-**Isso é uma limitação da fonte de dados, não do modelo.**
-
-### Resolução Temporal da Série Longa
-A série longa da ANA (1939-2026) é **diária**, não horária. Ela é útil para contar quantos eventos extremos existem (182 eventos com cota > 300 cm), mas não para treinar o modelo de previsão de 15 min.
-
-### Calibração ERAB (Bloqueio Atual)
-O modelo v8 foi treinado na régua do Rio do Pouso (84580000). O painel de produção usa a cota da ERAB (Tubarão Saneamento). Não existe período de sobreposição entre as duas séries.
-
-**Ação:** Pedido formal enviado à Tubarão Saneamento. Enquanto isso, o painel deve exibir o rótulo **"EXPERIMENTAL — ERAB NÃO CALIBRADA"** e bloquear a previsão se o dado tiver mais de 45 minutos.
-
----
-
----
-
-## Validação de Dados (24/10/2026)
-
-### Queda da Cota (67 cm → 26 cm)
-No dia 23/10/2026, a cota da ERAB (Tubarão Saneamento) estava em 67 cm. No dia 24/10/2026, às 12:15, caiu para 26 cm. **Isso não é erro do Playwright.** O rio está em recessão (período de seca), e a cota de 26 cm é consistente com o histórico da bacia (cota mínima de 24 cm em dias secos).
-
-### Interpretação do Modelo (0.35% de Probabilidade)
-Com a cota em 26 cm e a chuva prevista de 56.9 mm em 48h, o classificador de cheia calculou uma probabilidade de **0.35%** de o rio atingir 300 cm em 2 dias. Isso é consistente com a física da bacia: o rio está tão baixo que, mesmo com chuva significativa, a água não sobe 274 cm em 48h.
-
-### Fontes de Dados e Confiabilidade
-- **Cota:** Tubarão Saneamento (ERAB) via Playwright. Dado validado (26 cm em 24/10 às 12:15).
-- **Chuva Prevista:** Open-Meteo Forecast. 56.9 mm em 48h.
-- **Classificador de Cheia:** Treinado com 87 anos de dados (1939-2026) e 182 eventos extremos. AUC de 0.869.
-
-### Limitações Conhecidas
-- **Calibração ERAB x 84580000:** O modelo foi treinado na régua do Rio do Pouso (84580000), mas opera com a cota da ERAB. A calibração está pendente (pedido enviado à Tubarão Saneamento).
-- **Evento de Julho/2024:** O evento de 335 cm (média diária) está na série longa, mas não no cache de 15 min. O modelo não pôde aprender com ele.
-- **Eventos Extremos:** O modelo tem maior incerteza em subidas muito rápidas (RMSE de ~12 cm na subida).
-
----
-
-## Mapa de Impacto (Google Open Buildings)
-
-O fluxo `baixar_open_buildings.py` consulta a coleção
-`GOOGLE/Research/open-buildings/v3/polygons` no Google Earth Engine para a
-caixa de coordenadas entre longitudes -49.2 e -48.6 e latitudes -28.8 e -28.2.
-O GeoPackage gerado localmente é `cache/buildings_open_buildings.gpkg`.
-
-No cruzamento com a máscara binária de inundação de maio de 2019, foram
-identificadas **1.290 edificações afetadas entre 360.920 footprints (0,36%)**.
-Essa estimativa substitui a contagem preliminar de 2 prédios baseada em OSM;
-os footprints são atribuídos a um único tile por ponto representativo para
-evitar duplicações nas bordas do download. O resultado depende da cobertura
-do conjunto de footprints e da resolução de 30 m da máscara, e não constitui
-validação cadastral ou levantamento de danos.
-
-Para recalcular a interseção sem baixar novamente a coleção:
-
-```bash
-source .venv/bin/activate
-python baixar_open_buildings.py --reprocess-cache
+# Gitleaks
+
+```
+┌─○───┐
+│ │╲  │
+│ │ ○ │
+│ ○ ░ │
+└─░───┘
 ```
 
-O resultado JSON é salvo em
-`resultados/dano_inundacao_tubarao_2019_edificacoes.json`. O GeoPackage fica
-no cache local e não é versionado.
+<p align="left">
+  <p align="left">
+	  <a href="https://github.com/zricethezav/gitleaks/actions/workflows/test.yml">
+		  <img alt="Github Test" src="https://github.com/zricethezav/gitleaks/actions/workflows/test.yml/badge.svg">
+	  </a>
+	  <a href="https://hub.docker.com/r/zricethezav/gitleaks">
+		  <img src="https://img.shields.io/docker/pulls/zricethezav/gitleaks.svg" />
+	  </a>
+	  <a href="https://github.com/zricethezav/gitleaks-action">
+        	<img alt="gitleaks badge" src="https://img.shields.io/badge/protected%20by-gitleaks-blue">
+    	 </a>
+	  <a href="https://twitter.com/intent/follow?screen_name=zricethezav">
+		  <img src="https://img.shields.io/twitter/follow/zricethezav?label=Follow%20zricethezav&style=social&color=blue" alt="Follow @zricethezav" />
+	  </a>
+  </p>
+</p>
 
-## A.C. Geo (Mapa de Inundação)
+### Join our Discord! [![Discord](https://img.shields.io/discord/1102689410522284044.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/8Hzbrnkr7E)
 
-No painel Dash, o botão **A.C. Geo (Mapa 2019)** na barra lateral alterna a
-exibição do mapa `assets/mapa_inundacao_tubarao_2019_satelite.png` dentro do
-painel. A seção identifica o evento como Tubarão, maio de 2019, e oferece um
-link para abrir o arquivo original. O mapa é uma referência visual do evento,
-não um produto oficial de alerta ou delimitação cadastral.
+Gitleaks is a SAST tool for **detecting** and **preventing** hardcoded secrets like passwords, api keys, and tokens in git repos. Gitleaks is an **easy-to-use, all-in-one solution** for detecting secrets, past or present, in your code.
 
-## Visão de Longo Prazo
+```
+➜  ~/code(master) gitleaks detect --source . -v
 
-A visão de longo prazo organiza a evolução do ARCTURUS CLIMATIK em quatro
-camadas complementares. Trata-se de uma arquitetura de pesquisa e evolução:
-os componentes abaixo não constituem, em conjunto, um sistema oficial ou
-validado de alerta, e as previsões não substituem a Defesa Civil.
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
 
-### Camada 1 — Alerta de Curto Prazo
 
-Monitorar a dinâmica observada do rio por meio de **Vz** (velocidade de
-variação da cota), **Az** (aceleração da variação) e estimativas de **tempo até
-o limiar**. Esses indicadores experimentais podem apoiar a leitura da
-situação; decisões e alertas à população cabem às autoridades competentes,
-incluindo a Defesa Civil.
-
-### Camada 2 — Alerta de Médio Prazo
-
-Combinar o **ensemble meteorológico (Open-Meteo + ECMWF)** e o **LightGBM v2**
-com evidências espaciais: o **Mapa de Inundação** observado por Sentinel-1 e
-o **Mapa de Impacto**, que identificou 1.290 footprints de edificações
-intersectando a máscara de inundação de 2019. As estimativas dependem da
-cobertura e resolução dos dados e não equivalem a danos cadastrais verificados.
-
-### Camada 3 — Alerta de Longo Prazo
-
-Desenvolver um **Mapa de Recorrência** e um **Mapa de Risco** para investigar
-áreas e condições associadas a impactos recorrentes. A análise deverá
-considerar possíveis causas raiz — como gargalos hidráulicos e limitações de
-drenagem — e apoiar recomendações de obras a serem avaliadas por estudos
-técnicos e pelos órgãos responsáveis. Essa camada é uma direção de pesquisa,
-não um diagnóstico concluído.
-
-### Camada 4 — Aprendizado Contínuo
-
-Cada evento documentado — incluindo **2019, 2022 e 2026** — poderá contribuir
-para revisar dados, métodos e hipóteses, após validação das fontes e dos
-registros de impacto. A combinação de **mapa de inundação + Google Open
-Buildings + relevo** busca ajudar a investigar *por onde a água chegou e por
-quê*. É um objetivo de aprendizado e análise; não implica que todos esses
-eventos já estejam integrados ou que suas causas estejam estabelecidas.
-
-## Banco de Dados
-
-O armazenamento operacional de leituras usa PostgreSQL no WSL; o Dash e o
-gravador conectam-se ao banco `arcturus` pelo socket Unix com autenticação
-peer como o usuário Linux `oikos` (sem senha e sem abrir acesso TCP). A
-instalação idempotente está em [docs/POSTGRES_SETUP.md](docs/POSTGRES_SETUP.md)
-e pode ser executada com `./setup_postgres_wsl.sh`.
-
-Migre as leituras existentes sem apagar o arquivo SQLite:
-
-```bash
-source .venv/bin/activate
-python src/relatorios/migrar_postgres.py --sqlite data/arcturus.db --skip-geojson
+Finding:     "export BUNDLE_ENTERPRISE__CONTRIBSYS__COM=cafebabe:deadbeef",
+Secret:      cafebabe:deadbeef
+RuleID:      sidekiq-secret
+Entropy:     2.609850
+File:        cmd/generate/config/rules/sidekiq.go
+Line:        23
+Commit:      cd5226711335c68be1e720b318b7bc3135a30eb2
+Author:      John
+Email:       john@users.noreply.github.com
+Date:        2022-08-03T12:31:40Z
+Fingerprint: cd5226711335c68be1e720b318b7bc3135a30eb2:cmd/generate/config/rules/sidekiq.go:sidekiq-secret:23
 ```
 
-O script preserva IDs, timestamps, valores, regime e QC, e também migra as
-colunas de chuva e confiança presentes no SQLite. O gravador atual é
-`src/relatorios/gravar_postgres.py`; o Dash consulta as 100 leituras mais
-recentes no PostgreSQL. O SQLite permanece como cópia histórica e origem da
-migração, não como banco operacional.
+## Getting Started
 
-O PostGIS cria a tabela `inundacoes` com geometria Polygon em EPSG:4326 e
-índice GiST. O shapefile `cache/mancha_2019.shp` (EPSG:32722) pode ser
-reprojetado para GeoJSON WGS84 e importado assim:
+Gitleaks can be installed using Homebrew, Docker, or Go. Gitleaks is also available in binary form for many popular platforms and OS types on the [releases page](https://github.com/zricethezav/gitleaks/releases). In addition, Gitleaks can be implemented as a pre-commit hook directly in your repo or as a GitHub action using [Gitleaks-Action](https://github.com/gitleaks/gitleaks-action).
+
+### Installing
 
 ```bash
-source .venv/bin/activate
-python -c 'import geopandas as gpd; gpd.read_file("cache/mancha_2019.shp").to_crs(epsg=4326).to_file("cache/mancha_2019.geojson")'
-python src/relatorios/migrar_postgres.py --sqlite data/arcturus.db \
-  --geojson cache/mancha_2019.geojson
+# MacOS
+brew install gitleaks
+
+# Docker (DockerHub)
+docker pull zricethezav/gitleaks:latest
+docker run -v ${path_to_host_folder_to_scan}:/path zricethezav/gitleaks:latest [COMMAND] --source="/path" [OPTIONS]
+
+# Docker (ghcr.io)
+docker pull ghcr.io/gitleaks/gitleaks:latest
+docker run -v ${path_to_host_folder_to_scan}:/path ghcr.io/gitleaks/gitleaks:latest [COMMAND] --source="/path" [OPTIONS]
+
+# From Source
+git clone https://github.com/gitleaks/gitleaks.git
+cd gitleaks
+make build
 ```
 
-O shapefile importado contém 85.245 polígonos válidos na área de interesse.
-O `mancha_inundacao.geojson` atualmente na raiz foi gerado de um limiar de
-altitude SRTM e não deve ser tratado como o contorno observado do evento.
-Sem uma fonte verificada, use `--skip-geojson`; a tabela e o índice são
-criados sem inventar geometrias.
+### GitHub Action
 
-## Backup
+Check out the official [Gitleaks GitHub Action](https://github.com/gitleaks/gitleaks-action)
 
-O script `backup_diario.sh` cria uma cópia diária em `backup/YYYYMMDD/` do
-PostgreSQL (formato custom do `pg_dump`), preserva também um snapshot do
-SQLite legado quando o arquivo ainda existe e copia os arquivos operacionais:
-
-- `data/regime_atual.json`
-- `data/chuva_ensemble_consolidada.json`
-- `data/simulacao_probabilidade_atual.json`
-- `data/health_check.json`
-- `resultados/historico_previsoes.csv`
-
-O agendamento local é diário às 03:00. Para executar manualmente:
-
-```bash
-/home/oikos/projetos/ARCTURUS_CLIMATIK/backup_diario.sh
+```
+name: gitleaks
+on: [pull_request, push, workflow_dispatch]
+jobs:
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations, not personal accounts.
 ```
 
-Os backups locais não devem ser versionados; `backup/` está listado no
-`.gitignore`.
+### Pre-Commit
 
-## Desenvolvimento Assistido por IA (XERJ)
+1. Install pre-commit from https://pre-commit.com/#install
+2. Create a `.pre-commit-config.yaml` file at the root of your repository with the following content:
 
-O ARCTURUS utiliza o **XERJ** (v1.0.0) para indexação local do código-fonte.
+   ```
+   repos:
+     - repo: https://github.com/gitleaks/gitleaks
+       rev: v8.16.1
+       hooks:
+         - id: gitleaks
+   ```
 
-**Benefícios:**
-- Busca semântica do código (sem ler arquivos inteiros).
-- Economia de tokens (o Copilot recebe o trecho exato, não o arquivo todo).
-- Localização rápida de funções (ex: "onde o Vz é calculado?").
-- Integração com GitHub Copilot via MCP (Model Context Protocol).
-- Navegação contextual do projeto.
+   for a [native execution of GitLeaks](https://github.com/zricethezav/gitleaks/releases) or use the [`gitleaks-docker` pre-commit ID](https://github.com/zricethezav/gitleaks/blob/master/.pre-commit-hooks.yaml) for executing GitLeaks using the [official Docker images](#docker)
 
-**Índices disponíveis:**
-- `src/` (109 arquivos, 1.462 documentos) → prefixo `ax`.
-- `tools/` (59 arquivos, 455 documentos) → prefixo `tools`.
+3. Auto-update the config to the latest repos' versions by executing `pre-commit autoupdate`
+4. Install with `pre-commit install`
+5. Now you're all set!
 
-**Exemplos de perguntas:**
-- "Onde é calculado o Vz?"
-- "Onde o Az é escrito no JSON?"
-- "Onde o regime é atualizado?"
-- "Onde o PostgreSQL recebe novas leituras?"
+```
+➜ git commit -m "this commit contains a secret"
+Detect hardcoded secrets.................................................Failed
+```
 
-**Configuração:**
-- O arquivo `.vscode/mcp.json` contém a configuração do servidor XERJ.
-- O XERJ roda na porta `9200` (MCP stdio server).
+Note: to disable the gitleaks pre-commit hook you can prepend `SKIP=gitleaks` to the commit command
+and it will skip running gitleaks
+
+```
+➜ SKIP=gitleaks git commit -m "skip gitleaks check"
+Detect hardcoded secrets................................................Skipped
+```
+
+## Usage
+
+```
+Usage:
+  gitleaks [command]
+
+Available Commands:
+  completion  generate the autocompletion script for the specified shell
+  detect      detect secrets in code
+  help        Help about any command
+  protect     protect secrets in code
+  version     display gitleaks version
+
+Flags:
+  -b, --baseline-path string       path to baseline with issues that can be ignored
+  -c, --config string              config file path
+                                   order of precedence:
+                                   1. --config/-c
+                                   2. env var GITLEAKS_CONFIG
+                                   3. (--source/-s)/.gitleaks.toml
+                                   If none of the three options are used, then gitleaks will use the default config
+      --exit-code int              exit code when leaks have been encountered (default 1)
+  -h, --help                       help for gitleaks
+  -l, --log-level string           log level (trace, debug, info, warn, error, fatal) (default "info")
+      --max-target-megabytes int   files larger than this will be skipped
+      --no-color                   turn off color for verbose output
+      --no-banner                  suppress banner
+      --redact                     redact secrets from logs and stdout
+  -f, --report-format string       output format (json, csv, junit, sarif) (default "json")
+  -r, --report-path string         report file
+  -s, --source string              path to source (default ".")
+  -v, --verbose                    show verbose output from scan
+
+Use "gitleaks [command] --help" for more information about a command.
+```
+
+### Commands
+
+There are two commands you will use to detect secrets; `detect` and `protect`.
+
+#### Detect
+
+The `detect` command is used to scan repos, directories, and files. This command can be used on developer machines and in CI environments.
+
+When running `detect` on a git repository, gitleaks will parse the output of a `git log -p` command (you can see how this executed
+[here](https://github.com/zricethezav/gitleaks/blob/7240e16769b92d2a1b137c17d6bf9d55a8562899/git/git.go#L17-L25)).
+[`git log -p` generates patches](https://git-scm.com/docs/git-log#_generating_patch_text_with_p) which gitleaks will use to detect secrets.
+You can configure what commits `git log` will range over by using the `--log-opts` flag. `--log-opts` accepts any option for `git log -p`.
+For example, if you wanted to run gitleaks on a range of commits you could use the following command: `gitleaks detect --source . --log-opts="--all commitA..commitB"`.
+See the `git log` [documentation](https://git-scm.com/docs/git-log) for more information.
+
+You can scan files and directories by using the `--no-git` option.
+
+If you want to run only specific rules you can do so by using the `--enable-rule` option (with a rule ID as a parameter), this flag can be used multiple times. For example: `--enable-rule=atlassian-api-token` will only apply that rule. You can find a list of rules [here](config/gitleaks.toml).
+
+#### Protect
+
+The `protect` command is used to scan uncommitted changes in a git repo. This command should be used on developer machines in accordance with
+[shifting left on security](https://cloud.google.com/architecture/devops/devops-tech-shifting-left-on-security).
+When running `protect` on a git repository, gitleaks will parse the output of a `git diff` command (you can see how this executed
+[here](https://github.com/zricethezav/gitleaks/blob/7240e16769b92d2a1b137c17d6bf9d55a8562899/git/git.go#L48-L49)). You can set the
+`--staged` flag to check for changes in commits that have been `git add`ed. The `--staged` flag should be used when running Gitleaks
+as a pre-commit.
+
+**NOTE**: the `protect` command can only be used on git repos, running `protect` on files or directories will result in an error message.
+
+### Creating a baseline
+
+When scanning large repositories or repositories with a long history, it can be convenient to use a baseline. When using a baseline,
+gitleaks will ignore any old findings that are present in the baseline. A baseline can be any gitleaks report. To create a gitleaks report, run gitleaks with the `--report-path` parameter.
+
+```
+gitleaks detect --report-path gitleaks-report.json # This will save the report in a file called gitleaks-report.json
+```
+
+Once as baseline is created it can be applied when running the detect command again:
+
+```
+gitleaks detect --baseline-path gitleaks-report.json --report-path findings.json
+```
+
+After running the detect command with the --baseline-path parameter, report output (findings.json) will only contain new issues.
+
+### Verify Findings
+
+You can verify a finding found by gitleaks using a `git log` command.
+Example output:
+
+```
+Finding:     aws_secret="AKIAIMNOJVGFDXXXE4OA"
+RuleID:      aws-access-token
+Secret       AKIAIMNOJVGFDXXXE4OA
+Entropy:     3.65
+File:        checks_test.go
+Line:        37
+Commit:      ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29
+Author:      Zachary Rice
+Email:       z@email.com
+Date:        2018-01-28T17:39:00Z
+Fingerprint: ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29:checks_test.go:aws-access-token:37
+```
+
+We can use the following format to verify the leak:
+
+```
+git log -L {StartLine,EndLine}:{File} {Commit}
+```
+
+So in this example it would look like:
+
+```
+git log -L 37,37:checks_test.go ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29
+```
+
+Which gives us:
+
+```
+commit ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29
+Author: zricethezav <thisispublicanyways@gmail.com>
+Date:   Sun Jan 28 17:39:00 2018 -0500
+
+    [update] entropy check
+
+diff --git a/checks_test.go b/checks_test.go
+--- a/checks_test.go
++++ b/checks_test.go
+@@ -28,0 +37,1 @@
++               "aws_secret= \"AKIAIMNOJVGFDXXXE4OA\"":          true,
+
+```
+
+## Pre-Commit hook
+
+You can run Gitleaks as a pre-commit hook by copying the example `pre-commit.py` script into
+your `.git/hooks/` directory.
+
+## Configuration
+
+Gitleaks offers a configuration format you can follow to write your own secret detection rules:
+
+```toml
+# Title for the gitleaks configuration file.
+title = "Gitleaks title"
+
+# Extend the base (this) configuration. When you extend a configuration
+# the base rules take precedence over the extended rules. I.e., if there are
+# duplicate rules in both the base configuration and the extended configuration
+# the base rules will override the extended rules.
+# Another thing to know with extending configurations is you can chain together
+# multiple configuration files to a depth of 2. Allowlist arrays are appended
+# and can contain duplicates.
+# useDefault and path can NOT be used at the same time. Choose one.
+[extend]
+# useDefault will extend the base configuration with the default gitleaks config:
+# https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml
+useDefault = true
+# or you can supply a path to a configuration. Path is relative to where gitleaks
+# was invoked, not the location of the base config.
+path = "common_config.toml"
+
+# An array of tables that contain information that define instructions
+# on how to detect secrets
+[[rules]]
+
+# Unique identifier for this rule
+id = "awesome-rule-1"
+
+# Short human readable description of the rule.
+description = "awesome rule 1"
+
+# Golang regular expression used to detect secrets. Note Golang's regex engine
+# does not support lookaheads.
+regex = '''one-go-style-regex-for-this-rule'''
+
+# Golang regular expression used to match paths. This can be used as a standalone rule or it can be used
+# in conjunction with a valid `regex` entry.
+path = '''a-file-path-regex'''
+
+# Array of strings used for metadata and reporting purposes.
+tags = ["tag","another tag"]
+
+# Int used to extract secret from regex match and used as the group that will have
+# its entropy checked if `entropy` is set.
+secretGroup = 3
+
+# Float representing the minimum shannon entropy a regex group must have to be considered a secret.
+entropy = 3.5
+
+# Keywords are used for pre-regex check filtering. Rules that contain
+# keywords will perform a quick string compare check to make sure the
+# keyword(s) are in the content being scanned. Ideally these values should
+# either be part of the idenitifer or unique strings specific to the rule's regex
+# (introduced in v8.6.0)
+keywords = [
+  "auth",
+  "password",
+  "token",
+]
+
+# You can include an allowlist table for a single rule to reduce false positives or ignore commits
+# with known/rotated secrets
+[rules.allowlist]
+description = "ignore commit A"
+commits = [ "commit-A", "commit-B"]
+paths = [
+  '''go\.mod''',
+  '''go\.sum'''
+]
+# note: (rule) regexTarget defaults to check the _Secret_ in the finding.
+# if regexTarget is not specified then _Secret_ will be used.
+# Acceptable values for regexTarget are "match" and "line"
+regexTarget = "match"
+regexes = [
+  '''process''',
+  '''getenv''',
+]
+# note: stopwords targets the extracted secret, not the entire regex match
+# like 'regexes' does. (stopwords introduced in 8.8.0)
+stopwords = [
+  '''client''',
+  '''endpoint''',
+]
+
+
+# This is a global allowlist which has a higher order of precedence than rule-specific allowlists.
+# If a commit listed in the `commits` field below is encountered then that commit will be skipped and no
+# secrets will be detected for said commit. The same logic applies for regexes and paths.
+[allowlist]
+description = "global allow list"
+commits = [ "commit-A", "commit-B", "commit-C"]
+paths = [
+  '''gitleaks\.toml''',
+  '''(.*?)(jpg|gif|doc)'''
+]
+
+# note: (global) regexTarget defaults to check the _Secret_ in the finding.
+# if regexTarget is not specified then _Secret_ will be used.
+# Acceptable values for regexTarget are "match" and "line"
+regexTarget = "match"
+
+regexes = [
+  '''219-09-9999''',
+  '''078-05-1120''',
+  '''(9[0-9]{2}|666)-\d{2}-\d{4}''',
+]
+# note: stopwords targets the extracted secret, not the entire regex match
+# like 'regexes' does. (stopwords introduced in 8.8.0)
+stopwords = [
+  '''client''',
+  '''endpoint''',
+]
+```
+
+Refer to the default [gitleaks config](https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml) for examples or follow the [contributing guidelines](https://github.com/zricethezav/gitleaks/blob/master/README.md) if you would like to contribute to the default configuration. Additionally, you can check out [this gitleaks blog post](https://blog.gitleaks.io/stop-leaking-secrets-configuration-2-3-aeed293b1fbf) which covers advanced configuration setups.
+
+### Additional Configuration
+
+#### gitleaks:allow
+
+If you are knowingly committing a test secret that gitleaks will catch you can add a `gitleaks:allow` comment to that line which will instruct gitleaks
+to ignore that secret. Ex:
+
+```
+class CustomClass:
+    discord_client_secret = '8dyfuiRyq=vVc3RRr_edRk-fK__JItpZ'  #gitleaks:allow
+
+```
+
+#### .gitleaksignore
+
+You can ignore specific findings by creating a `.gitleaksignore` file at the root of your repo. In release v8.10.0 Gitleaks added a `Fingerprint` value to the Gitleaks report. Each leak, or finding, has a Fingerprint that uniquely identifies a secret. Add this fingerprint to the `.gitleaksignore` file to ignore that specific secret. See Gitleaks' [.gitleaksignore](https://github.com/zricethezav/gitleaks/blob/master/.gitleaksignore) for an example. Note: this feature is experimental and is subject to change in the future.
+
+## Sponsorships
+
+<p align="left">
+	  <a href="https://www.tines.com/?utm_source=oss&utm_medium=sponsorship&utm_campaign=gitleaks">
+		  <img alt="Tines Sponsorship" src="https://user-images.githubusercontent.com/15034943/146411864-4878f936-b4f7-49a0-b625-f9f40c704bfa.png" width=200>
+	  </a>
+  </p>
+
+## Exit Codes
+
+You can always set the exit code when leaks are encountered with the --exit-code flag. Default exit codes below:
+
+```
+0 - no leaks present
+1 - leaks or error encountered
+126 - unknown flag
+```
 
 ## Arquitetura
 
@@ -571,3 +494,14 @@ flowchart TD
     class XERJ,NYLAS,COPILOT integracoes
     class CRON,BACKUP,HEALTH automacao
 ```
+
+## Validação do Modelo (LOEO) — REPROVADO
+
+O modelo LightGBM v2 foi validado com **Leave-One-Event-Out (LOEO)** (31 eventos, janela de 7 dias, negativos ao redor). O resultado:
+
+- **PR-AUC:** 0.3039 (critério: ≥ 0.5) ❌
+- **Recall:** 0.1642 (critério: ≥ 0.7) ❌
+- **Detecção por evento:** 11/31 (35.5%) ❌
+- **ROC-AUC:** ~0.65 (o AUC 0.8323 era in-sample)
+
+**Conclusão:** o modelo **não generaliza** para eventos inéditos. Ele permanece em **modo sombra** (registra, não avisa). O alerta de cheia é baseado na **Camada 1 (física: Vz/Az)**.
