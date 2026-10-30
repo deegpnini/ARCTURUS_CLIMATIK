@@ -515,3 +515,40 @@ O ARCTURUS tem 4 especialistas (LightGBM) treinados com a série ANA (1939-2026)
 - **Cheia de Verão** (dezembro-março): 105 episódios. LOEO: F1 inferior ao Vz/Az. **Fallback: Vz/Az.**
 
 **Conclusão:** o especialista gradual é o único que supera o Vz/Az. Para os outros tipos, o Vz/Az (físico) é melhor. O ensemble permanece em modo experimental/sombra (não dispara alerta).
+
+## Validação do Modelo (Leave-One-Event-Out) — Modo Sombra
+
+A validação **Leave-One-Event-Out (LOEO)** demonstrou que o modelo **LightGBM v2 não apresenta desempenho suficiente para uso operacional em alertas de cheia**. O modelo permanece em **modo sombra** para pesquisa e desenvolvimento. Os alertas operacionais do ARCTURUS continuam baseados em **indicadores físicos observados (cota, Vz e Az)**.
+
+### Números do LOEO (31 eventos)
+- **PR-AUC:** 0.3039 (critério: ≥ 0.5) ❌
+- **Recall:** 0.1642 (critério: ≥ 0.7) ❌
+- **Detecção por evento:** 11/31 (35.5%) ❌
+- **ROC-AUC:** ~0.65 (o AUC 0.8323 era in-sample)
+
+### Status do Modelo
+| Item | Status |
+|---|---|
+| **Modo** | Shadow Mode (registra, não avisa) |
+| **Uso operacional** | NÃO |
+| **Uso para alerta** | NÃO |
+| **Uso para análise** | SIM (pesquisa e evolução) |
+
+## STATUS DO MODELO (LightGBM v2)
+
+- **Modo:** Shadow Mode (registra, não avisa).
+- **Uso operacional:** NÃO.
+- **Uso para alerta:** NÃO.
+- **Uso para análise:** SIM (pesquisa e evolução).
+
+## Arquitetura em 3 Camadas
+
+1. **Camada 1 (Alerta):** Cota + Vz + Az + Persistência (física). **Ativa.**
+2. **Camada 2 (Pesquisa):** LightGBM v2 (modo sombra). **Registra, não avisa.**
+3. **Camada 3 (Planejamento):** Sentinel-1 + A.C. Atlas (impacto). **Em andamento.**
+
+## Arquitetura em 3 Camadas
+
+1. **Camada 1 (Alerta):** Cota + Vz + Az + Persistência (física). **Ativa.**
+2. **Camada 2 (Pesquisa):** LightGBM v2 (modo sombra). **Registra, não avisa.**
+3. **Camada 3 (Planejamento):** Sentinel-1 + A.C. Atlas (impacto). **Em andamento.**
