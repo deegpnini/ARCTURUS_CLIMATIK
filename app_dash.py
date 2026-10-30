@@ -17,6 +17,7 @@ FILE_COTA = BASE / "tubarao_saneamento_dados.json"
 FILE_ENSEMBLE = DATA_DIR / "chuva_ensemble_consolidada.json"
 FILE_SIMULACAO = DATA_DIR / "simulacao_probabilidade_atual.json"
 FILE_REGIME = DATA_DIR / "regime_atual.json"
+FILE_HEALTH = DATA_DIR / "health_check.json"
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG], title="ARCTURUS CLIMATIK")
 
@@ -104,6 +105,32 @@ def ler_dados():
         except: pass
 
     return cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color
+
+
+def ler_status_camera():
+    fallback = "Câmera ERAB (link na barra lateral)"
+    try:
+        with FILE_HEALTH.open("r", encoding="utf-8") as arquivo:
+            health = json.load(arquivo)
+    except FileNotFoundError:
+        return fallback
+    except (OSError, json.JSONDecodeError):
+        logging.exception("Não foi possível ler o status da câmera no health check.")
+        return fallback
+
+    status = health.get("camera_status")
+    if status is None and isinstance(health.get("camera"), dict):
+        status = health["camera"].get("status")
+
+    if isinstance(status, bool):
+        status = "online" if status else "offline"
+    if isinstance(status, str):
+        normalized = status.strip().lower()
+        if normalized in {"online", "ok"} or "online" in normalized:
+            return "Câmera ERAB: Online"
+        if normalized in {"offline", "error", "erro"} or "offline" in normalized:
+            return "Câmera ERAB: Offline"
+    return fallback
 
 
 
@@ -295,8 +322,7 @@ app.layout = dbc.Container([
                 dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
                 dbc.Col(html.Div([
                     html.H5("A.C. Vision", className="card-title"),
-                    html.P("📷 Câmera ERAB", className="card-text"),
-                    html.A("Abrir Câmera", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="btn btn-primary btn-sm")
+                    html.P(ler_status_camera(), className="card-text"),
                 ], className="card-body"), width=3),
                 dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
             ], className="mb-4"),
