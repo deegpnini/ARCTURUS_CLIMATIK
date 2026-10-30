@@ -552,3 +552,17 @@ A validação **Leave-One-Event-Out (LOEO)** demonstrou que o modelo **LightGBM 
 1. **Camada 1 (Alerta):** Cota + Vz + Az + Persistência (física). **Ativa.**
 2. **Camada 2 (Pesquisa):** LightGBM v2 (modo sombra). **Registra, não avisa.**
 3. **Camada 3 (Planejamento):** Sentinel-1 + A.C. Atlas (impacto). **Em andamento.**
+
+## Status Final do Modelo (LightGBM v2) — 30/10/2026
+
+O modelo LightGBM v2 foi validado com **Leave-One-Event-Out (LOEO)** em 31 eventos (1939-1957). O resultado:
+
+| Versão | PR-AUC | Recall | Precision | F1 |
+|---|---|---|---|---|
+| LOEO original | 0.3039 | 16.4% | 36.7% | 0.227 |
+| + Chuva montante (recente) | ~0.30 | 26.9% | — | — |
+| + Chuva montante **histórica** | **0.2824** | **25.4%** | 33.3% | 0.288 |
+
+**Conclusão:** o modelo tem sinal fraco (PR-AUC ~0.28-0.30), mas o Recall máximo em LOEO é ~25%. Ele **não é operacional**. Permanece em **modo sombra** (registra, não avisa). O alerta operacional continua baseado na **Camada 1 (física: Vz/Az)**.
+
+**Próximos passos:** só voltar ao ML quando houver mais dados de qualidade ou mudar o target (ex: prever subida rápida em 6-12h, ou magnitude da subida).

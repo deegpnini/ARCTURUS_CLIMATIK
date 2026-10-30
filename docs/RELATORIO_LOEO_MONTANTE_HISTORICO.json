@@ -1,0 +1,10 @@
+{
+  "total_eventos": 31,
+  "total_predicoes": 413,
+  "pr_auc": 0.28238857069666007,
+  "recall": 0.2537313432835821,
+  "precision": 0.3333333333333333,
+  "f1": 0.288135593220339,
+  "limiar": 0.05,
+  "chuva_montante": "historica"
+}
