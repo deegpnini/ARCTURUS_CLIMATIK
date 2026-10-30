@@ -1,0 +1,573 @@
+{
+  "status": "EXPERIMENTAL_SHADOW",
+  "nao_e_sistema_de_alerta": true,
+  "dados_ana_diarios": {
+    "inicio": "1939-05-26",
+    "fim": "2026-01-31",
+    "episodios_cota_ge_200cm_gap_gt_3_dias": 574,
+    "inverno_jun_ago": 85,
+    "verao_dez_mar": 280,
+    "demais_meses": 209,
+    "limite_resolucao": "A série diária não permite determinar Vz horário nem separar cheias relâmpago e graduais para 1939-2026."
+  },
+  "dados_alta_resolucao": {
+    "eventos_loeo": 27,
+    "periodo_inicio": "2024-10-03T02:00:00",
+    "periodo_fim": "2026-09-14T16:15:00",
+    "rotulo_relampago": "pico de Vz observado >50 cm/h no evento",
+    "rotulo_gradual": "pico de Vz observado entre 12 e 50 cm/h no evento",
+    "rotulos_temporais": "inverno: mês inicial junho-agosto; verão: dezembro-março",
+    "contagem_por_especialista": {
+      "relampago": 10,
+      "gradual": 14,
+      "inverno": 9,
+      "verao": 9
+    }
+  },
+  "especialistas": {
+    "relampago": {
+      "eventos_candidatos": 10,
+      "folds_validos": 10,
+      "mae_loeo_lightgbm_cm": 2.516212662842592,
+      "mae_loeo_vz_az_cm": 3.79901731751049,
+      "status": "ACTIVE",
+      "folds": [
+        {
+          "evento": "evento_03",
+          "inicio": "2024-11-07T01:30:00",
+          "vz_max_cm_h": 99.0,
+          "n_treino_eventos": 9,
+          "n_teste": 292,
+          "mae_lightgbm_cm": 4.382493811946508,
+          "mae_vz_az_cm": 5.565068493150685
+        },
+        {
+          "evento": "evento_05",
+          "inicio": "2024-12-07T14:15:00",
+          "vz_max_cm_h": 90.0,
+          "n_treino_eventos": 9,
+          "n_teste": 548,
+          "mae_lightgbm_cm": 2.263065476036637,
+          "mae_vz_az_cm": 2.8485401459854014
+        },
+        {
+          "evento": "evento_06",
+          "inicio": "2025-01-01T03:15:00",
+          "vz_max_cm_h": 112.0,
+          "n_treino_eventos": 9,
+          "n_teste": 222,
+          "mae_lightgbm_cm": 3.282953846288489,
+          "mae_vz_az_cm": 6.378378378378378
+        },
+        {
+          "evento": "evento_09",
+          "inicio": "2025-01-29T00:15:00",
+          "vz_max_cm_h": 77.0,
+          "n_treino_eventos": 9,
+          "n_teste": 754,
+          "mae_lightgbm_cm": 3.8498742920866573,
+          "mae_vz_az_cm": 5.968832891246684
+        },
+        {
+          "evento": "evento_10",
+          "inicio": "2025-02-07T05:45:00",
+          "vz_max_cm_h": 51.0,
+          "n_treino_eventos": 9,
+          "n_teste": 306,
+          "mae_lightgbm_cm": 1.1849895371374788,
+          "mae_vz_az_cm": 1.9607843137254901
+        },
+        {
+          "evento": "evento_11",
+          "inicio": "2025-02-14T04:15:00",
+          "vz_max_cm_h": 57.0,
+          "n_treino_eventos": 9,
+          "n_teste": 984,
+          "mae_lightgbm_cm": 1.9766133650525255,
+          "mae_vz_az_cm": 2.7621951219512195
+        },
+        {
+          "evento": "evento_16",
+          "inicio": "2025-08-24T07:15:00",
+          "vz_max_cm_h": 106.0,
+          "n_treino_eventos": 9,
+          "n_teste": 512,
+          "mae_lightgbm_cm": 1.536268785375717,
+          "mae_vz_az_cm": 2.4638671875
+        },
+        {
+          "evento": "evento_18",
+          "inicio": "2025-10-29T06:30:00",
+          "vz_max_cm_h": 60.0,
+          "n_treino_eventos": 9,
+          "n_teste": 406,
+          "mae_lightgbm_cm": 1.4889635175196463,
+          "mae_vz_az_cm": 2.084975369458128
+        },
+        {
+          "evento": "evento_19",
+          "inicio": "2025-11-08T00:30:00",
+          "vz_max_cm_h": 105.0,
+          "n_treino_eventos": 9,
+          "n_teste": 361,
+          "mae_lightgbm_cm": 2.081794483591687,
+          "mae_vz_az_cm": 3.6454293628808863
+        },
+        {
+          "evento": "evento_23",
+          "inicio": "2026-07-22T09:15:00",
+          "vz_max_cm_h": 83.0,
+          "n_treino_eventos": 9,
+          "n_teste": 157,
+          "mae_lightgbm_cm": 3.1151095133905717,
+          "mae_vz_az_cm": 4.312101910828026
+        }
+      ],
+      "arquivo": "relampago.txt",
+      "features": [
+        "cota",
+        "cota_lag_15m",
+        "cota_lag_30m",
+        "cota_lag_60m",
+        "cota_lag_180m",
+        "cota_lag_360m",
+        "cota_lag_720m",
+        "cota_lag_1440m",
+        "delta_15m",
+        "delta_60m",
+        "delta_180m",
+        "aceleracao_1h",
+        "cota_std_12h",
+        "cota_max_12h",
+        "cota_min_12h",
+        "vazao",
+        "chuva_15m",
+        "chuva_60m",
+        "chuva_180m",
+        "chuva_360m",
+        "chuva_720m",
+        "chuva_1440m",
+        "chuva_2880m",
+        "sin_hora",
+        "cos_hora",
+        "sin_dia_ano",
+        "cos_dia_ano",
+        "mes"
+      ],
+      "n_treino_final": 4542
+    },
+    "gradual": {
+      "eventos_candidatos": 14,
+      "folds_validos": 14,
+      "mae_loeo_lightgbm_cm": 2.0696502903193594,
+      "mae_loeo_vz_az_cm": 2.597781770781802,
+      "status": "ACTIVE",
+      "folds": [
+        {
+          "evento": "evento_02",
+          "inicio": "2024-10-10T03:00:00",
+          "vz_max_cm_h": 25.0,
+          "n_treino_eventos": 13,
+          "n_teste": 397,
+          "mae_lightgbm_cm": 1.4287813577253916,
+          "mae_vz_az_cm": 2.0125944584382873
+        },
+        {
+          "evento": "evento_04",
+          "inicio": "2024-11-20T14:00:00",
+          "vz_max_cm_h": 31.0,
+          "n_treino_eventos": 13,
+          "n_teste": 467,
+          "mae_lightgbm_cm": 1.5378304865991461,
+          "mae_vz_az_cm": 1.551391862955032
+        },
+        {
+          "evento": "evento_07",
+          "inicio": "2025-01-09T06:15:00",
+          "vz_max_cm_h": 26.0,
+          "n_treino_eventos": 13,
+          "n_teste": 535,
+          "mae_lightgbm_cm": 1.146923645207197,
+          "mae_vz_az_cm": 1.7429906542056075
+        },
+        {
+          "evento": "evento_08",
+          "inicio": "2025-01-18T23:00:00",
+          "vz_max_cm_h": 25.0,
+          "n_treino_eventos": 13,
+          "n_teste": 236,
+          "mae_lightgbm_cm": 1.8758310198061796,
+          "mae_vz_az_cm": 2.514830508474576
+        },
+        {
+          "evento": "evento_12",
+          "inicio": "2025-02-28T03:00:00",
+          "vz_max_cm_h": 14.0,
+          "n_treino_eventos": 13,
+          "n_teste": 151,
+          "mae_lightgbm_cm": 1.714466709986155,
+          "mae_vz_az_cm": 2.301324503311258
+        },
+        {
+          "evento": "evento_13",
+          "inicio": "2025-03-26T08:15:00",
+          "vz_max_cm_h": 26.0,
+          "n_treino_eventos": 13,
+          "n_teste": 98,
+          "mae_lightgbm_cm": 1.9646104274592857,
+          "mae_vz_az_cm": 2.688775510204082
+        },
+        {
+          "evento": "evento_14",
+          "inicio": "2025-06-29T10:15:00",
+          "vz_max_cm_h": 33.0,
+          "n_treino_eventos": 13,
+          "n_teste": 39,
+          "mae_lightgbm_cm": 6.125981230952498,
+          "mae_vz_az_cm": 6.884615384615385
+        },
+        {
+          "evento": "evento_17",
+          "inicio": "2025-09-06T02:15:00",
+          "vz_max_cm_h": 25.0,
+          "n_treino_eventos": 13,
+          "n_teste": 506,
+          "mae_lightgbm_cm": 1.3590621582025082,
+          "mae_vz_az_cm": 1.9219367588932805
+        },
+        {
+          "evento": "evento_20",
+          "inicio": "2025-11-24T01:15:00",
+          "vz_max_cm_h": 14.0,
+          "n_treino_eventos": 13,
+          "n_teste": 278,
+          "mae_lightgbm_cm": 1.2042180520495145,
+          "mae_vz_az_cm": 1.5557553956834533
+        },
+        {
+          "evento": "evento_22",
+          "inicio": "2026-07-12T04:15:00",
+          "vz_max_cm_h": 23.0,
+          "n_treino_eventos": 13,
+          "n_teste": 81,
+          "mae_lightgbm_cm": 1.950006778914563,
+          "mae_vz_az_cm": 1.5
+        },
+        {
+          "evento": "evento_24",
+          "inicio": "2026-07-29T10:30:00",
+          "vz_max_cm_h": 44.0,
+          "n_treino_eventos": 13,
+          "n_teste": 195,
+          "mae_lightgbm_cm": 4.158243716865657,
+          "mae_vz_az_cm": 5.635897435897436
+        },
+        {
+          "evento": "evento_25",
+          "inicio": "2026-08-13T14:30:00",
+          "vz_max_cm_h": 22.0,
+          "n_treino_eventos": 13,
+          "n_teste": 403,
+          "mae_lightgbm_cm": 1.3431518363968238,
+          "mae_vz_az_cm": 1.696029776674938
+        },
+        {
+          "evento": "evento_26",
+          "inicio": "2026-08-31T06:30:00",
+          "vz_max_cm_h": 24.0,
+          "n_treino_eventos": 13,
+          "n_teste": 389,
+          "mae_lightgbm_cm": 1.5832027400868947,
+          "mae_vz_az_cm": 2.172236503856041
+        },
+        {
+          "evento": "evento_27",
+          "inicio": "2026-09-11T22:15:00",
+          "vz_max_cm_h": 46.0,
+          "n_treino_eventos": 13,
+          "n_teste": 265,
+          "mae_lightgbm_cm": 1.5827939042192163,
+          "mae_vz_az_cm": 2.190566037735849
+        }
+      ],
+      "arquivo": "gradual.txt",
+      "features": [
+        "cota",
+        "cota_lag_15m",
+        "cota_lag_30m",
+        "cota_lag_60m",
+        "cota_lag_180m",
+        "cota_lag_360m",
+        "cota_lag_720m",
+        "cota_lag_1440m",
+        "delta_15m",
+        "delta_60m",
+        "delta_180m",
+        "aceleracao_1h",
+        "cota_std_12h",
+        "cota_max_12h",
+        "cota_min_12h",
+        "vazao",
+        "chuva_15m",
+        "chuva_60m",
+        "chuva_180m",
+        "chuva_360m",
+        "chuva_720m",
+        "chuva_1440m",
+        "chuva_2880m",
+        "sin_hora",
+        "cos_hora",
+        "sin_dia_ano",
+        "cos_dia_ano",
+        "mes"
+      ],
+      "n_treino_final": 4040
+    },
+    "inverno": {
+      "eventos_candidatos": 9,
+      "folds_validos": 9,
+      "mae_loeo_lightgbm_cm": 2.637484747413413,
+      "mae_loeo_vz_az_cm": 3.0356145661911955,
+      "status": "ACTIVE",
+      "folds": [
+        {
+          "evento": "evento_14",
+          "inicio": "2025-06-29T10:15:00",
+          "vz_max_cm_h": 33.0,
+          "n_treino_eventos": 8,
+          "n_teste": 39,
+          "mae_lightgbm_cm": 7.273408692827938,
+          "mae_vz_az_cm": 6.884615384615385
+        },
+        {
+          "evento": "evento_15",
+          "inicio": "2025-08-05T19:30:00",
+          "vz_max_cm_h": 10.0,
+          "n_treino_eventos": 8,
+          "n_teste": 106,
+          "mae_lightgbm_cm": 1.1296768875178436,
+          "mae_vz_az_cm": 1.3018867924528301
+        },
+        {
+          "evento": "evento_16",
+          "inicio": "2025-08-24T07:15:00",
+          "vz_max_cm_h": 106.0,
+          "n_treino_eventos": 8,
+          "n_teste": 512,
+          "mae_lightgbm_cm": 2.230576874942701,
+          "mae_vz_az_cm": 2.4638671875
+        },
+        {
+          "evento": "evento_21",
+          "inicio": "2026-07-03T00:00:00",
+          "vz_max_cm_h": -2.0,
+          "n_treino_eventos": 8,
+          "n_teste": 154,
+          "mae_lightgbm_cm": 1.4820546206175502,
+          "mae_vz_az_cm": 1.353896103896104
+        },
+        {
+          "evento": "evento_22",
+          "inicio": "2026-07-12T04:15:00",
+          "vz_max_cm_h": 23.0,
+          "n_treino_eventos": 8,
+          "n_teste": 81,
+          "mae_lightgbm_cm": 1.8250497621839108,
+          "mae_vz_az_cm": 1.5
+        },
+        {
+          "evento": "evento_23",
+          "inicio": "2026-07-22T09:15:00",
+          "vz_max_cm_h": 83.0,
+          "n_treino_eventos": 8,
+          "n_teste": 157,
+          "mae_lightgbm_cm": 3.0095120010760996,
+          "mae_vz_az_cm": 4.312101910828026
+        },
+        {
+          "evento": "evento_24",
+          "inicio": "2026-07-29T10:30:00",
+          "vz_max_cm_h": 44.0,
+          "n_treino_eventos": 8,
+          "n_teste": 195,
+          "mae_lightgbm_cm": 3.4425778242090885,
+          "mae_vz_az_cm": 5.635897435897436
+        },
+        {
+          "evento": "evento_25",
+          "inicio": "2026-08-13T14:30:00",
+          "vz_max_cm_h": 22.0,
+          "n_treino_eventos": 8,
+          "n_teste": 403,
+          "mae_lightgbm_cm": 1.4219448562294645,
+          "mae_vz_az_cm": 1.696029776674938
+        },
+        {
+          "evento": "evento_26",
+          "inicio": "2026-08-31T06:30:00",
+          "vz_max_cm_h": 24.0,
+          "n_treino_eventos": 8,
+          "n_teste": 389,
+          "mae_lightgbm_cm": 1.9225612071161227,
+          "mae_vz_az_cm": 2.172236503856041
+        }
+      ],
+      "arquivo": "inverno.txt",
+      "features": [
+        "cota",
+        "cota_lag_15m",
+        "cota_lag_30m",
+        "cota_lag_60m",
+        "cota_lag_180m",
+        "cota_lag_360m",
+        "cota_lag_720m",
+        "cota_lag_1440m",
+        "delta_15m",
+        "delta_60m",
+        "delta_180m",
+        "aceleracao_1h",
+        "cota_std_12h",
+        "cota_max_12h",
+        "cota_min_12h",
+        "vazao",
+        "chuva_15m",
+        "chuva_60m",
+        "chuva_180m",
+        "chuva_360m",
+        "chuva_720m",
+        "chuva_1440m",
+        "chuva_2880m",
+        "sin_hora",
+        "cos_hora",
+        "sin_dia_ano",
+        "cos_dia_ano",
+        "mes"
+      ],
+      "n_treino_final": 2036
+    },
+    "verao": {
+      "eventos_candidatos": 9,
+      "folds_validos": 9,
+      "mae_loeo_lightgbm_cm": 2.2481371213429546,
+      "mae_loeo_vz_az_cm": 3.2407391141647444,
+      "status": "ACTIVE",
+      "folds": [
+        {
+          "evento": "evento_05",
+          "inicio": "2024-12-07T14:15:00",
+          "vz_max_cm_h": 90.0,
+          "n_treino_eventos": 8,
+          "n_teste": 548,
+          "mae_lightgbm_cm": 2.1069639771896385,
+          "mae_vz_az_cm": 2.8485401459854014
+        },
+        {
+          "evento": "evento_06",
+          "inicio": "2025-01-01T03:15:00",
+          "vz_max_cm_h": 112.0,
+          "n_treino_eventos": 8,
+          "n_teste": 222,
+          "mae_lightgbm_cm": 3.234801995587127,
+          "mae_vz_az_cm": 6.378378378378378
+        },
+        {
+          "evento": "evento_07",
+          "inicio": "2025-01-09T06:15:00",
+          "vz_max_cm_h": 26.0,
+          "n_treino_eventos": 8,
+          "n_teste": 535,
+          "mae_lightgbm_cm": 1.338848264420351,
+          "mae_vz_az_cm": 1.7429906542056075
+        },
+        {
+          "evento": "evento_08",
+          "inicio": "2025-01-18T23:00:00",
+          "vz_max_cm_h": 25.0,
+          "n_treino_eventos": 8,
+          "n_teste": 236,
+          "mae_lightgbm_cm": 1.9431854317979185,
+          "mae_vz_az_cm": 2.514830508474576
+        },
+        {
+          "evento": "evento_09",
+          "inicio": "2025-01-29T00:15:00",
+          "vz_max_cm_h": 77.0,
+          "n_treino_eventos": 8,
+          "n_teste": 754,
+          "mae_lightgbm_cm": 4.125036195781089,
+          "mae_vz_az_cm": 5.968832891246684
+        },
+        {
+          "evento": "evento_10",
+          "inicio": "2025-02-07T05:45:00",
+          "vz_max_cm_h": 51.0,
+          "n_treino_eventos": 8,
+          "n_teste": 306,
+          "mae_lightgbm_cm": 1.1772055604447667,
+          "mae_vz_az_cm": 1.9607843137254901
+        },
+        {
+          "evento": "evento_11",
+          "inicio": "2025-02-14T04:15:00",
+          "vz_max_cm_h": 57.0,
+          "n_treino_eventos": 8,
+          "n_teste": 984,
+          "mae_lightgbm_cm": 2.1060732117844108,
+          "mae_vz_az_cm": 2.7621951219512195
+        },
+        {
+          "evento": "evento_12",
+          "inicio": "2025-02-28T03:00:00",
+          "vz_max_cm_h": 14.0,
+          "n_treino_eventos": 8,
+          "n_teste": 151,
+          "mae_lightgbm_cm": 1.9292831890281539,
+          "mae_vz_az_cm": 2.301324503311258
+        },
+        {
+          "evento": "evento_13",
+          "inicio": "2025-03-26T08:15:00",
+          "vz_max_cm_h": 26.0,
+          "n_treino_eventos": 8,
+          "n_teste": 98,
+          "mae_lightgbm_cm": 2.271836266053136,
+          "mae_vz_az_cm": 2.688775510204082
+        }
+      ],
+      "arquivo": "verao.txt",
+      "features": [
+        "cota",
+        "cota_lag_15m",
+        "cota_lag_30m",
+        "cota_lag_60m",
+        "cota_lag_180m",
+        "cota_lag_360m",
+        "cota_lag_720m",
+        "cota_lag_1440m",
+        "delta_15m",
+        "delta_60m",
+        "delta_180m",
+        "aceleracao_1h",
+        "cota_std_12h",
+        "cota_max_12h",
+        "cota_min_12h",
+        "vazao",
+        "chuva_15m",
+        "chuva_60m",
+        "chuva_180m",
+        "chuva_360m",
+        "chuva_720m",
+        "chuva_1440m",
+        "chuva_2880m",
+        "sin_hora",
+        "cos_hora",
+        "sin_dia_ano",
+        "cos_dia_ano",
+        "mes"
+      ],
+      "n_treino_final": 3834
+    }
+  },
+  "criterio_ativacao": "Ativa somente com pelo menos 4 eventos e 4 folds LOEO válidos, e MAE média LOEO menor que o fallback Vz/Az.",
+  "aviso": "Resultados de pesquisa em sombra; não enviar previsões deste ensemble como alertas públicos."
+}
