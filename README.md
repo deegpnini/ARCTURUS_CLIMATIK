@@ -505,3 +505,13 @@ O modelo LightGBM v2 foi validado com **Leave-One-Event-Out (LOEO)** (31 eventos
 - **ROC-AUC:** ~0.65 (o AUC 0.8323 era in-sample)
 
 **Conclusão:** o modelo **não generaliza** para eventos inéditos. Ele permanece em **modo sombra** (registra, não avisa). O alerta de cheia é baseado na **Camada 1 (física: Vz/Az)**.
+
+## Ensemble de Especialistas (Experimental)
+
+O ARCTURUS tem 4 especialistas (LightGBM) treinados com a série ANA (1939-2026):
+- **Cheia Relâmpago** (Vz > 50 cm/dia): 210 episódios. LOEO: F1 inferior ao Vz/Az. **Fallback: Vz/Az.**
+- **Cheia Gradual** (Vz entre 12 e 50 cm/dia): 10 episódios. LOEO: F1 superior ao Vz/Az. **Especialista ativo.**
+- **Cheia de Inverno** (junho-agosto): 33 episódios. LOEO: F1 inferior ao Vz/Az. **Fallback: Vz/Az.**
+- **Cheia de Verão** (dezembro-março): 105 episódios. LOEO: F1 inferior ao Vz/Az. **Fallback: Vz/Az.**
+
+**Conclusão:** o especialista gradual é o único que supera o Vz/Az. Para os outros tipos, o Vz/Az (físico) é melhor. O ensemble permanece em modo experimental/sombra (não dispara alerta).
