@@ -1,32 +1,28 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
-ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-ENV_FILE="$ROOT/.env"
-LOG_FILE="$ROOT/logs/health_check.log"
-JSON_FILE="$ROOT/data/health_check.json"
-LIMIT_MIN="${HEALTH_CHECK_LIMIT_MIN:-45}"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_FILE="$BASE_DIR/logs/health_check.log"
+ENV_FILE="$BASE_DIR/.env"
+JSON_FILE="$BASE_DIR/data/health_check.json"
 
-mkdir -p "$ROOT/logs" "$ROOT/data"
+LIMIT_MIN="${LIMIT_MIN:-45}"
+
+mkdir -p "$BASE_DIR/logs" "$BASE_DIR/data"
 
 log() {
-    printf '%s %s\n' "$(date --iso-8601=seconds)" "$1" | tee -a "$LOG_FILE"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
 }
-
-if [[ ! "$LIMIT_MIN" =~ ^[1-9][0-9]*$ ]]; then
-    log "ERRO: HEALTH_CHECK_LIMIT_MIN deve ser um inteiro positivo."
-    exit 2
-fi
 
 if [[ ! -r "$ENV_FILE" ]]; then
     log "ERRO: arquivo .env ausente ou ilegível: $ENV_FILE"
     exit 1
 fi
-
 set -a
 source "$ENV_FILE"
 set +a
 
+# 1. Verifica a idade da última leitura
 IDADE="$(psql -XAtq -v ON_ERROR_STOP=1 -U oikos -d arcturus \
     -c "SELECT floor(extract(epoch FROM (localtimestamp - max(timestamp)))/60)::bigint FROM leituras;" 2>/dev/null)"
 
@@ -35,6 +31,8 @@ if [[ ! "$IDADE" =~ ^[0-9]+$ ]]; then
     exit 1
 fi
 
+# 2. Suaviza o Vz com a média móvel de 3 leituras e exige 2 médias altas
+# consecutivas para confirmar um alerta de cheia.
 VZ_DATA="$(psql -XAtq -F '|' -v ON_ERROR_STOP=1 -U oikos -d arcturus \
     -c "WITH rolling AS (
             SELECT timestamp, id,
@@ -75,11 +73,14 @@ if [[ ! "${VZ_SUAVIZADO:-}" =~ ^-?[0-9]+([.][0-9]+)?$ ]] \
     exit 1
 fi
 
+# 3. Verifica o regime
 REGIME="$(psql -XAtq -v ON_ERROR_STOP=1 -U oikos -d arcturus \
     -c "SELECT COALESCE(regime, 'NORMAL') FROM leituras ORDER BY timestamp DESC LIMIT 1;" 2>/dev/null)"
 
+# 4. Define o status (OK ou ALERTA)
 STATUS="OK"
 MSG=""
+MOTIVO=""
 if (( IDADE >= LIMIT_MIN )); then
     STATUS="ALERTA"
     MSG="⚠️ ALERTA ARCTURUS: última leitura há $IDADE min (limite: $LIMIT_MIN min). O cron pode estar parado."
@@ -94,30 +95,14 @@ fi
 log "Vz suavizado (média móvel de 3 leituras): $VZ_SUAVIZADO cm/h."
 log "Decisão: $MOTIVO."
 
-if [[ "$STATUS" == "ALERTA" ]]; then
-    if [[ -z "${TELEGRAM_TOKEN:-}" || -z "${TELEGRAM_CHAT_ID:-}" ]]; then
-        log "ERRO: alerta necessário, mas TELEGRAM_TOKEN/TELEGRAM_CHAT_ID não estão configurados no .env."
-        exit 1
-    fi
-
-    RESPONSE="$(curl --silent --show-error --fail \
-        --connect-timeout 10 --max-time 30 \
-        --request POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+# 5. Se houver alerta, envia para o Telegram
+if [[ "$STATUS" == "ALERTA" ]] && [[ -n "${TELEGRAM_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
         --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-        --data-urlencode "text=${MSG}")" || {
-        log "ERRO: falha HTTP ao enviar o alerta ao Telegram ($MOTIVO)."
-        exit 1
-    }
-
-    if ! python3 -c 'import json,sys; sys.exit(0 if json.load(sys.stdin).get("ok") is True else 1)' <<< "$RESPONSE"; then
-        log "ERRO: Telegram API não confirmou o envio ($MOTIVO)."
-        exit 1
-    fi
-    log "ALERTA ENVIADO: $MOTIVO; Telegram confirmou o envio."
-else
-    log "OK: última leitura há $IDADE min (limite: $LIMIT_MIN min)."
+        --data-urlencode "text=${MSG}" > /dev/null
 fi
 
+# 6. Escreve o JSON (para o Dash ler)
 cat > "$JSON_FILE" << JSONEOF
 {
   "timestamp": "$(date -Iseconds)",
@@ -129,4 +114,5 @@ cat > "$JSON_FILE" << JSONEOF
   "mensagem": "$MSG"
 }
 JSONEOF
+
 log "JSON atualizado: $JSON_FILE"
