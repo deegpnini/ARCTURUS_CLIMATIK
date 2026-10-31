@@ -888,3 +888,27 @@ O termo "blindagem" e "auditoria externa" no README anterior foi substituído po
 **Interpretação:** o relógio dos 60 dias começa em 31/10/2026. As 30 predições anteriores ao corte foram invalidadas porque usaram chuva congelada. As 15 restantes são do período pós-fix, mas ainda não têm `y_true` (o backfill preenche quando a cota futura chega). A primeira avaliação estatisticamente válida só será possível quando houver `n > 30` com `y_true` preenchido.
 
 **Tag do pré-registro:** `protocolo-v1` (criada em 31/10/2026).
+
+---
+
+## Prova de Mutation Test — Leakage Bloqueado (31/10/2026)
+
+**Status:** PROVADO.
+
+O teste `tests/test_no_future_leakage.py` foi executado em dois cenários:
+
+1. **Com o filtro ativo:** PASSOU. As features calculadas com e sem dados futuros são idênticas.
+2. **Com o filtro comentado (de propósito):** FALHOU com `LEAKAGE DETECTADO` e `NameError: df_ate_alvo is not defined`. Isso prova que o teste **detecta** a quebra do código.
+3. **Com o filtro restaurado:** PASSOU de novo.
+
+### Log da evidência
+
+- Com o filtro ativo: `1 passed in 0.36s`
+- Com o filtro comentado: `1 failed in 0.42s` (LEAKAGE DETECTADO)
+- Com o filtro restaurado: `1 passed in 0.33s`
+
+### Conclusão
+
+O filtro de leakage temporal no `features_bacia.py` está **provado** bloqueado. O teste não é fachada — ele falha quando o código é quebrado e passa quando o código está correto.
+
+**Data da prova:** 31/10/2026.
