@@ -566,3 +566,73 @@ O modelo LightGBM v2 foi validado com **Leave-One-Event-Out (LOEO)** em 31 event
 **Conclusão:** o modelo tem sinal fraco (PR-AUC ~0.28-0.30), mas o Recall máximo em LOEO é ~25%. Ele **não é operacional**. Permanece em **modo sombra** (registra, não avisa). O alerta operacional continua baseado na **Camada 1 (física: Vz/Az)**.
 
 **Próximos passos:** só voltar ao ML quando houver mais dados de qualidade ou mudar o target (ex: prever subida rápida em 6-12h, ou magnitude da subida).
+
+---
+
+## Pendência Crítica (31/10/2026) — Persistência de scores no modo sombra
+
+**Status:** ABERTA — bloqueia a curva Precision-Recall real.
+
+### O problema
+
+O LightGBM v2 em modo sombra registra **apenas métricas agregadas** no `resultados/manifesto_loeo_v2.json`:
+- MAE médio/mediano por horizonte
+- best_iteration por fold
+- Métricas de validação LOEO
+
+Ele **NÃO persiste os scores individuais** (`y_true` / `y_score`) por evento. Por isso, a curva PR real **não pode ser gerada** com os dados atuais.
+
+### O que foi feito (31/10/2026)
+
+- Pipeline da curva PR **validado** com dados sintéticos (`resultados/curva_pr_completa.json`).
+- **Rótulo obrigatório** aplicado: `"pipeline validation only — real PR pending score persistence"`.
+- O gráfico `resultados/curva_pr_real.png` **NÃO foi gerado** (não há dados reais).
+
+### Ação necessária (backlog — Opção B)
+
+Implementar a persistência de scores no modo sombra:
+
+1. Criar a tabela PostgreSQL `predicoes_shadow` (ou CSV `resultados/predicoes_shadow.csv`) com:
+   - `timestamp`
+   - `evento`
+   - `y_true`
+   - `y_score`
+   - `horizonte` (1h, 3h, 6h)
+2. O script do modo sombra deve salvar, a cada ciclo, os pares `y_true`/`y_score`.
+3. Rodar backfill com os eventos históricos do LOEO (se possível).
+4. Regerar a curva PR com dados reais.
+
+### Regra de Honestidade Radical
+
+Enquanto a pendência não for resolvida, **qualquer curva PR gerada é sintética** e deve carregar o rótulo:
+> `pipeline validation only — real PR pending score persistence`
+
+
+---
+
+## Arquitetura em 3 Camadas (atualizada em 31/10/2026)
+
+```mermaid
+flowchart TD
+    A[PostgreSQL + PostGIS<br/>Migração concluída 28/10/2026]
+
+    A --> B[Camada 1<br/>Alerta Físico<br/>Cota, Vz, Az, Persistência]
+    A --> C[Camada 2<br/>LightGBM v2<br/>MODO SOMBRA - Não alerta]
+    A --> D[Camada 3<br/>A.C. Atlas<br/>Impacto Territorial]
+
+    B --> E[Telegram<br/>msg_id 178]
+    B --> F[Dashboard Dash<br/>Status do modelo]
+
+    C --> G[Registro de Predições<br/>PENDENTE: y_true/y_score]
+    G --> H[Validação Científica<br/>Curva PR - aguardando dados]
+
+    D --> I[Sentinel-1<br/>Mancha 2019]
+    D --> J[Google Open Buildings<br/>1.290 edificações]
+    D --> K[Infraestrutura Crítica<br/>Escolas, UBS, Hospitais]
+
+    K --> L[Relatórios de Impacto<br/>resultados/atlas_impacto_*.json]
+
+    style C fill:#ffcccc
+    style G fill:#ffcccc
+    style H fill:#ffcccc
+```
