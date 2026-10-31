@@ -32,9 +32,6 @@ def gravar_leitura(regime, dados_cota, connection_factory=get_postgres_connectio
             anterior = cursor.fetchone()
             cota_anterior = anterior[0] if anterior else None
             qc = determinar_qc(cota_cm, cota_anterior, qc_fonte)
-            if qc == "SUSPEITO":
-                print(f"Leitura SUSPEITA ignorada: cota={cota_cm} cm")
-                return qc
 
             if cota_cm is not None:
                 try:

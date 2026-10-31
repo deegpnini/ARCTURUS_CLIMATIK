@@ -1,7 +1,5 @@
 import unittest
-
 from src.relatorios.gravar_postgres import gravar_leitura
-
 
 class FakeCursor:
     def __init__(self, cota_anterior):
@@ -39,7 +37,8 @@ class FakeConnection:
 
 
 class GravarPostgresQCTests(unittest.TestCase):
-    def test_suspect_jump_is_persisted_with_measurement(self):
+    def test_suspect_jump_is_persisted_with_qc_flag(self):
+        """Leitura SUSPEITO DEVE ser persistida (para trilha de auditoria)."""
         connection = FakeConnection(cota_anterior=80.0)
         qc = gravar_leitura(
             {"delta_60m": 1.5, "aceleracao_az": 0.2, "regime": "ATENCAO"},
@@ -48,6 +47,8 @@ class GravarPostgresQCTests(unittest.TestCase):
         )
 
         self.assertEqual(qc, "SUSPEITO")
+        # A leitura FOI persistida com o QC SUSPEITO
+        self.assertIsNotNone(connection.cursor_instance.inserted_values)
         self.assertEqual(connection.cursor_instance.inserted_values[1], 111.0)
         self.assertEqual(connection.cursor_instance.inserted_values[-1], "SUSPEITO")
         self.assertTrue(connection.committed)
@@ -62,7 +63,9 @@ class GravarPostgresQCTests(unittest.TestCase):
         )
 
         self.assertEqual(qc, "CORROMPIDO")
+        self.assertIsNotNone(connection.cursor_instance.inserted_values)
         self.assertIsNone(connection.cursor_instance.inserted_values[1])
+        self.assertEqual(connection.cursor_instance.inserted_values[-1], "CORROMPIDO")
 
 
 if __name__ == "__main__":
