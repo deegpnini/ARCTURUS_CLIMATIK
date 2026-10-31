@@ -6,7 +6,9 @@ Usa features disponiveis no PostgreSQL; features de lag/bacia ficam NaN.
 Roda no cron a cada 15 min, persiste y_pred, NUNCA dispara alerta.
 """
 import json
+import hashlib
 import math
+import numbers
 from datetime import datetime
 
 import lightgbm as lgb
@@ -23,6 +25,7 @@ MODELOS = {
     "3h": "modelos/modelo_delta_3h_v8_final.txt",
     "6h": "modelos/modelo_delta_6h_v8_final.txt",
 }
+MODEL_VERSION = "v8_final"
 
 def carregar_features():
     with open(MANIFESTO, encoding="utf-8") as f:
@@ -76,6 +79,21 @@ def calcular_features(df, features):
     row = {f: base.get(f, float("nan")) for f in features}
     return pd.DataFrame([row])[features]
 
+def calcular_features_hash(X):
+    """Hash canonical JSON for the exact feature row sent to the model."""
+    valores = {}
+    for nome, valor in X.iloc[0].items():
+        if pd.isna(valor):
+            valores[nome] = None
+        elif isinstance(valor, numbers.Real):
+            valores[nome] = float(valor)
+        else:
+            valores[nome] = str(valor)
+    payload = json.dumps(
+        valores, sort_keys=True, separators=(",", ":"), allow_nan=False
+    )
+    return hashlib.md5(payload.encode("utf-8")).hexdigest()
+
 def main():
     features = carregar_features()
     df = puxar_leituras()
@@ -83,19 +101,25 @@ def main():
         print("[AVISO] Sem leituras no PostgreSQL. Nada a fazer.")
         return
     X = calcular_features(df, features)
-    ts = datetime.now().isoformat()
-    evento_id = f"cron_{datetime.now().strftime('%Y%m%d_%H%M')}"
+    ts_observacao = pd.Timestamp(df.iloc[-1]["timestamp"]).to_pydatetime()
+    ts_predicao = datetime.now()
+    evento_id = f"cron_{ts_predicao.strftime('%Y%m%d_%H%M')}"
     cota_atual = float(df.iloc[-1]["cota_cm"])
+    features_hash = calcular_features_hash(X)
     for h, path in MODELOS.items():
         try:
             modelo = lgb.Booster(model_file=path)
             y_pred = float(modelo.predict(X)[0])
             registrar(
-                timestamp=ts,
+                timestamp=ts_predicao,
                 evento_id=evento_id,
                 y_pred=y_pred,
                 horizonte=h,
                 cota_atual=cota_atual,
+                ts_observacao=ts_observacao,
+                ts_predicao=ts_predicao,
+                model_version=MODEL_VERSION,
+                features_hash=features_hash,
             )
         except Exception as e:
             print(f"[ERRO] Modelo {h} falhou: {e}")
