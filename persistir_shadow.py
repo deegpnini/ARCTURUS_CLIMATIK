@@ -18,6 +18,7 @@ def persistir_postgres(
     ts_predicao=None,
     model_version=None,
     features_hash=None,
+    stale=False,
 ):
     try:
         import psycopg2
@@ -28,12 +29,12 @@ def persistir_postgres(
             (
                 timestamp, modelo, versao, evento_id, y_true, y_score,
                 horizonte, threshold, ts_observacao, ts_predicao,
-                model_version, features_hash
+                model_version, features_hash, stale
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             timestamp, MODELO, VERSAO, evento_id, y_true, y_pred, horizonte,
-            None, ts_observacao, ts_predicao, model_version, features_hash,
+            None, ts_observacao, ts_predicao, model_version, features_hash, stale,
         ))
         conn.commit()
         cur.close()
@@ -67,6 +68,7 @@ def registrar(
     ts_predicao=None,
     model_version=None,
     features_hash=None,
+    stale=False,
 ):
     ok_pg = persistir_postgres(
         timestamp,
@@ -79,10 +81,18 @@ def registrar(
         ts_predicao=ts_predicao,
         model_version=model_version,
         features_hash=features_hash,
+        stale=stale,
     )
-    ok_csv = persistir_csv(timestamp, evento_id, y_pred, y_true, horizonte, cota_atual)
+    ok_csv = False
+    if not stale:
+        ok_csv = persistir_csv(
+            timestamp, evento_id, y_pred, y_true, horizonte, cota_atual
+        )
     status = "PG" if ok_pg else ("CSV" if ok_csv else "FALHA")
-    print(f"[{status}] evento={evento_id} y_pred={y_pred:.4f} h={horizonte}")
+    if stale:
+        print(f"[{status}] evento={evento_id} horizonte={horizonte} stale=true; inferência ignorada")
+    else:
+        print(f"[{status}] evento={evento_id} y_pred={y_pred:.4f} h={horizonte}")
     return ok_pg or ok_csv
 
 if __name__ == "__main__":

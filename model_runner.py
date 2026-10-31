@@ -7,9 +7,11 @@ Roda no cron a cada 15 min, persiste y_pred, NUNCA dispara alerta.
 """
 import json
 import hashlib
+import logging
 import math
 import numbers
-from datetime import datetime
+from datetime import datetime, timedelta
+from pathlib import Path
 
 import lightgbm as lgb
 import pandas as pd
@@ -26,6 +28,11 @@ MODELOS = {
     "6h": "modelos/modelo_delta_6h_v8_final.txt",
 }
 MODEL_VERSION = "v8_final"
+BASE_DIR = Path(__file__).resolve().parent
+RAIN_CSV = BASE_DIR / "data" / "chuva_bacia_openmeteo.csv"
+MAX_OBSERVATION_AGE = timedelta(minutes=45)
+MAX_RAIN_AGE = timedelta(hours=6)
+LOGGER = logging.getLogger(__name__)
 
 def carregar_features():
     with open(MANIFESTO, encoding="utf-8") as f:
@@ -94,17 +101,98 @@ def calcular_features_hash(X):
     )
     return hashlib.md5(payload.encode("utf-8")).hexdigest()
 
+def ultima_chuva_observada(ts_origem, caminho=RAIN_CSV):
+    """Return the newest rainfall timestamp no later than the observation."""
+    try:
+        chuva = pd.read_csv(caminho, index_col=0, parse_dates=True)
+    except (OSError, ValueError, pd.errors.ParserError):
+        LOGGER.exception("Não foi possível ler o CSV de chuva para validar frescor.")
+        return None
+
+    chuva.index = pd.to_datetime(chuva.index, errors="coerce")
+    chuva = chuva.loc[~chuva.index.isna()].sort_index()
+    if chuva.empty:
+        LOGGER.error("CSV de chuva não contém timestamps válidos.")
+        return None
+
+    ts_mais_recente = chuva.index.max()
+    if ts_mais_recente > ts_origem:
+        LOGGER.warning(
+            "Possível leakage no CSV de chuva: máximo=%s, ts_origem=%s. "
+            "Dados posteriores à origem não serão considerados.",
+            ts_mais_recente,
+            ts_origem,
+        )
+
+    nan_count = int(chuva.isna().sum().sum())
+    if nan_count:
+        LOGGER.warning(
+            "CSV de chuva contém %d valores NaN; nenhum será convertido em zero.",
+            nan_count,
+        )
+
+    elegiveis = chuva.index[chuva.index <= ts_origem]
+    return elegiveis.max() if len(elegiveis) else None
+
+def motivos_dados_vencidos(ts_observacao, ts_predicao, ts_chuva):
+    idade_leitura = ts_predicao - ts_observacao
+    motivos = []
+    if idade_leitura < timedelta(0):
+        motivos.append("timestamp da leitura está no futuro")
+    elif idade_leitura > MAX_OBSERVATION_AGE:
+        motivos.append(f"leitura com {idade_leitura.total_seconds() / 60:.1f} min")
+
+    if ts_chuva is None:
+        motivos.append("sem timestamp de chuva elegível")
+    else:
+        idade_chuva = ts_observacao - ts_chuva
+        if idade_chuva < timedelta(0):
+            motivos.append("timestamp da chuva elegível está no futuro")
+        elif idade_chuva > MAX_RAIN_AGE:
+            motivos.append(f"chuva com {idade_chuva.total_seconds() / 3600:.1f} h")
+    return motivos
+
 def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     features = carregar_features()
     df = puxar_leituras()
     if df is None or len(df) == 0:
         print("[AVISO] Sem leituras no PostgreSQL. Nada a fazer.")
         return
-    X = calcular_features(df, features)
-    ts_observacao = pd.Timestamp(df.iloc[-1]["timestamp"]).to_pydatetime()
+
     ts_predicao = datetime.now()
+    ts_observacao = pd.Timestamp(df.iloc[-1]["timestamp"]).to_pydatetime()
     evento_id = f"cron_{ts_predicao.strftime('%Y%m%d_%H%M')}"
     cota_atual = float(df.iloc[-1]["cota_cm"])
+
+    ts_chuva = ultima_chuva_observada(pd.Timestamp(ts_observacao))
+    motivos_stale = motivos_dados_vencidos(
+        pd.Timestamp(ts_observacao),
+        pd.Timestamp(ts_predicao),
+        ts_chuva,
+    )
+    if motivos_stale:
+        motivo = "; ".join(motivos_stale)
+        LOGGER.error("Inferência cancelada; dados vencidos: %s", motivo)
+        for horizonte in MODELOS:
+            registrar(
+                timestamp=ts_predicao,
+                evento_id=evento_id,
+                y_pred=None,
+                horizonte=horizonte,
+                cota_atual=cota_atual,
+                ts_observacao=ts_observacao,
+                ts_predicao=ts_predicao,
+                model_version=MODEL_VERSION,
+                stale=True,
+            )
+        return
+
+    X = calcular_features(df, features)
     features_hash = calcular_features_hash(X)
     for h, path in MODELOS.items():
         try:
