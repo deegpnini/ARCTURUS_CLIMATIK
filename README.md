@@ -845,3 +845,11 @@ O `data/chuva_bacia_openmeteo.csv` estava congelado em 22/09/2026. O Motor V2 es
 
 - **Massa de `y_true`:** ainda baixa (n=1 por horizonte). Aguardar 30–60 dias para curva PR real.
 
+
+---
+
+## Avaliação Científica (Blindagem 31/10/2026)
+
+- **Protocolo Pré-Registrado:** As regras de sucesso e falha do Motor V2 estão em `docs/PROTOCOLO_AVALIACAO.md`. Elas foram definidas **antes** da coleta de dados prospectivos, conforme auditoria externa.
+- **Métrica Principal:** Skill Score vs Persistência (Δ=0) em regime de evento (Δ > 10 cm).
+- **Status:** Coleta prospectiva em andamento. A Camada 1 permanece como única fonte de alerta.
