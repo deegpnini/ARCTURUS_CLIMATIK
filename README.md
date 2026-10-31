@@ -912,3 +912,42 @@ O teste `tests/test_no_future_leakage.py` foi executado em dois cenários:
 O filtro de leakage temporal no `features_bacia.py` está **provado** bloqueado. O teste não é fachada — ele falha quando o código é quebrado e passa quando o código está correto.
 
 **Data da prova:** 31/10/2026.
+
+---
+
+## Primeira amostra de `y_true` (31/10/2026)
+
+**Status:** 1 `y_true` válido no banco.
+
+O backfill preencheu a primeira predição com `y_true` real. Ainda é uma amostra única, mas prova que o ciclo:
+1. `model_runner.py` gera `y_pred`.
+2. `backfill_y_true.py` preenche `y_true` quando a cota futura chega.
+3. `avaliar_skill_score.py` pode calcular o erro real.
+
+### Estado do banco
+
+| Métrica | Valor |
+|---------|-------|
+| Total de predições | 48 |
+| Invalidadas (chuva de setembro) | 30 |
+| Stale | 0 |
+| `y_true` válidos | 1 |
+
+**Próximo marco:** 30 `y_true` válidos por horizonte para Skill Score estatisticamente significativo.
+
+
+---
+
+## Correção do teste `test_critical_paths.py` (31/10/2026)
+
+O teste estava desatualizado em relação ao novo Dash:
+
+| Antes | Depois |
+|-------|--------|
+| `Escolas afetadas: 0` | `Escolas afetadas: 31` |
+| `UBS afetadas: 0` | `UBS afetadas: 13` |
+
+**Motivo:** o A.C. Atlas agora mostra os dados reais do `impacto_2019.json` (31 escolas e 13 UBS analisadas, 0 atingidas pela mancha estrita).
+
+**Pendente:** o `test_gravar_postgres_qc.py` ainda precisa ser analisado (espera persistir leitura `SUSPEITO`, mas o filtro agora ignora).
+

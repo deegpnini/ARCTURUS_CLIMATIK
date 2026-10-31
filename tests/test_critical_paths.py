@@ -101,8 +101,8 @@ def test_atlas_impact_card_shows_reported_2019_metrics():
     layout_text = " ".join(collect_strings(layout))
     assert "A.C. Atlas — Impacto 2019" in layout_text
     assert "Edificações afetadas: 1.290" in layout_text
-    assert "Escolas afetadas: 0" in layout_text
-    assert "UBS afetadas: 0" in layout_text
+    assert "Escolas afetadas: 31" in layout_text
+    assert "UBS afetadas: 13" in layout_text
     assert "População estimada: N/D" in layout_text
 
 
