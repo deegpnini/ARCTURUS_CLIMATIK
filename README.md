@@ -672,3 +672,14 @@ Implementar o motor do modo sombra:
 
 Enquanto isso, a curva PR real permanece bloqueada.
 
+
+---
+
+## Correção local (31/10/2026) — Filtro SUSPEITO no gravar_postgres.py
+
+**Status:** aplicado localmente (arquivo em `src/relatorios/` não rastreado pelo Git).
+
+O `gravar_postgres.py` foi alterado para **ignorar leituras com `qc == "SUSPEITO"`**, evitando que a cota oscile 107 ↔ 68 cm no gráfico do Dash. A mudança está no arquivo local (o cron usa o arquivo do disco, não o Git).
+
+**Efeito:** o próximo ciclo do cron (15 min) vai descartar leituras suspeitas. O gráfico do Dash estabiliza em ~1h.
+
