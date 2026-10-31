@@ -725,3 +725,49 @@ As features de bacia (`bacia_lag_4h`, `bacia_3h`, `bacia_pontos_forte`, etc.) e 
 
 Extrair a lógica de cálculo de features do `src/modelo/extraido_colab/cel_73.py` e integrar ao `model_runner.py` para preencher as features de bacia a partir do `data/chuva_bacia_openmeteo.csv`.
 
+
+---
+
+## Backfill de y_true (31/10/2026) — ciclo fechado
+
+**Status:** EM PRODUÇÃO (cron a cada 15 min).
+
+### O que foi implementado
+
+- `backfill_y_true.py`: busca predições com `y_true IS NULL`, calcula o `timestamp_alvo` (timestamp + horizonte), procura a leitura correspondente na tabela `leituras` (tolerância ±15 min) e grava `y_true = cota_futura - cota_atual`.
+- Idempotente: não sobrescreve `y_true` já preenchido.
+- Commit `42a461a`.
+
+### Ciclo completo do modo sombra
+
+1. `gravar_postgres.py` → grava leitura nova na tabela `leituras`.
+2. `model_runner.py` → gera `y_pred` (Δcota) e persiste em `predicoes_shadow`.
+3. `backfill_y_true.py` → preenche `y_true` quando a cota futura chega.
+4. Curva PR real → pode ser gerada quando houver massa de `y_true` (30–60 dias).
+
+### Pendência
+
+- **Motor v2:** features de bacia (`bacia_lag_4h`, etc.) ainda ficam `NaN`. O `y_pred` é proxy, não validação operacional. Documentado no backlog.
+
+---
+
+## Backfill de y_true (31/10/2026) — ciclo fechado
+
+**Status:** EM PRODUÇÃO (cron a cada 15 min).
+
+### O que foi implementado
+
+- `backfill_y_true.py`: busca predições com `y_true IS NULL`, calcula o `timestamp_alvo` (timestamp + horizonte), procura a leitura correspondente na tabela `leituras` (tolerância ±15 min) e grava `y_true = cota_futura - cota_atual`.
+- Idempotente: não sobrescreve `y_true` já preenchido.
+- Commit `42a461a`.
+
+### Ciclo completo do modo sombra
+
+1. `gravar_postgres.py` → grava leitura nova na tabela `leituras`.
+2. `model_runner.py` → gera `y_pred` (Δcota) e persiste em `predicoes_shadow`.
+3. `backfill_y_true.py` → preenche `y_true` quando a cota futura chega.
+4. Curva PR real → pode ser gerada quando houver massa de `y_true` (30–60 dias).
+
+### Pendência
+
+- **Motor v2:** features de bacia (`bacia_lag_4h`, etc.) ainda ficam `NaN`. O `y_pred` é proxy, não validação operacional. Documentado no backlog.
