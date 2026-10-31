@@ -683,3 +683,45 @@ O `gravar_postgres.py` foi alterado para **ignorar leituras com `qc == "SUSPEITO
 
 **Efeito:** o próximo ciclo do cron (15 min) vai descartar leituras suspeitas. O gráfico do Dash estabiliza em ~1h.
 
+
+---
+
+## Motor do modo sombra (31/10/2026) — v1 funcional
+
+**Status:** EM PRODUÇÃO (cron a cada 15 min).
+
+### O que foi implementado
+
+- `model_runner.py`: carrega os modelos LightGBM v8 (`modelo_delta_{1h,3h,6h}_v8_final.txt`), puxa as últimas 96 leituras do PostgreSQL, calcula as features disponíveis, roda os 3 modelos e persiste `y_pred` via `persistir_shadow.py`.
+- `persistir_shadow.py`: persiste em `predicoes_shadow` (PostgreSQL) e `resultados/predicoes_shadow.csv` (fallback).
+- **Nunca dispara alerta.** Só registra.
+
+### Limitação conhecida (v1)
+
+As features de bacia (`bacia_lag_4h`, `bacia_3h`, `bacia_pontos_forte`, etc.) e alguns lags de cota não estão disponíveis no PostgreSQL, então ficam `NaN` na inferência. O LightGBM aceita `NaN` e usa o valor padrão aprendido no treino, mas a precisão do `y_pred` é menor do que seria com as features completas.
+
+### Próximo passo (v2)
+
+Extrair a lógica de cálculo de features do `src/modelo/extraido_colab/cel_73.py` e integrar ao `model_runner.py` para preencher as features de bacia a partir do `data/chuva_bacia_openmeteo.csv`.
+
+
+---
+
+## Motor do modo sombra (31/10/2026) — v1 funcional
+
+**Status:** EM PRODUÇÃO (cron a cada 15 min).
+
+### O que foi implementado
+
+- `model_runner.py`: carrega os modelos LightGBM v8 (`modelo_delta_{1h,3h,6h}_v8_final.txt`), puxa as últimas 96 leituras do PostgreSQL, calcula as features disponíveis, roda os 3 modelos e persiste `y_pred` via `persistir_shadow.py`.
+- `persistir_shadow.py`: persiste em `predicoes_shadow` (PostgreSQL) e `resultados/predicoes_shadow.csv` (fallback).
+- **Nunca dispara alerta.** Só registra.
+
+### Limitação conhecida (v1)
+
+As features de bacia (`bacia_lag_4h`, `bacia_3h`, `bacia_pontos_forte`, etc.) e alguns lags de cota não estão disponíveis no PostgreSQL, então ficam `NaN` na inferência. O LightGBM aceita `NaN` e usa o valor padrão aprendido no treino, mas a precisão do `y_pred` é menor do que seria com as features completas.
+
+### Próximo passo (v2)
+
+Extrair a lógica de cálculo de features do `src/modelo/extraido_colab/cel_73.py` e integrar ao `model_runner.py` para preencher as features de bacia a partir do `data/chuva_bacia_openmeteo.csv`.
+
