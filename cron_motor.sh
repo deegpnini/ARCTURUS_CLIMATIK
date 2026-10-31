@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # ARCTURUS CLIMATIK - Motor de Execução Única (Disparado pelo Cron a cada 30 min)
 
 BASE_DIR="/home/oikos/projetos/ARCTURUS_CLIMATIK"
