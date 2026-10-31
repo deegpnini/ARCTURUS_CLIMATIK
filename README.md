@@ -636,3 +636,39 @@ flowchart TD
     style G fill:#ffcccc
     style H fill:#ffcccc
 ```
+
+---
+
+## Pendência Adicional (31/10/2026) — Motor do modo sombra não está em produção
+
+**Status:** ABERTA — bloqueia a curva PR real.
+
+### O que foi descoberto
+
+O `crontab -l` mostra que o único script rodando a cada 15 min é:
+- `cron_motor.sh` (Camada 1)
+- `src/relatorios/gravar_postgres.py` (grava `leituras` da Camada 1)
+
+**Nenhum script executa o LightGBM v2 em produção.** O modo sombra foi validado offline (LOEO, `manifesto_loeo_v2.json`), mas não há um motor que:
+1. Carregue o modelo treinado
+2. Puxe as features em tempo real
+3. Gere `y_score`
+4. Persista em `predicoes_shadow`
+
+### O que já está pronto
+
+- Tabela `predicoes_shadow` criada no PostgreSQL (`arcturus`).
+- Script `persistir_shadow.py` funcional (PG + fallback CSV).
+- Teste de persistência validado (3 registros).
+
+### Ação necessária (backlog)
+
+Implementar o motor do modo sombra:
+1. Carregar o modelo LightGBM v2 (localizar o `.pkl`/`.txt`).
+2. Puxar features do PostgreSQL ou da ANA.
+3. Gerar `y_score` por horizonte (1h, 3h, 6h).
+4. Chamar `registrar()` do `persistir_shadow.py`.
+5. Agendar no cron (a cada 15 min, junto com o `cron_motor.sh`).
+
+Enquanto isso, a curva PR real permanece bloqueada.
+
