@@ -817,3 +817,31 @@ Extrair a lógica de cálculo de features do `src/modelo/extraido_colab/cel_73.p
 ### Pendência
 
 - **Motor v2:** features de bacia (`bacia_lag_4h`, etc.) ainda ficam `NaN`. O `y_pred` é proxy, não validação operacional. Documentado no backlog.
+
+---
+
+## Cadeia de suprimentos da chuva (31/10/2026) — fechada
+
+**Status:** EM PRODUÇÃO (cron a cada 6h).
+
+### O problema
+
+O `data/chuva_bacia_openmeteo.csv` estava congelado em 22/09/2026. O Motor V2 estava usando "chuva fantasma" de setembro para prever o presente.
+
+### A correção
+
+- `src/coleta/baixar_chuva_bacia.py` (commit `de0dba6`): consulta a API do Open-Meteo Archive para os 8 pontos da bacia, baixa os últimos 30 dias, concatena com o CSV existente, remove duplicatas e salva.
+- Cron: `0 */6 * * *` (a cada 6h).
+- Validação: CSV com 25.512 linhas, dados até 31/10/2026 23:00.
+
+### Ciclo completo do modo sombra (atualizado)
+
+1. `baixar_chuva_bacia.py` → atualiza chuva da bacia (a cada 6h).
+2. `gravar_postgres.py` → grava leitura nova (a cada 15 min).
+3. `model_runner.py` → gera `y_pred` com chuva real (a cada 15 min).
+4. `backfill_y_true.py` → preenche `y_true` quando a cota futura chega (a cada 15 min).
+
+### Pendência
+
+- **Massa de `y_true`:** ainda baixa (n=1 por horizonte). Aguardar 30–60 dias para curva PR real.
+
