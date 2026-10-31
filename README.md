@@ -873,3 +873,18 @@ O termo "blindagem" e "auditoria externa" no README anterior foi substituído po
 ### Pendência conhecida
 
 2 testes falharam fora do escopo do modo sombra (card Atlas e QC). Documentado para correção futura.
+
+---
+
+## Estado do banco em 31/10/2026 (Marco Zero da avaliação prospectiva)
+
+| Métrica | Valor |
+|---------|-------|
+| Total de predições | 45 |
+| Invalidadas (chuva de setembro) | 30 |
+| Stale (leitura/chuva velha) | 0 |
+| `y_true` válidos | 0 |
+
+**Interpretação:** o relógio dos 60 dias começa em 31/10/2026. As 30 predições anteriores ao corte foram invalidadas porque usaram chuva congelada. As 15 restantes são do período pós-fix, mas ainda não têm `y_true` (o backfill preenche quando a cota futura chega). A primeira avaliação estatisticamente válida só será possível quando houver `n > 30` com `y_true` preenchido.
+
+**Tag do pré-registro:** `protocolo-v1` (criada em 31/10/2026).
