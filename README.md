@@ -853,3 +853,23 @@ O `data/chuva_bacia_openmeteo.csv` estava congelado em 22/09/2026. O Motor V2 es
 - **Protocolo Pré-Registrado:** As regras de sucesso e falha do Motor V2 estão em `docs/PROTOCOLO_AVALIACAO.md`. Elas foram definidas **antes** da coleta de dados prospectivos, conforme auditoria externa.
 - **Métrica Principal:** Skill Score vs Persistência (Δ=0) em regime de evento (Δ > 10 cm).
 - **Status:** Coleta prospectiva em andamento. A Camada 1 permanece como única fonte de alerta.
+
+---
+
+## Correção de linguagem (31/10/2026)
+
+O termo "blindagem" e "auditoria externa" no README anterior foi substituído por descrição factual: o protocolo foi definido antes da coleta prospectiva, com sugestões de uma IA (Claude/Anthropic), não por revisão independente por pares.
+
+### Correções aplicadas (commits `c4893dd` a `d47cf2b`)
+
+1. Filtro temporal nas features de chuva (impede leakage de futuro).
+2. Wrapper `run_cycle.sh` com `flock` (ordem: Camada 1 → gravar → model_runner → backfill).
+3. Escrita atômica do CSV (`os.replace`).
+4. Guarda de frescor: `stale=true` e sem inferência se leitura > 45 min ou chuva > 6h.
+5. Invalidação de 30 predições anteriores ao corte (chuva de setembro).
+6. Skill Score corrigido (razão de somas, `-inf` em vez de `N/A`).
+7. Propagação de falhas no `cron_motor.sh` (a cadeia `&&` realmente interrompe).
+
+### Pendência conhecida
+
+2 testes falharam fora do escopo do modo sombra (card Atlas e QC). Documentado para correção futura.
