@@ -2,6 +2,8 @@
 """Update the basin's hourly precipitation history from Open-Meteo Archive."""
 
 import logging
+import os
+import tempfile
 import time
 from datetime import date, timedelta
 from pathlib import Path
@@ -95,7 +97,24 @@ def atualizar_csv(caminho=CSV_PATH, chuva_nova=None):
 
     combinado = combinado[~combinado.index.duplicated(keep="last")].sort_index()
     combinado.index.name = "timestamp"
-    combinado.to_csv(caminho, float_format="%.4f")
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            newline="",
+            dir=caminho.parent,
+            prefix=f".{caminho.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary_file:
+            temporary_path = Path(temporary_file.name)
+            combinado.to_csv(temporary_file, float_format="%.4f")
+        os.replace(temporary_path, caminho)
+        temporary_path = None
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
     return combinado
 
 
