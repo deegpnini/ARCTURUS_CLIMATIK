@@ -12,6 +12,7 @@ from datetime import datetime
 import lightgbm as lgb
 import pandas as pd
 
+from src.modelo.features_bacia import calcular_features_bacia
 from src.relatorios.postgres_db import get_postgres_connection
 from persistir_shadow import registrar
 
@@ -49,8 +50,7 @@ def puxar_leituras(n=96):
     return pd.DataFrame(rows, columns=cols).sort_values("timestamp").reset_index(drop=True)
 
 def calcular_features(df, features):
-    """Calcula as features que dao para derivar do historico.
-    Features de lag/bacia nao disponiveis ficam NaN."""
+    """Calcula as features derivadas das leituras e da chuva na bacia."""
     ultima = df.iloc[-1]
     ts = pd.to_datetime(ultima["timestamp"])
     base = {
@@ -72,7 +72,7 @@ def calcular_features(df, features):
         base["cota_lag_180m"] = df.iloc[-13]["cota_cm"]
     if len(df) >= 25:
         base["cota_lag_360m"] = df.iloc[-25]["cota_cm"]
-    # Restantes ficam NaN
+    base.update(calcular_features_bacia(ts))
     row = {f: base.get(f, float("nan")) for f in features}
     return pd.DataFrame([row])[features]
 
