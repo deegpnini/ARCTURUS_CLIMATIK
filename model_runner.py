@@ -20,6 +20,20 @@ from src.modelo.features_bacia import calcular_features_bacia
 from src.relatorios.postgres_db import get_postgres_connection
 from persistir_shadow import registrar
 
+def verificar_frescor(ts_observacao, limite_min=45):
+    """True se a leitura é velha demais OU inválida (ausente ou com timestamp no futuro)."""
+    from datetime import datetime
+    if ts_observacao is None:
+        return True
+    if isinstance(ts_observacao, str):
+        ts_observacao = datetime.fromisoformat(ts_observacao)
+    agora = datetime.now(ts_observacao.tzinfo) if ts_observacao.tzinfo else datetime.now()
+    idade = (agora - ts_observacao).total_seconds() / 60
+    if idade < -5:  # no futuro: relógio ou fuso errado; não confiar
+        return True
+    return idade > limite_min
+
+
 # --- CONFIG ---
 MANIFESTO = "modelos/manifesto_v8.json"
 MODELOS = {
