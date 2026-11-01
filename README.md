@@ -972,10 +972,8 @@ O bug era um lock duplo (o `crontab` chamava `flock` e o `run_cycle.sh` pedia `f
 Site oficial Tubarão Saneamento às 04:05: cota em 0.50m (recessão desde 1.56m às 23:30). O scraper leu 50 cm. O modelo previu queda. O sistema está calibrado.
 
 ---
-## Incidente da Cheia de 31/10 (01/11/2026)
+## Incidente de 31/10 a 01/11/2026: ciclo bloqueado por ~12 h
 
-**O que aconteceu:** O rio Tubarão subiu de 85 cm (15:15) para 156 cm (~23:30), em resposta à chuva de 1.78 mm/h na bacia (13:00-17:00). O sistema **não avisou** porque o cron estava travado (lock duplo) e a Camada 1 não rodou por 12h.
+**Verificado:** de ~15:30 de 31/10 até 03:37 de 01/11 o `run_cycle.sh` foi ignorado a cada 15 min (lock duplo: `flock` externo no cron e `flock -n` interno no script) e a Camada 1, que roda dentro desse ciclo, não executou. Correção aplicada em 01/11 (commit 474dc73). Desde 03:50 o maior intervalo entre coletas é de 15 min.
 
-**O que o scraper fez:** Às 03:37, quando o lock foi liberado, o scraper leu 156 cm (o pico da cheia). Às 03:40, leu 50 cm (a recessão). O sistema registrou os dois valores, mas o modelo não entendeu a dinâmica (foi treinado em ANA, não ERAB).
-
-**Lição:** O lock duplo foi corrigido. A Camada 1 agora roda a cada 15 min. Mas o modelo precisa ser retreinado com dados da ERAB para entender a resposta do rio à chuva.
+**Não verificado:** o nível do rio durante o apagão. O coletor leu 156 cm às 03:37 e 50 cm às 03:40, na mesma página; as duas leituras não podem ser o mesmo sensor (queda de 106 cm em 3 min). A origem da divergência está em investigação. Não há confirmação independente de cheia nem do seu horário. A chuva modelada na janela foi fraca (média da bacia de ~7 mm entre 12:00 de 31/10 e 08:00 de 01/11).
