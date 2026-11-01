@@ -20,7 +20,7 @@ def test_erab_collector_extracts_cota_from_mocked_html():
     element = Mock()
     element.inner_text.return_value = "0,65"
     page = Mock()
-    page.query_selector.return_value = element
+    page.query_selector_all.return_value = [element]
     browser = Mock()
     browser.new_page.return_value = page
     playwright = Mock()
