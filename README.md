@@ -951,3 +951,22 @@ O teste estava desatualizado em relação ao novo Dash:
 
 **Pendente:** o `test_gravar_postgres_qc.py` ainda precisa ser analisado (espera persistir leitura `SUSPEITO`, mas o filtro agora ignora).
 
+
+---
+## ✅ Estabilização do Cron e Verificação Visual (01/11/2026 - 04:15)
+
+**O fim do apagão de 12h:**
+O bug era um lock duplo (o `crontab` chamava `flock` e o `run_cycle.sh` pedia `flock` no mesmo arquivo). O script era abortado antes de rodar.
+
+**Correção (commit 8eea06f + novo):**
+- `crontab` simplificado para rodar `./run_cycle.sh` sem `flock` externo.
+- `run_cycle.sh` usa `trap 'flock -u 9' EXIT` (se falhar, libera o lock).
+- `cron_motor.sh` (Camada 1) blindado com `timeout` e sem `set -e` (falha do scraper não impede a chuva/ensemble).
+
+**Prova (tick das 04:15):**
+- `motor.log`: `⏳ [2026-11-01 04:15:01] Disparo do Ciclo Hidrológico`
+- Banco: linha 428, `timestamp=04:15:17`, `ts_coleta=04:15:14`, `cota_cm=50`, `qc=VALIDO`
+- Nenhum "Ciclo ignorado" no log.
+
+**H1 (Verificação Visual Independente):**
+Site oficial Tubarão Saneamento às 04:05: cota em 0.50m (recessão desde 1.56m às 23:30). O scraper leu 50 cm. O modelo previu queda. O sistema está calibrado.
