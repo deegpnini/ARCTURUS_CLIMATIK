@@ -43,7 +43,7 @@ def test_erab_collector_extracts_cota_from_mocked_html():
         coletar_tubarao_saneamento.coletar_cota()
 
     page.goto.assert_called_once()
-    page.query_selector.assert_called_once_with(".chartjs-value")
+    page.query_selector_all.assert_called_once_with(".chartjs-value")
     browser.close.assert_called_once()
     assert saved_readings[0]["cota_metros"] == 0.65
     assert saved_readings[0]["cota_cm"] == 65.0
