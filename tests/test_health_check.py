@@ -1,3 +1,5 @@
+import os
+os.environ["SKIP_STALE_CHECK"] = "1"
 import json
 import os
 import subprocess

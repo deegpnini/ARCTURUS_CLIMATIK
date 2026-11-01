@@ -19,6 +19,7 @@ COTA_FILE = BASE / "tubarao_saneamento_dados.json"
 def gravar_leitura(regime, dados_cota, connection_factory=get_postgres_connection):
     cota_cm = dados_cota.get("cota_cm")
     qc_fonte = dados_cota.get("qc")
+    ts_coleta = dados_cota.get("data_extracao")
     connection = connection_factory()
     try:
         with connection.cursor() as cursor:
@@ -46,14 +47,15 @@ def gravar_leitura(regime, dados_cota, connection_factory=get_postgres_connectio
 
             cursor.execute("""
                 INSERT INTO leituras (
-                    timestamp, cota_cm, vz_cm_h, az_cm_h2, regime, qc
-                ) VALUES (%s, %s, %s, %s, %s, %s)
+                    timestamp, ts_coleta, cota_cm, vz_cm_h, az_cm_h2, regime, qc
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (
                 datetime.now(),
+                ts_coleta,
                 cota_cm,
                 regime.get("delta_60m"),
                 regime.get("aceleracao_az"),
-                regime.get("regime", "NORMAL"),
+                regime.get("regime") or "DESCONHECIDO",
                 qc,
             ))
         connection.commit()

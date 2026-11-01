@@ -13,7 +13,8 @@ class FakeCursor:
         return False
 
     def execute(self, query, values=None):
-        if query.lstrip().startswith("INSERT"):
+        # Se for INSERT, guarda os valores. Se for SELECT, guarda os valores (que é o que o fetchone usa)
+        if "INSERT" in query.upper():
             self.inserted_values = values
 
     def fetchone(self):
@@ -38,19 +39,19 @@ class FakeConnection:
 
 class GravarPostgresQCTests(unittest.TestCase):
     def test_suspect_jump_is_persisted_with_qc_flag(self):
-        """Leitura SUSPEITO DEVE ser persistida (para trilha de auditoria)."""
         connection = FakeConnection(cota_anterior=80.0)
         qc = gravar_leitura(
             {"delta_60m": 1.5, "aceleracao_az": 0.2, "regime": "ATENCAO"},
-            {"cota_cm": 111.0, "qc": "VALIDO"},
+            {"cota_cm": 111.0, "qc": "VALIDO", "data_extracao": "2026-10-31T15:15:16"},
             connection_factory=lambda: connection,
         )
 
         self.assertEqual(qc, "SUSPEITO")
-        # A leitura FOI persistida com o QC SUSPEITO
-        self.assertIsNotNone(connection.cursor_instance.inserted_values)
-        self.assertEqual(connection.cursor_instance.inserted_values[1], 111.0)
-        self.assertEqual(connection.cursor_instance.inserted_values[-1], "SUSPEITO")
+        vals = connection.cursor_instance.inserted_values
+        self.assertIsNotNone(vals, "O INSERT nao foi chamado!")
+        self.assertEqual(vals[2], 111.0)          # cota_cm
+        self.assertEqual(vals[5], "ATENCAO")      # regime
+        self.assertEqual(vals[6], "SUSPEITO")     # qc
         self.assertTrue(connection.committed)
         self.assertTrue(connection.closed)
 
@@ -63,9 +64,30 @@ class GravarPostgresQCTests(unittest.TestCase):
         )
 
         self.assertEqual(qc, "CORROMPIDO")
-        self.assertIsNotNone(connection.cursor_instance.inserted_values)
-        self.assertIsNone(connection.cursor_instance.inserted_values[1])
-        self.assertEqual(connection.cursor_instance.inserted_values[-1], "CORROMPIDO")
+        vals = connection.cursor_instance.inserted_values
+        self.assertIsNotNone(vals)
+        self.assertIsNone(vals[2])               # cota_cm
+        self.assertEqual(vals[6], "CORROMPIDO")  # qc
+
+    def test_empty_regime_defaults_to_desconhecido(self):
+        connection = FakeConnection(cota_anterior=80.0)
+        gravar_leitura(
+            {},
+            {"cota_cm": 85.0, "data_extracao": "2026-10-31T15:15:16"},
+            connection_factory=lambda: connection,
+        )
+        vals = connection.cursor_instance.inserted_values
+        self.assertEqual(vals[5], "DESCONHECIDO")
+
+    def test_ts_coleta_is_persisted_from_data_extracao(self):
+        connection = FakeConnection(cota_anterior=80.0)
+        gravar_leitura(
+            {"delta_60m": 1.0, "regime": "NORMAL"},
+            {"cota_cm": 85.0, "data_extracao": "2026-10-31T15:15:16"},
+            connection_factory=lambda: connection,
+        )
+        vals = connection.cursor_instance.inserted_values
+        self.assertEqual(vals[1], "2026-10-31T15:15:16")
 
 
 if __name__ == "__main__":

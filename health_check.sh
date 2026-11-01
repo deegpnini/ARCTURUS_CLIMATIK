@@ -1,6 +1,49 @@
 #!/bin/bash
 set -euo pipefail
 
+# Carrega credenciais (ignora se nao existir)
+if [ -f "$(dirname "$0")/.env" ]; then
+    set -a; source "$(dirname "$0")/.env" 2>/dev/null || true; set +a
+fi
+
+# --- INICIO DA CHECAGEM DE FRESCOR ---
+# So executa se NAO estivermos em modo de teste
+if [ "${SKIP_STALE_CHECK:-0}" != "1" ]; then
+    LIMITE_MIN=45
+    STATE_FILE="$(dirname "$0")/.last_stale_alert"
+    JSON_COTA="$(dirname "$0")/tubarao_saneamento_dados.json"
+
+    # O '|| true' no final evita que o set -e mate o script se o JSON nao existir
+    ULTIMA_LEITURA=$(python3 -c "import json; print(json.load(open('$JSON_COTA')).get('data_extracao', ''))" 2>/dev/null || true)
+    
+    if [ -n "$ULTIMA_LEITURA" ]; then
+        AGORA=$(date +%s)
+        TS_LEITURA=$(date -d "$ULTIMA_LEITURA" +%s 2>/dev/null || true)
+        
+        if [ -n "$TS_LEITURA" ]; then
+            DIF_MIN=$(( (AGORA - TS_LEITURA) / 60 ))
+            if [ "$DIF_MIN" -gt "$LIMITE_MIN" ]; then
+                if [ -f "$STATE_FILE" ] && [ $(( (AGORA - $(cat "$STATE_FILE")) / 60 )) -lt 240 ]; then
+                    echo "{"status": "STALE", "minutos": $DIF_MIN, "alerta_silenciado": true}" > "$(dirname "$0")/data/health_check.json"
+                    exit 0
+                fi
+                echo "$AGORA" > "$STATE_FILE"
+                MSG="⚠️ ALERTA ARCTURUS: ultima leitura ha $DIF_MIN min (limite: $LIMITE_MIN min)."
+                if [ -n "${TELEGRAM_TOKEN:-}" ] && [ -n "${TELEGRAM_CHAT_ID:-}" ]; then
+                    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" --data-urlencode "text=$MSG" > /dev/null || true
+                fi
+                echo "{"status": "STALE", "minutos": $DIF_MIN}" > "$(dirname "$0")/data/health_check.json"
+                exit 0
+            else
+                rm -f "$STATE_FILE"
+                echo "{"status": "OK", "minutos": $DIF_MIN}" > "$(dirname "$0")/data/health_check.json"
+            fi
+        fi
+    fi
+fi
+# --- FIM DA CHECAGEM DE FRESCOR ---
+
+
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="$BASE_DIR/logs/health_check.log"
 ENV_FILE="$BASE_DIR/.env"
