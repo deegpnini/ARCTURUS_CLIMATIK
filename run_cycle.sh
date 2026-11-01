@@ -11,6 +11,9 @@ if ! flock -n 9; then
     exit 0
 fi
 
+# Trap: se o script sair (sucesso ou erro), destrava o lock explicitamente
+trap 'flock -u 9' EXIT
+
 cd "$BASE_DIR"
 
 # Preserve the existing collection and hydrology processing pipeline.

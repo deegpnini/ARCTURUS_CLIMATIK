@@ -15,55 +15,60 @@ def coletar_cota():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        
+
         print("Abrindo Tubarão Saneamento...")
-        page.goto("https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", timeout=60000)
+        try:
+            page.goto("https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", timeout=60000)
+            page.wait_for_timeout(5000)
+        except Exception as e:
+            print(f"⚠️ Erro ao carregar a página: {e}")
+            browser.close()
+            return
+
+        # Pega TODOS os elementos com a classe do gráfico
+        elementos = page.query_selector_all(".chartjs-value")
         
-        print("Aguardando carregamento do gráfico...")
-        page.wait_for_timeout(5000)
+        cota_metros = None
         
-        # A MÁGICA: Pegar o elemento pela classe exata
-        elemento = page.query_selector(".chartjs-value")
-        
-        if elemento:
-            texto = elemento.inner_text().strip()
-            try:
-                cota_metros = float(texto.replace(",", "."))
-                cota_cm = cota_metros * 100
-                if not math.isfinite(cota_cm) or cota_cm <= 0:
-                    raise ValueError("cota fora do domínio numérico válido")
+        if elementos:
+            # Tenta ler todos os valores e escolher o mais plausível (0.1 a 6.0 metros)
+            valores = []
+            for el in elementos:
+                try:
+                    texto = el.inner_text().strip().replace(",", ".")
+                    v = float(texto)
+                    if 0.1 <= v <= 6.0: # Rio Tubarão não passa de 6 metros
+                        valores.append(v)
+                except (ValueError, TypeError):
+                    continue
+            
+            if valores:
+                # Pega o menor valor (o nível do rio, não o topo da régua)
+                cota_metros = min(valores)
+                
                 resultado = {
                     "fonte": "Tubarão Saneamento (ERAB)",
                     "cota_metros": cota_metros,
-                    "cota_cm": cota_cm,
+                    "cota_cm": cota_metros * 100,
                     "data_extracao": datetime.now().isoformat(),
                     "qc": "VALIDO",
                 }
-                with open("tubarao_saneamento_dados.json", "w", encoding="utf-8") as f:
-                    json.dump(resultado, f, indent=2)
-
+                
+                # Chama o monitor para checar a regra de salto (SUSPEITO)
                 qc = salvar_no_historico(resultado)
                 resultado["qc"] = qc
+                
                 with open("tubarao_saneamento_dados.json", "w", encoding="utf-8") as f:
                     json.dump(resultado, f, indent=2)
-                print(
-                    f"✅ Cota extraída: {cota_metros:.2f} metros "
-                    f"({cota_cm:.0f} cm; QC={qc})"
-                )
-                print("Salvo em tubarao_saneamento_dados.json")
-            except (TypeError, ValueError):
-                resultado = {
-                    "fonte": "Tubarão Saneamento (ERAB)",
-                    "cota_metros": None,
-                    "cota_cm": None,
-                    "data_extracao": datetime.now().isoformat(),
-                    "qc": "CORROMPIDO",
-                }
+                    
+                print(f"✅ Cota extraída: {cota_metros:.2f} metros ({cota_metros*100:.0f} cm; QC={qc})")
+            else:
+                print("⚠️ Nenhum valor numérico plausível encontrado na página.")
+                resultado = {"fonte": "ERAB", "cota_metros": None, "cota_cm": None, "data_extracao": datetime.now().isoformat(), "qc": "CORROMPIDO"}
                 salvar_no_historico(resultado)
-                print("⚠️ Valor extraído inválido; leitura registrada como CORROMPIDO.")
         else:
             print("⚠️ Elemento .chartjs-value não encontrado. O site pode ter mudado.")
-        
+
         browser.close()
 
 if __name__ == "__main__":
