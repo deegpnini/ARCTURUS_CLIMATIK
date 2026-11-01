@@ -19,20 +19,21 @@ HORIZONS = {
     "3h": timedelta(hours=3),
     "6h": timedelta(hours=6),
 }
-TOLERANCE = timedelta(minutes=15)
+TOLERANCE = timedelta(minutes=5)
 
 
-def nearest_cota(cursor, timestamp):
+def nearest_cota(cursor, timestamp, origem_id):
     cursor.execute(
         """
         SELECT cota_cm
         FROM leituras
         WHERE cota_cm IS NOT NULL
+          AND id != %s
           AND timestamp BETWEEN %s AND %s
         ORDER BY ABS(EXTRACT(EPOCH FROM (timestamp - %s))), timestamp DESC
         LIMIT 1
         """,
-        (timestamp - TOLERANCE, timestamp + TOLERANCE, timestamp),
+        (origem_id, timestamp - TOLERANCE, timestamp + TOLERANCE, timestamp),
     )
     row = cursor.fetchone()
     return row[0] if row else None
@@ -65,7 +66,7 @@ def backfill(connection_factory=get_postgres_connection):
                     )
                     continue
 
-                cota_atual = nearest_cota(cursor, prediction_timestamp)
+                cota_atual = nearest_cota(cursor, prediction_timestamp, prediction_id)
                 if cota_atual is None:
                     LOG.debug(
                         "Predição id=%s pendente: sem leitura próxima ao timestamp "
@@ -75,7 +76,7 @@ def backfill(connection_factory=get_postgres_connection):
                     continue
 
                 timestamp_alvo = prediction_timestamp + delta_horizon
-                cota_futura = nearest_cota(cursor, timestamp_alvo)
+                cota_futura = nearest_cota(cursor, timestamp_alvo, prediction_id)
                 if cota_futura is None:
                     LOG.debug(
                         "Predição id=%s pendente: sem leitura futura próxima de %s",

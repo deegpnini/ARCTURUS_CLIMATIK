@@ -970,3 +970,12 @@ O bug era um lock duplo (o `crontab` chamava `flock` e o `run_cycle.sh` pedia `f
 
 **H1 (Verificação Visual Independente):**
 Site oficial Tubarão Saneamento às 04:05: cota em 0.50m (recessão desde 1.56m às 23:30). O scraper leu 50 cm. O modelo previu queda. O sistema está calibrado.
+
+---
+## Incidente da Cheia de 31/10 (01/11/2026)
+
+**O que aconteceu:** O rio Tubarão subiu de 85 cm (15:15) para 156 cm (~23:30), em resposta à chuva de 1.78 mm/h na bacia (13:00-17:00). O sistema **não avisou** porque o cron estava travado (lock duplo) e a Camada 1 não rodou por 12h.
+
+**O que o scraper fez:** Às 03:37, quando o lock foi liberado, o scraper leu 156 cm (o pico da cheia). Às 03:40, leu 50 cm (a recessão). O sistema registrou os dois valores, mas o modelo não entendeu a dinâmica (foi treinado em ANA, não ERAB).
+
+**Lição:** O lock duplo foi corrigido. A Camada 1 agora roda a cada 15 min. Mas o modelo precisa ser retreinado com dados da ERAB para entender a resposta do rio à chuva.
