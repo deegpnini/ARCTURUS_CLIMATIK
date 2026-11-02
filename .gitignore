@@ -229,3 +229,25 @@ modelos/manifesto_classificador_extremos.json
 resultados/analise_cota.png
 resultados/analise_hidrologica_v2.png
 resultados/histograma_cota.png
+.aider*
+
+# Modelos locais (GGUF)
+model/
+*.gguf
+
+# Resultados e logs (gerados pelo sistema)
+resultados/*.json
+resultados/*.png
+resultados/*.html
+resultados/*.log
+logs/
+
+# Dados sensíveis
+.env
+
+# Arquivos de sessão (Aider)
+.aider*
+
+# Pre-commit e backlog (opcional)
+pre-commit.sh
+backlog_*.md
