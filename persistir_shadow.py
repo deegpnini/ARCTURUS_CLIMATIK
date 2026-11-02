@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os, csv
+import os, csv, json
 from datetime import datetime
 
 DB_URL = os.environ.get("DATABASE_URL", "postgresql:///arcturus")
@@ -18,6 +18,9 @@ def persistir_postgres(
     ts_predicao=None,
     model_version=None,
     features_hash=None,
+    features=None,
+    fase="PILOTO_II",
+    motivo_invalidacao=None,
     stale=False,
 ):
     try:
@@ -29,12 +32,13 @@ def persistir_postgres(
             (
                 timestamp, modelo, versao, evento_id, y_true, y_score,
                 horizonte, threshold, ts_observacao, ts_predicao,
-                model_version, features_hash, stale
+                model_version, features_hash, features, fase, motivo_invalidacao, stale
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             timestamp, MODELO, VERSAO, evento_id, y_true, y_pred, horizonte,
-            None, ts_observacao, ts_predicao, model_version, features_hash, stale,
+            None, ts_observacao, ts_predicao, model_version, features_hash,
+            json.dumps(features) if features else None, fase, motivo_invalidacao, stale,
         ))
         conn.commit()
         cur.close()
@@ -68,6 +72,9 @@ def registrar(
     ts_predicao=None,
     model_version=None,
     features_hash=None,
+    features=None,
+    fase="PILOTO_II",
+    motivo_invalidacao=None,
     stale=False,
 ):
     ok_pg = persistir_postgres(
@@ -81,6 +88,9 @@ def registrar(
         ts_predicao=ts_predicao,
         model_version=model_version,
         features_hash=features_hash,
+        features=features,
+        fase=fase,
+        motivo_invalidacao=motivo_invalidacao,
         stale=stale,
     )
     ok_csv = False

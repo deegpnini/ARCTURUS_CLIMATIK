@@ -1,76 +1,98 @@
-import logging
+# -*- coding: utf-8 -*-
+"""Features de chuva na bacia a partir de data/chuva_bacia_openmeteo.csv."""
+from __future__ import annotations
 
-import pandas as pd
-import numpy as np
+import logging
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 ARQUIVO_BACIA = BASE_DIR / "data" / "chuva_bacia_openmeteo.csv"
 LOGGER = logging.getLogger(__name__)
 
-def calcular_features_bacia(data_alvo):
-    features_vazias = {
-        "bacia_lag_4h": float("nan"),
-        "bacia_3h": float("nan"),
-        "bacia_pontos_forte": float("nan")
-    }
+FEATURE_NAMES = (
+    "bacia_lag_4h",
+    "bacia_lag_6h",
+    "bacia_lag_8h",
+    "bacia_3h",
+    "bacia_6h",
+    "bacia_12h",
+    "bacia_max1h",
+    "bacia_pontos_forte",
+)
 
+
+def _vazio() -> dict:
+    return {k: float("nan") for k in FEATURE_NAMES}
+
+
+def calcular_features_bacia(data_alvo) -> dict:
+    """Calcula features de bacia até data_alvo (sem leakage futuro)."""
     if not ARQUIVO_BACIA.exists():
-        return features_vazias
+        LOGGER.warning("CSV de bacia ausente: %s", ARQUIVO_BACIA)
+        return _vazio()
 
     try:
         df = pd.read_csv(ARQUIVO_BACIA, index_col=0, parse_dates=True)
         df.index = pd.to_datetime(df.index, errors="coerce")
         df = df.loc[~df.index.isna()].sort_index()
         if df.empty:
-            return features_vazias
+            return _vazio()
 
+        data_alvo = pd.Timestamp(data_alvo)
         if df.index.max() > data_alvo:
             LOGGER.warning(
-                "Possível leakage na chuva: última linha %s é posterior "
-                "ao timestamp de origem %s; linhas futuras serão ignoradas.",
+                "Chuva com linhas > origem (%s > %s); cortando futuro.",
                 df.index.max(),
                 data_alvo,
             )
 
-        nan_count = int(df.isna().sum().sum())
-        if nan_count:
-            LOGGER.warning(
-                "CSV de chuva contém %d valores NaN; eles não serão convertidos "
-                "em zero.",
-                nan_count,
-            )
+        df = df[df.index <= data_alvo]
+        if df.empty:
+            return _vazio()
 
-        df_ate_alvo = df[df.index <= data_alvo]
+        cols = df.select_dtypes(include=[np.number]).columns
+        if len(cols) == 0:
+            return _vazio()
 
-        if df_ate_alvo.empty:
-            return features_vazias
+        # série horária = média espacial dos pontos
+        media = df[cols].mean(axis=1)
 
-        cols_chuva = df.select_dtypes(include=[np.number]).columns
-        if len(cols_chuva) == 0:
-            return features_vazias
+        def lag(h: int):
+            if len(media) <= h:
+                return float("nan")
+            v = media.shift(h).iloc[-1]
+            return float(v) if pd.notna(v) else float("nan")
 
-        chuva_media = df_ate_alvo[cols_chuva].mean(axis=1)
+        def soma(h: int):
+            if len(media) < h:
+                return float("nan")
+            v = media.iloc[-h:].sum(min_count=max(1, h // 2))
+            return float(v) if pd.notna(v) else float("nan")
 
-        bacia_lag_4h = chuva_media.shift(4).iloc[-1] if len(chuva_media) >= 5 else float("nan")
-        bacia_3h = chuva_media.rolling(window=3, min_periods=3).sum().iloc[-1]
+        # max1h: máximo da média horária na última hora (1 passo se horário)
+        max1h = media.iloc[-1]
+        max1h = float(max1h) if pd.notna(max1h) else float("nan")
 
-        ultima_leitura = df_ate_alvo[cols_chuva].iloc[-1]
-        bacia_pontos_forte = (
-            float((ultima_leitura.dropna() > 5.0).sum())
-            if ultima_leitura.notna().any()
+        ultima = df[cols].iloc[-1]
+        pontos_forte = (
+            float((ultima.dropna() > 5.0).sum())
+            if ultima.notna().any()
             else float("nan")
         )
 
         return {
-            "bacia_lag_4h": float(bacia_lag_4h) if not pd.isna(bacia_lag_4h) else float("nan"),
-            "bacia_3h": float(bacia_3h) if not pd.isna(bacia_3h) else float("nan"),
-            "bacia_pontos_forte": (
-                float(bacia_pontos_forte)
-                if not pd.isna(bacia_pontos_forte)
-                else float("nan")
-            ),
+            "bacia_lag_4h": lag(4),
+            "bacia_lag_6h": lag(6),
+            "bacia_lag_8h": lag(8),
+            "bacia_3h": soma(3),
+            "bacia_6h": soma(6),
+            "bacia_12h": soma(12),
+            "bacia_max1h": max1h,
+            "bacia_pontos_forte": pontos_forte,
         }
-    except Exception as e:
-        LOGGER.exception("Falha ao processar features de bacia: %s", e)
-        return features_vazias
+    except Exception:
+        LOGGER.exception("Falha features_bacia")
+        return _vazio()
