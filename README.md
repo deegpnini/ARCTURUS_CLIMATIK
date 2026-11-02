@@ -977,3 +977,18 @@ Site oficial Tubarão Saneamento às 04:05: cota em 0.50m (recessão desde 1.56m
 **Verificado:** de ~15:30 de 31/10 até 03:37 de 01/11 o `run_cycle.sh` foi ignorado a cada 15 min (lock duplo: `flock` externo no cron e `flock -n` interno no script) e a Camada 1, que roda dentro desse ciclo, não executou. Correção aplicada em 01/11 (commit 474dc73). Desde 03:50 o maior intervalo entre coletas é de 15 min.
 
 **Não verificado:** o nível do rio durante o apagão. O coletor leu 156 cm às 03:37 e 50 cm às 03:40, na mesma página; as duas leituras não podem ser o mesmo sensor (queda de 106 cm em 3 min). A origem da divergência está em investigação. Não há confirmação independente de cheia nem do seu horário. A chuva modelada na janela foi fraca (média da bacia de ~7 mm entre 12:00 de 31/10 e 08:00 de 01/11).
+
+---
+## Prioridade 1 Concluída (02/11/2026)
+
+**Motor sombra v2 em produção:** `features` JSONB + `cota_atual` + fallback `archive → forecast → cache`. **Nunca dispara alerta** (Camada 2 em modo sombra).
+
+**Auditabilidade:** cada predição grava o vetor completo de features (cota, Vz, Az, chuva da bacia, lags, hora do dia, dia do ano) em JSONB, além do `features_hash` (deduplicação) e do `cota_atual` (cota de origem).
+
+**Teste de regressão:**
+```sql
+SELECT COUNT(*) FROM predicoes_shadow
+WHERE timestamp > now() - interval '2 hours'
+  AND stale IS NOT TRUE
+  AND features IS NULL;
+-- esperado: 0

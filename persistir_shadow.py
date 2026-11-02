@@ -32,13 +32,13 @@ def persistir_postgres(
             (
                 timestamp, modelo, versao, evento_id, y_true, y_score,
                 horizonte, threshold, ts_observacao, ts_predicao,
-                model_version, features_hash, features, fase, motivo_invalidacao, stale
+                model_version, features_hash, features, fase, motivo_invalidacao, cota_atual, stale
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             timestamp, MODELO, VERSAO, evento_id, y_true, y_pred, horizonte,
             None, ts_observacao, ts_predicao, model_version, features_hash,
-            json.dumps(features) if features else None, fase, motivo_invalidacao, stale,
+            json.dumps(features, default=str) if features else None, fase, motivo_invalidacao, cota_atual, stale,
         ))
         conn.commit()
         cur.close()
