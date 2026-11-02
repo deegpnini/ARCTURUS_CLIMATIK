@@ -251,3 +251,4 @@ logs/
 # Pre-commit e backlog (opcional)
 pre-commit.sh
 backlog_*.md
+data/chuva_bacia_meta.json
