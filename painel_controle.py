@@ -128,7 +128,8 @@ chuva_48h = carregar_chuva_48h()
 prob = carregar_probabilidade()
 regime_data = carregar_regime()
 regime = regime_data.get("regime", "NORMAL")
-delta = float(regime_data.get("delta_60m", 0.0))
+delta_raw = regime_data.get("delta_60m")
+        delta = float(delta_raw) if delta_raw is not None else 0.0
 motivo_regime = regime_data.get("motivo", "")
 
 if regime == "EXTREMO" or prob >= 10:

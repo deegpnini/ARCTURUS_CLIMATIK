@@ -8,7 +8,7 @@ import json, os, subprocess
 from datetime import datetime, timedelta
 
 HOME = os.path.expanduser("~")
-CACHE = f"{HOME}/ARCTURUS_CLIMATIK/cache"
+CACHE = f"{HOME}/projetos/ARCTURUS_CLIMATIK/cache"
 TOKEN_FILE = f"{CACHE}/ana_token.txt"
 BASE = "https://www.ana.gov.br/hidrowebservice/EstacoesTelemetricas"
 
