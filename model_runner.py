@@ -35,6 +35,18 @@ MAX_RAIN_AGE = timedelta(hours=6)
 LOGGER = logging.getLogger(__name__)
 
 
+
+def verificar_frescor(ts_observacao, limite_min=45):
+    """Retorna True se a leitura for mais antiga que o limite (minutos)."""
+    from datetime import datetime
+    if ts_observacao is None:
+        return True
+    if isinstance(ts_observacao, str):
+        ts_observacao = datetime.fromisoformat(ts_observacao)
+    idade = (datetime.now() - ts_observacao).total_seconds() / 60
+    return idade > limite_min
+
+
 def carregar_features():
     with open(MANIFESTO, encoding="utf-8") as f:
         return json.load(f)["features"]
@@ -138,6 +150,11 @@ def ultima_chuva_observada(ts_origem, caminho=RAIN_CSV):
     chuva = chuva.loc[~chuva.index.isna()].sort_index()
     if chuva.empty:
         return None
+    if chuva.index.max() > ts_origem:
+        LOGGER.warning(
+            "Possível leakage no CSV de chuva: máximo=%s, ts_origem=%s. Dados posteriores à origem não serão considerados.",
+            chuva.index.max(), ts_origem
+        )
     elegiveis = chuva.index[chuva.index <= ts_origem]
     return elegiveis.max() if len(elegiveis) else None
 
@@ -148,7 +165,7 @@ def motivos_dados_vencidos(ts_observacao, ts_predicao, ts_chuva):
     if idade < timedelta(0):
         motivos.append("leitura no futuro")
     elif idade > MAX_OBSERVATION_AGE:
-        motivos.append(f"leitura {idade.total_seconds()/60:.1f} min")
+        motivos.append(f"leitura com {idade.total_seconds()/60:.1f} min")
     if ts_chuva is None:
         motivos.append("sem chuva elegível")
     else:
@@ -156,7 +173,7 @@ def motivos_dados_vencidos(ts_observacao, ts_predicao, ts_chuva):
         if idade_c < timedelta(0):
             motivos.append("chuva no futuro")
         elif idade_c > MAX_RAIN_AGE:
-            motivos.append(f"chuva {idade_c.total_seconds()/3600:.1f} h")
+            motivos.append(f"chuva com {idade_c.total_seconds()/3600:.1f} h")
     return motivos
 
 

@@ -44,7 +44,7 @@ def calcular_features_bacia(data_alvo) -> dict:
         data_alvo = pd.Timestamp(data_alvo)
         if df.index.max() > data_alvo:
             LOGGER.warning(
-                "Chuva com linhas > origem (%s > %s); cortando futuro.",
+                "Possível leakage na chuva (%s > %s); linhas futuras serão ignoradas.",
                 df.index.max(),
                 data_alvo,
             )
@@ -69,7 +69,12 @@ def calcular_features_bacia(data_alvo) -> dict:
         def soma(h: int):
             if len(media) < h:
                 return float("nan")
-            v = media.iloc[-h:].sum(min_count=max(1, h // 2))
+            janela = media.iloc[-h:]
+            if janela.isna().any():
+                n_nan = int(janela.isna().sum().sum())
+                LOGGER.warning("Janela de %dh contém %d valores NaN; não serão convertidos em zero; retornando NaN.", h, n_nan)
+                return float("nan")
+            v = janela.sum()
             return float(v) if pd.notna(v) else float("nan")
 
         # max1h: máximo da média horária na última hora (1 passo se horário)
