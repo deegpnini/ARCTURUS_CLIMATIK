@@ -25,7 +25,7 @@ MANIFESTO = "modelos/manifesto_v8.json"
 MODELOS = {
     "1h": "modelos/modelo_delta_1h_v8_final.txt",
     "3h": "modelos/modelo_delta_3h_v8_final.txt",
-    "6h": "modelos/modelo_delta_6h_v8_final.txt",
+    "6h": "modelos/modelo_delta_6h_v9.txt",
 }
 MODEL_VERSION = "v8_final_bacia"
 BASE_DIR = Path(__file__).resolve().parent

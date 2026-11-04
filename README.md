@@ -1005,3 +1005,18 @@ Após a correção do backfill e a inclusão das features de bacia, o modelo V2 
 | 6h | 84 | 19.99 | 19.32 | -0.03 |
 
 **Conclusão:** O modelo está tecnicamente empatado com a persistência, mas o Skill Score em 3h é **positivo (+0.05)**. Isso indica que o modelo está começando a capturar o sinal da chuva na bacia. O próximo passo é acumular mais dados de eventos de cheia para consolidar o ganho.
+
+---
+## Retreino v9 e LOEO (04/11/2026)
+
+O retreino do LightGBM v9 (com features de chuva acumulada 24h/72h/7d) apresentou:
+
+| Horizonte | PR-AUC (treino) | PR-AUC (LOEO) | v8 (referência) | Decisão |
+|-----------|------------------|----------------|------------------|---------|
+| 1h | 0.66 | 0.47 | 0.63 | ❌ v8 mantido |
+| 3h | 0.98 | 0.54 | 0.63 | ❌ v8 mantido |
+| **6h** | 0.83 | **0.745** | 0.63 | ✅ **v9 promovido** |
+
+**Interpretação:** As features de chuva acumulada só mostram ganho real no horizonte de 6h (onde a chuva tem tempo de chegar ao rio). Para 1h e 3h, o modelo v8 é melhor (o v9 teve overfitting).
+
+**Limitação:** O LOEO foi rodado com apenas 3 eventos únicos (o dataset é pequeno). O resultado é **preliminar**. A prioridade agora é acumular mais eventos (meta: 20-50 eventos) para consolidar o ganho.
