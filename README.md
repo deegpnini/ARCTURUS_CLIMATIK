@@ -992,3 +992,16 @@ WHERE timestamp > now() - interval '2 hours'
   AND stale IS NOT TRUE
   AND features IS NULL;
 -- esperado: 0
+
+---
+## Primeiro Skill Score Positivo (04/11/2026)
+
+Após a correção do backfill e a inclusão das features de bacia, o modelo V2 (LightGBM) foi avaliado com 334 predições (138 de 1h, 112 de 3h, 84 de 6h):
+
+| Horizonte | n | MAE_modelo | MAE_persist | Skill_Score |
+|-----------|----|------------|-------------|-------------|
+| 1h | 138 | 4.71 | 4.38 | -0.07 |
+| **3h** | **112** | **11.27** | **11.89** | **+0.05** |
+| 6h | 84 | 19.99 | 19.32 | -0.03 |
+
+**Conclusão:** O modelo está tecnicamente empatado com a persistência, mas o Skill Score em 3h é **positivo (+0.05)**. Isso indica que o modelo está começando a capturar o sinal da chuva na bacia. O próximo passo é acumular mais dados de eventos de cheia para consolidar o ganho.
