@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Features de chuva na bacia a partir de data/chuva_bacia_openmeteo.csv."""
+
 from __future__ import annotations
 
 import logging
@@ -21,6 +22,12 @@ FEATURE_NAMES = (
     "bacia_12h",
     "bacia_max1h",
     "bacia_pontos_forte",
+    "chuva_24h",
+    "chuva_72h",
+    "chuva_7d",
+    "api_3d",
+    "api_7d",
+    "api_14d",
 )
 
 
@@ -44,7 +51,7 @@ def calcular_features_bacia(data_alvo) -> dict:
         data_alvo = pd.Timestamp(data_alvo)
         if df.index.max() > data_alvo:
             LOGGER.warning(
-                "Possível leakage na chuva (%s > %s); linhas futuras serão ignoradas.",
+                "Chuva com linhas > origem (%s > %s); linhas futuras serão ignoradas.",
                 df.index.max(),
                 data_alvo,
             )
@@ -77,6 +84,18 @@ def calcular_features_bacia(data_alvo) -> dict:
             v = janela.sum()
             return float(v) if pd.notna(v) else float("nan")
 
+        def api(h_dias: int):
+            """Índice de Umidade Antecedente (API) com fator de decaimento 0.9."""
+            horas = h_dias * 24
+            if len(media) < horas:
+                return float("nan")
+            janela = media.iloc[-horas:]
+            valor = 0.0
+            for v in janela:
+                if pd.notna(v):
+                    valor = v + 0.9 * valor
+            return float(valor) if pd.notna(valor) else float("nan")
+
         # max1h: máximo da média horária na última hora (1 passo se horário)
         max1h = media.iloc[-1]
         max1h = float(max1h) if pd.notna(max1h) else float("nan")
@@ -97,6 +116,12 @@ def calcular_features_bacia(data_alvo) -> dict:
             "bacia_12h": soma(12),
             "bacia_max1h": max1h,
             "bacia_pontos_forte": pontos_forte,
+            "chuva_24h": soma(24),
+            "chuva_72h": soma(72),
+            "chuva_7d": soma(168),
+            "api_3d": api(3),
+            "api_7d": api(7),
+            "api_14d": api(14),
         }
     except Exception:
         LOGGER.exception("Falha features_bacia")

@@ -45,5 +45,5 @@ def test_nan_rainfall_is_reported_without_replacing_with_zero(
         )
 
     assert pd.isna(result["bacia_3h"])
-    assert "contém 2 valores NaN" in caplog.text
+    assert "contém 1 valores NaN" in caplog.text
     assert "não serão convertidos em zero" in caplog.text

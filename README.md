@@ -1020,3 +1020,20 @@ O retreino do LightGBM v9 (com features de chuva acumulada 24h/72h/7d) apresento
 **Interpretação:** As features de chuva acumulada só mostram ganho real no horizonte de 6h (onde a chuva tem tempo de chegar ao rio). Para 1h e 3h, o modelo v8 é melhor (o v9 teve overfitting).
 
 **Limitação:** O LOEO foi rodado com apenas 3 eventos únicos (o dataset é pequeno). O resultado é **preliminar**. A prioridade agora é acumular mais eventos (meta: 20-50 eventos) para consolidar o ganho.
+
+---
+## Auditoria Científica: v9 (API) REJEITADO (04/11/2026)
+
+**Resultado da ablação (v8 vs v8+API, LOEO com 4 eventos):**
+
+| Horizonte | A (v8) | B (v8+API) | Delta | Folds B>A |
+|-----------|--------|------------|-------|-----------|
+| 1h | 0.6562 | 0.6449 | -0.0113 | 0/4 |
+| 3h | 0.6000 | 0.5700 | -0.0300 | 2/4 |
+| 6h | 0.7310 | 0.7301 | -0.0008 | 0/3 |
+
+**Conclusão:** As features de API (umidade antecedente) não melhoram o modelo em nenhum horizonte. O delta é muito menor que o desvio entre folds (0.18 a 0.33). O v8 (27 features) permanece em produção.
+
+**Próximo gatilho:** Reavaliar o API com pelo menos 8 eventos (o dataset atual tem 4).
+
+**Método:** A ablação (A vs B, mesmos folds) é o padrão para validar novas features. Nenhuma feature entra no modelo sem passar pelo LOEO.

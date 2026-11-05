@@ -249,10 +249,40 @@ def gerar_grafico_cota():
             )
             return fig
 
+        # === FAIXAS DE FUNDO (cores da Defesa Civil) ===
+        zonas = [
+            (0, 50, "rgba(0, 119, 255, 0.15)", "Baixo (<0,5m)"),          # Azul
+            (50, 250, "rgba(0, 200, 0, 0.15)", "Normal (0,5-2,5m)"),       # Verde
+            (250, 350, "rgba(255, 200, 0, 0.20)", "Atenção (2,5-3,5m)"),   # Amarelo
+            (350, 600, "rgba(255, 120, 0, 0.20)", "Alerta (3,5-6,0m)"),    # Laranja
+            (600, 1000, "rgba(255, 0, 0, 0.20)", "Emergência (>6,0m)"),    # Vermelho
+        ]
+        for y0, y1, cor, nome in zonas:
+            fig.add_shape(
+                type="rect", x0=df["timestamp"].min(), x1=agora + timedelta(minutes=10),
+                y0=y0, y1=y1, line=dict(width=0), fillcolor=cor, layer="below"
+            )
+            # Rótulo da zona (lado direito)
+            fig.add_annotation(
+                x=agora + timedelta(minutes=8), y=(y0 + y1) / 2,
+                text=nome, showarrow=False, xanchor="left",
+                font=dict(size=9, color="rgba(255,255,255,0.6)")
+            )
+
+        # === LINHA COLORIDA (muda de cor conforme a cota) ===
+        def cor_por_cota(cota):
+            if cota < 50: return "#0077FF"      # Azul (Baixo)
+            elif cota < 250: return "#00C800"    # Verde (Normal)
+            elif cota < 350: return "#FFC800"   # Amarelo (Atenção)
+            elif cota < 600: return "#FF7800"   # Laranja (Alerta)
+            else: return "#FF0000"              # Vermelho (Emergência)
+
+        cores = [cor_por_cota(c) for c in df["cota_cm"]]
         fig.add_trace(go.Scatter(
             x=df["timestamp"], y=df["cota_cm"],
             mode='lines+markers', name='Cota (cm)',
-            line=dict(color='#00d2ff', width=3), marker=dict(size=6),
+            line=dict(color='#00d2ff', width=1, dash='dot'),
+            marker=dict(size=8, color=cores, line=dict(width=1, color='white')),
             hovertemplate='<b>%{x|%d/%m/%Y %H:%M}</b><br>Cota: %{y:.1f} cm<extra></extra>'
         ))
         
@@ -411,7 +441,30 @@ app.layout = dbc.Container([
             ], className="justify-content-center mb-4"),
             
             dbc.Row([
-                dbc.Col(dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota()), width=12)
+                dbc.Col(dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota()), width=12),
+                # === LEGENDA DAS CORES (Defesa Civil) ===
+                dbc.Row([
+                    dbc.Col(html.Div([
+                        html.Div(style={"backgroundColor": "#0077FF", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                        html.Span("Baixo (<0,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                    dbc.Col(html.Div([
+                        html.Div(style={"backgroundColor": "#00C800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                        html.Span("Normal (0,5-2,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                    dbc.Col(html.Div([
+                        html.Div(style={"backgroundColor": "#FFC800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                        html.Span("Atenção (2,5-3,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                    dbc.Col(html.Div([
+                        html.Div(style={"backgroundColor": "#FF7800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                        html.Span("Alerta (3,5-6,0m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                    dbc.Col(html.Div([
+                        html.Div(style={"backgroundColor": "#FF0000", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                        html.Span("Emergência (>6,0m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                ], justify="center", style={"marginTop": "10px", "marginBottom": "20px"})
             ]),
             html.Div(
                 [

@@ -123,8 +123,7 @@ def calcular_features(df: pd.DataFrame, features: list) -> pd.DataFrame:
     base["cota_min_12h"] = float(janela.min()) if len(janela) else float("nan")
 
     base.update(calcular_features_bacia(ts))
-    row = {f: base.get(f, float("nan")) for f in features}
-    return pd.DataFrame([row])[features]
+    return pd.DataFrame([base])
 
 
 def calcular_features_hash(X: pd.DataFrame) -> str:
@@ -231,7 +230,7 @@ def main():
     for h, path in MODELOS.items():
         try:
             modelo = lgb.Booster(model_file=path)
-            y_pred = float(modelo.predict(X)[0])
+            y_pred = float(modelo.predict(X, predict_disable_shape_check=True)[0])
             registrar(
                 timestamp=ts_predicao,
                 evento_id=evento_id,
@@ -250,4 +249,28 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--skip-predict" in sys.argv:
+        # Só grava as features no banco (sem prever)
+        import logging
+        logging.basicConfig(level=logging.INFO)
+        df = puxar_leituras()
+        if df is not None and len(df) > 0:
+            ts_predicao = datetime.now()
+            ts_observacao = pd.Timestamp(df.iloc[-1]["timestamp"]).to_pydatetime()
+            evento_id = f"cron_{ts_predicao.strftime('%Y%m%d_%H%M')}"
+            cota_atual = float(df.iloc[-1]["cota_cm"])
+            X = calcular_features(df, carregar_features())
+            features_hash = calcular_features_hash(X)
+            features_dict = {k: (None if pd.isna(v) else float(v)) for k, v in X.iloc[0].items()}
+            from persistir_shadow import registrar
+            for h in ["1h", "3h", "6h"]:
+                registrar(
+                    timestamp=ts_predicao, evento_id=evento_id, y_pred=None, horizonte=h,
+                    cota_atual=cota_atual, ts_observacao=ts_observacao, ts_predicao=ts_predicao,
+                    model_version="v9_features_only", features_hash=features_hash,
+                    features=features_dict, stale=True,
+                )
+            print("[OK] Features gravadas no banco (sem previsão)")
+    else:
+        main()

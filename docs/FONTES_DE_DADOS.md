@@ -18,3 +18,12 @@
 ## Arquitetura de Fallback
 
 
+
+---
+## Atualização: Defesa Civil de SC (04/11/2026)
+
+A Defesa Civil de SC (`monitoramento.defesacivil.sc.gov.br`) usa a API da Qualle Control (`tile-service.quallecontrol.com.br`), que retorna **TileJSON (Mapbox Vector Tiles)** em vez de dados tabulares (JSON/CSV). A extração dos dados exigiria decodificar tiles `.pbf`/`.mvt` com protobuf, o que é **frágil e complexo**. 
+
+**Decisão:** A Defesa Civil de SC é **fonte visual** (consulta manual pelo operador). Não é integrada automaticamente ao ARCTURUS.
+
+**Alternativa:** A ERAB (P0) continua sendo a fonte primária de cota (tempo real). A ANA (P1) fica como histórico/validação.

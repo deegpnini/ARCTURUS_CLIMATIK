@@ -44,7 +44,7 @@ def coletar_cota():
             
             if valores:
                 # Pega o menor valor (o nível do rio, não o topo da régua)
-                cota_metros = min(valores)
+                cota_metros = valores[-1]  # Pega o último valor (o mais recente)
                 
                 resultado = {
                     "fonte": "Tubarão Saneamento (ERAB)",
