@@ -91,6 +91,9 @@ def main():
     }
     HEALTH.write_text(json.dumps(health, indent=2), encoding="utf-8")
 
+    # Verifica se a ANA tem dados recentes (se o endpoint retornou items vazios)
+    ana_ok = health.get("ana_hidroweb", "UNKNOWN") == "ONLINE"
+    
     # ICA: frescor 40 + fontes 30 + pipeline 30
     frescor = 0
     if idade_h is not None:

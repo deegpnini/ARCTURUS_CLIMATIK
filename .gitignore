@@ -252,3 +252,17 @@ logs/
 pre-commit.sh
 backlog_*.md
 data/chuva_bacia_meta.json
+
+# Dados gerados (não versionar)
+data/*.json
+data/dataset_retreino.parquet
+resultados/*.png
+resultados/*.csv
+resultados/loeo/
+modelos/*_v9.txt
+
+# Logs
+logs/*.log
+
+# Arquivos temporários
+*.tmp
