@@ -28,7 +28,7 @@ def puxar_leituras_ate(conn, ts_alvo, n=200):
     cur.execute("""
         SELECT timestamp, cota_cm, vz_cm_h, az_cm_h2
         FROM leituras
-        WHERE cota_cm IS NOT NULL
+        WHERE cota_cm IS NOT NULL AND qc = 'VALIDO'
           AND timestamp <= %s
         ORDER BY timestamp DESC
         LIMIT %s

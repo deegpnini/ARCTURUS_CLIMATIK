@@ -2,10 +2,8 @@
 """Features de chuva na bacia a partir de data/chuva_bacia_openmeteo.csv."""
 
 from __future__ import annotations
-
 import logging
 from pathlib import Path
-
 import numpy as np
 import pandas as pd
 
@@ -13,27 +11,21 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 ARQUIVO_BACIA = BASE_DIR / "data" / "chuva_bacia_openmeteo.csv"
 LOGGER = logging.getLogger(__name__)
 
+# Lista de features (o modelo v10 precisa saber quais são)
 FEATURE_NAMES = (
-    "bacia_lag_4h",
-    "bacia_lag_6h",
-    "bacia_lag_8h",
-    "bacia_3h",
-    "bacia_6h",
-    "bacia_12h",
-    "bacia_max1h",
-    "bacia_pontos_forte",
-    "chuva_24h",
-    "chuva_72h",
-    "chuva_7d",
-    "api_3d",
-    "api_7d",
-    "api_14d",
+    "bacia_lag_4h", "bacia_lag_6h", "bacia_lag_8h",
+    "bacia_3h", "bacia_6h", "bacia_12h",
+    "bacia_max1h", "bacia_pontos_forte",
+    "chuva_24h", "chuva_72h", "chuva_7d",
+    "api_3d", "api_7d", "api_14d",
+    "chuva_orleans_lag_15h",
+    "chuva_lauro_muller_lag_15h",
+    "chuva_braco_norte_lag_15h",
+    "chuva_grao_para_lag_14h",
 )
-
 
 def _vazio() -> dict:
     return {k: float("nan") for k in FEATURE_NAMES}
-
 
 def calcular_features_bacia(data_alvo) -> dict:
     """Calcula features de bacia até data_alvo (sem leakage futuro)."""
@@ -52,8 +44,7 @@ def calcular_features_bacia(data_alvo) -> dict:
         if df.index.max() > data_alvo:
             LOGGER.warning(
                 "Chuva com linhas > origem (%s > %s); linhas futuras serão ignoradas.",
-                df.index.max(),
-                data_alvo,
+                df.index.max(), data_alvo,
             )
 
         df = df[df.index <= data_alvo]
@@ -64,13 +55,21 @@ def calcular_features_bacia(data_alvo) -> dict:
         if len(cols) == 0:
             return _vazio()
 
-        # série horária = média espacial dos pontos
         media = df[cols].mean(axis=1)
 
-        def lag(h: int):
+        def lag_media(h: int):
             if len(media) <= h:
                 return float("nan")
             v = media.shift(h).iloc[-1]
+            return float(v) if pd.notna(v) else float("nan")
+
+        def lag_coluna(col: str, h: int):
+            if col not in df.columns:
+                return float("nan")
+            serie = df[col].dropna()
+            if len(serie) <= h:
+                return float("nan")
+            v = serie.shift(h).iloc[-1]
             return float(v) if pd.notna(v) else float("nan")
 
         def soma(h: int):
@@ -78,14 +77,10 @@ def calcular_features_bacia(data_alvo) -> dict:
                 return float("nan")
             janela = media.iloc[-h:]
             if janela.isna().any():
-                n_nan = int(janela.isna().sum().sum())
-                LOGGER.warning("Janela de %dh contém %d valores NaN; não serão convertidos em zero; retornando NaN.", h, n_nan)
                 return float("nan")
-            v = janela.sum()
-            return float(v) if pd.notna(v) else float("nan")
+            return float(janela.sum())
 
         def api(h_dias: int):
-            """Índice de Umidade Antecedente (API) com fator de decaimento 0.9."""
             horas = h_dias * 24
             if len(media) < horas:
                 return float("nan")
@@ -94,23 +89,18 @@ def calcular_features_bacia(data_alvo) -> dict:
             for v in janela:
                 if pd.notna(v):
                     valor = v + 0.9 * valor
-            return float(valor) if pd.notna(valor) else float("nan")
+            return float(valor)
 
-        # max1h: máximo da média horária na última hora (1 passo se horário)
         max1h = media.iloc[-1]
         max1h = float(max1h) if pd.notna(max1h) else float("nan")
 
         ultima = df[cols].iloc[-1]
-        pontos_forte = (
-            float((ultima.dropna() > 5.0).sum())
-            if ultima.notna().any()
-            else float("nan")
-        )
+        pontos_forte = float((ultima.dropna() > 5.0).sum()) if ultima.notna().any() else float("nan")
 
         return {
-            "bacia_lag_4h": lag(4),
-            "bacia_lag_6h": lag(6),
-            "bacia_lag_8h": lag(8),
+            "bacia_lag_4h": lag_media(4),
+            "bacia_lag_6h": lag_media(6),
+            "bacia_lag_8h": lag_media(8),
             "bacia_3h": soma(3),
             "bacia_6h": soma(6),
             "bacia_12h": soma(12),
@@ -122,6 +112,11 @@ def calcular_features_bacia(data_alvo) -> dict:
             "api_3d": api(3),
             "api_7d": api(7),
             "api_14d": api(14),
+            # Features de lag por cidade (o achado hidrológico)
+            "chuva_orleans_lag_15h": lag_coluna("orleans", 15),
+            "chuva_lauro_muller_lag_15h": lag_coluna("lauro_muller", 15),
+            "chuva_braco_norte_lag_15h": lag_coluna("braco_norte", 15),
+            "chuva_grao_para_lag_14h": lag_coluna("grao_para", 14),
         }
     except Exception:
         LOGGER.exception("Falha features_bacia")
