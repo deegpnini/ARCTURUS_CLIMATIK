@@ -11,6 +11,28 @@ if str(BASE) not in sys.path:
 from src.relatorios.monitor_continuo import determinar_qc
 from src.relatorios.postgres_db import get_postgres_connection
 
+import pandas as pd
+
+CHUVA_CSV = BASE / "data" / "chuva_bacia_openmeteo.csv"
+
+
+def calcular_chuva_24h():
+    """Soma a chuva das ultimas 24h do CSV (media dos 8 pontos da bacia)."""
+    try:
+        df = pd.read_csv(CHUVA_CSV, index_col=0, parse_dates=True)
+        if df.empty:
+            return None
+        df.index = pd.to_datetime(df.index, errors="coerce")
+        df = df.loc[~df.index.isna()].sort_index()
+        corte = pd.Timestamp.now() - pd.Timedelta(hours=24)
+        janela = df[df.index >= corte]
+        if janela.empty:
+            return None
+        return float(janela.mean(axis=1).sum())
+    except Exception as e:
+        print(f"[AVISO] Falha ao calcular chuva_24h: {e}")
+        return None
+
 
 REGIME_FILE = BASE / "data" / "regime_atual.json"
 COTA_FILE = BASE / "tubarao_saneamento_dados.json"
@@ -47,8 +69,9 @@ def gravar_leitura(regime, dados_cota, connection_factory=get_postgres_connectio
 
             cursor.execute("""
                 INSERT INTO leituras (
-                    timestamp, ts_coleta, cota_cm, vz_cm_h, az_cm_h2, regime, qc
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    timestamp, ts_coleta, cota_cm, vz_cm_h, az_cm_h2, regime,
+                    chuva_pior_caso_mm, qc
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 datetime.now(),
                 ts_coleta,
@@ -56,6 +79,7 @@ def gravar_leitura(regime, dados_cota, connection_factory=get_postgres_connectio
                 regime.get("delta_60m"),
                 regime.get("aceleracao_az"),
                 regime.get("regime") or "DESCONHECIDO",
+                calcular_chuva_24h(),
                 qc,
             ))
         connection.commit()
