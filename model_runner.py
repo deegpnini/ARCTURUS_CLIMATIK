@@ -105,8 +105,8 @@ def calcular_features(df: pd.DataFrame, features: list) -> pd.DataFrame:
         "aceleracao_1h": float(az) if pd.notna(az) else float("nan"),
         "sin_hora": math.sin(2 * math.pi * ts.hour / 24),
         "cos_hora": math.cos(2 * math.pi * ts.hour / 24),
-        "sin_dia_ano": math.sin(2 * math.pi * ts.dayofyear / 365),
-        "cos_dia_ano": math.cos(2 * math.pi * ts.dayofyear / 365),
+        "sin_dia_ano": math.sin(2 * math.pi * ts.day_of_year / 365),
+        "cos_dia_ano": math.cos(2 * math.pi * ts.day_of_year / 365),
     }
 
     # delta_180m ≈ (cota - cota_3h) / 3
