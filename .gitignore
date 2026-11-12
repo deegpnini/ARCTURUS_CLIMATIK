@@ -266,3 +266,6 @@ logs/*.log
 
 # Arquivos temporários
 *.tmp
+model/*.gguf
+cache/
+backup/
