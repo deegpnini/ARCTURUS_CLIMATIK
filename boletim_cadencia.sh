@@ -23,7 +23,7 @@ read -r COTA CHUVA VZ <<< "$(psql -d arcturus -tA -F' ' -c "
         COALESCE((SELECT cota_cm FROM leituras
                   WHERE cota_cm IS NOT NULL AND qc = 'VALIDO'
                   ORDER BY timestamp DESC LIMIT 1), 0),
-        COALESCE((SELECT SUM(chuva_pior_caso_mm) FROM leituras
+        COALESCE((SELECT AVG(chuva_pior_caso_mm) FROM leituras
                   WHERE timestamp > NOW() - INTERVAL '24 hours'
                     AND chuva_pior_caso_mm IS NOT NULL), 0),
         COALESCE((SELECT ABS(vz_cm_h) FROM leituras
