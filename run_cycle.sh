@@ -21,3 +21,6 @@ bash "$BASE_DIR/cron_motor.sh" &&
     "$PYTHON" "$BASE_DIR/src/relatorios/gravar_postgres.py" &&
     "$PYTHON" "$BASE_DIR/model_runner.py" &&
     "$PYTHON" "$BASE_DIR/backfill_y_true.py"
+
+# Modo Sombra v11c (LightGBM + Chuva Tripla)
+.venv/bin/python3 src/modelo/rodar_sombra_v11c.py >> logs/sombra_v11c.log 2>&1 || true

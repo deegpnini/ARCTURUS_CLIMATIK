@@ -1,0 +1,132 @@
+{
+  "versao": "v11c_noise_augmented_3x",
+  "treinado_em": "2026-11-14T00:23:47.584348",
+  "features": [
+    "ana_cota_m",
+    "openmeteo_chuva_lauro_muller_mm",
+    "openmeteo_chuva_orleans_mm",
+    "openmeteo_chuva_grao_para_mm",
+    "openmeteo_chuva_braco_norte_mm",
+    "openmeteo_chuva_sao_ludgero_mm",
+    "openmeteo_chuva_rio_fortuna_mm",
+    "openmeteo_chuva_pedras_grandes_mm",
+    "openmeteo_chuva_pouso_mm",
+    "openmeteo_chuva_lauro_muller_mm_lag_6h",
+    "openmeteo_chuva_orleans_mm_lag_6h",
+    "openmeteo_chuva_grao_para_mm_lag_6h",
+    "openmeteo_chuva_braco_norte_mm_lag_6h",
+    "openmeteo_chuva_sao_ludgero_mm_lag_6h",
+    "openmeteo_chuva_rio_fortuna_mm_lag_6h",
+    "openmeteo_chuva_pedras_grandes_mm_lag_6h",
+    "openmeteo_chuva_pouso_mm_lag_6h",
+    "openmeteo_chuva_lauro_muller_mm_lag_12h",
+    "openmeteo_chuva_orleans_mm_lag_12h",
+    "openmeteo_chuva_grao_para_mm_lag_12h",
+    "openmeteo_chuva_braco_norte_mm_lag_12h",
+    "openmeteo_chuva_sao_ludgero_mm_lag_12h",
+    "openmeteo_chuva_rio_fortuna_mm_lag_12h",
+    "openmeteo_chuva_pedras_grandes_mm_lag_12h",
+    "openmeteo_chuva_pouso_mm_lag_12h",
+    "openmeteo_chuva_lauro_muller_mm_lag_15h",
+    "openmeteo_chuva_orleans_mm_lag_15h",
+    "openmeteo_chuva_grao_para_mm_lag_15h",
+    "openmeteo_chuva_braco_norte_mm_lag_15h",
+    "openmeteo_chuva_sao_ludgero_mm_lag_15h",
+    "openmeteo_chuva_rio_fortuna_mm_lag_15h",
+    "openmeteo_chuva_pedras_grandes_mm_lag_15h",
+    "openmeteo_chuva_pouso_mm_lag_15h",
+    "openmeteo_chuva_lauro_muller_mm_lag_18h",
+    "openmeteo_chuva_orleans_mm_lag_18h",
+    "openmeteo_chuva_grao_para_mm_lag_18h",
+    "openmeteo_chuva_braco_norte_mm_lag_18h",
+    "openmeteo_chuva_sao_ludgero_mm_lag_18h",
+    "openmeteo_chuva_rio_fortuna_mm_lag_18h",
+    "openmeteo_chuva_pedras_grandes_mm_lag_18h",
+    "openmeteo_chuva_pouso_mm_lag_18h",
+    "openmeteo_chuva_lauro_muller_mm_lag_24h",
+    "openmeteo_chuva_orleans_mm_lag_24h",
+    "openmeteo_chuva_grao_para_mm_lag_24h",
+    "openmeteo_chuva_braco_norte_mm_lag_24h",
+    "openmeteo_chuva_sao_ludgero_mm_lag_24h",
+    "openmeteo_chuva_rio_fortuna_mm_lag_24h",
+    "openmeteo_chuva_pedras_grandes_mm_lag_24h",
+    "openmeteo_chuva_pouso_mm_lag_24h",
+    "api_3d",
+    "api_7d",
+    "api_14d",
+    "ana_vz_m_d",
+    "ana_az_m_d2",
+    "bacia_chuva_media_mm",
+    "bacia_chuva_max_mm",
+    "cota_norm_p90",
+    "mes_sin",
+    "mes_cos",
+    "prev_chuva_24h_media_mm",
+    "prev_chuva_48h_acum_mm",
+    "prev_chuva_72h_acum_mm",
+    "prev_chuva_24h_pior_caso_mm",
+    "div_modelos_mm"
+  ],
+  "n_features": 64,
+  "climatologia_ana": {
+    "p50": 58.0,
+    "p90": 145.0,
+    "p99": 306.0,
+    "max": 746.0,
+    "n_dias": 30977
+  },
+  "metricas_validacao": {
+    "n_treino_base": 606,
+    "n_treino_aumentado_3x": 1818,
+    "n_val_interna": 152,
+    "periodo_treino": "2024-01-02 a 2025-08-29",
+    "periodo_val": "2025-08-30 a 2026-01-28",
+    "rmse_cota_m": 29.0137,
+    "mae_cota_m": 18.4154,
+    "rmse_persistencia_m": 38.1592,
+    "mae_persistencia_m": 21.2993,
+    "ganho_rmse_pct": 23.97
+  },
+  "top_10_features": [
+    {
+      "feature": "ana_cota_m",
+      "importancia": 523
+    },
+    {
+      "feature": "ana_vz_m_d",
+      "importancia": 484
+    },
+    {
+      "feature": "ana_az_m_d2",
+      "importancia": 454
+    },
+    {
+      "feature": "api_7d",
+      "importancia": 351
+    },
+    {
+      "feature": "api_14d",
+      "importancia": 326
+    },
+    {
+      "feature": "api_3d",
+      "importancia": 228
+    },
+    {
+      "feature": "div_modelos_mm",
+      "importancia": 203
+    },
+    {
+      "feature": "prev_chuva_24h_media_mm",
+      "importancia": 170
+    },
+    {
+      "feature": "mes_cos",
+      "importancia": 166
+    },
+    {
+      "feature": "prev_chuva_24h_pior_caso_mm",
+      "importancia": 165
+    }
+  ]
+}
