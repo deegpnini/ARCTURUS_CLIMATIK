@@ -393,6 +393,22 @@ def gerar_mapa_previsao_tempo():
         textos.append(texto)
         cores.append(cor)
     
+    # Traçado do rio (carregar se existir)
+    import json
+    from pathlib import Path
+    caminho_rio = Path("data/trajeto_rio_tubarao.json")
+    tracos_rio = []
+    if caminho_rio.exists():
+        try:
+            dados_rio = json.loads(caminho_rio.read_text(encoding="utf-8"))
+            for segmento in dados_rio.get("segmentos", []):
+                if len(segmento) >= 2:
+                    lat_seg = [p[0] for p in segmento]
+                    lon_seg = [p[1] for p in segmento]
+                    tracos_rio.append((lat_seg, lon_seg))
+        except Exception:
+            pass
+    
     fig = go.Figure(go.Scattermap(
         lat=lats,
         lon=lons,
@@ -401,6 +417,17 @@ def gerar_mapa_previsao_tempo():
         text=textos,
         hoverinfo="text",
     ))
+    
+    # Adicionar o traçado do rio (linhas tracejadas)
+    for lat_seg, lon_seg in tracos_rio:
+        fig.add_trace(go.Scattermap(
+            lat=lat_seg,
+            lon=lon_seg,
+            mode="lines",
+            line=dict(width=3, color="#0284c7"),
+            hoverinfo="skip",
+            showlegend=False,
+        ))
     
     fig.update_layout(
         map=dict(
