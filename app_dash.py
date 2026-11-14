@@ -319,6 +319,100 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
         style={"backgroundColor": card_color}
     )
 
+
+# ============================================================
+# MAPA DE PREVISÃO DO TEMPO (Plotly Scattermapbox)
+# ============================================================
+def gerar_mapa_previsao_tempo():
+    """Gera o mapa interativo da bacia com as previsões do tempo."""
+    import json
+    from pathlib import Path
+    
+    BASE = Path(__file__).resolve().parent
+    tempo_file = BASE / "data" / "previsao_tempo.json"
+    
+    if not tempo_file.exists():
+        return go.Figure().update_layout(
+            title="Previsão do tempo indisponível",
+            height=500,
+        )
+    
+    with open(tempo_file, "r") as f:
+        tempo = json.load(f)
+    
+    # Coordenadas das cidades
+    COORDENADAS = {
+        "lauro_muller": (-28.39, -49.39),
+        "orleans": (-28.35, -49.30),
+        "anitapolis": (-27.90, -49.13),
+        "sao_bonifacio": (-27.90, -48.93),
+        "grao_para": (-28.18, -49.22),
+        "rio_fortuna": (-28.13, -49.10),
+        "santa_rosa_de_lima": (-28.03, -49.13),
+        "braco_do_norte": (-28.27, -49.17),
+        "sao_ludgero": (-28.32, -49.20),
+        "pedras_grandes": (-28.43, -49.18),
+        "armazem": (-28.26, -49.02),
+        "gravatal": (-28.33, -49.05),
+        "sao_martinho": (-28.16, -48.98),
+        "tubarao": (-28.48, -49.02),
+        "capivari_de_baixo": (-28.45, -48.98),
+        "treze_de_maio": (-28.55, -49.15),
+        "jaguaruna": (-28.61, -49.03),
+        "sangao": (-28.63, -49.13),
+        "laguna": (-28.48, -48.78),
+    }
+    
+    lats, lons, textos, cores = [], [], [], []
+    
+    for cidade, (lat, lon) in COORDENADAS.items():
+        if cidade not in tempo:
+            continue
+        t = tempo[cidade]
+        hoje = t.get("hoje", {})
+        chuva_hoje = hoje.get("chuva", 0)
+        
+        if chuva_hoje >= 20:
+            cor = "#FF0000"
+        elif chuva_hoje >= 5:
+            cor = "#FF7800"
+        elif chuva_hoje >= 1:
+            cor = "#FFC800"
+        else:
+            cor = "#00C800"
+        
+        texto = f"<b>{cidade.replace('_', ' ').title()}</b><br>"
+        for dia_nome, dia_chave in [("Hoje", "hoje"), ("Amanhã", "amanha"), ("Depois", "depois_amanha")]:
+            d = t.get(dia_chave, {})
+            texto += f"<b>{dia_nome}:</b> {d.get('temp_min', 0):.0f}°C a {d.get('temp_max', 0):.0f}°C | Chuva: {d.get('chuva', 0):.1f} mm<br>"
+        
+        lats.append(lat)
+        lons.append(lon)
+        textos.append(texto)
+        cores.append(cor)
+    
+    fig = go.Figure(go.Scattermap(
+        lat=lats,
+        lon=lons,
+        mode="markers",
+        marker=dict(size=15, color=cores, opacity=0.9),
+        text=textos,
+        hoverinfo="text",
+    ))
+    
+    fig.update_layout(
+        map=dict(
+            style="open-street-map",
+            center=dict(lat=-28.45, lon=-49.10),
+            zoom=9,
+        ),
+        height=500,
+        margin=dict(l=0, r=0, t=0, b=0),
+        showlegend=False,
+    )
+    
+    return fig
+
 app.layout = dbc.Container([
     # --- BARRA LATERAL (SIDEBAR) ---
     html.Div([
@@ -440,7 +534,18 @@ app.layout = dbc.Container([
                 ], width=4)
             ], className="justify-content-center mb-4"),
             
-            dbc.Row([
+            
+    # ============================================================
+    # SEÇÃO: MAPA DE PREVISÃO DO TEMPO (Bacia do Rio Tubarão)
+    # ============================================================
+    html.Hr(),
+    html.H3("🌤️ Previsão do Tempo — Bacia do Rio Tubarão", className="text-center mt-4"),
+    html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
+    dbc.Row([
+        dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=gerar_mapa_previsao_tempo()), width=12),
+    ]),
+    html.Hr(),
+dbc.Row([
                 dbc.Col(dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota()), width=12),
                 # === LEGENDA DAS CORES (Defesa Civil) ===
                 dbc.Row([
