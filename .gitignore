@@ -297,3 +297,32 @@ resultados/*.json.bak
 # --- Logs de sombra ---
 logs/sombra_v11c.log
 logs/sombra_v11c.jsonl
+
+# --- Scripts do pipeline v11c (temporários) ---
+coleta_ana_series.py
+integrar_dataset*.py
+limpar_dataset.py
+treinar_v11c*.py
+auditar_v11c*.py
+pipeline_sombra_promocao.py
+automatizar_pipeline.sh
+log_previsoes*.py
+prever_cota_amanha.py
+validar_v11c_sombra.py
+diagnostico_v11c.py
+p02_auditoria.py
+p2_auditoria.py
+auditoria_p1.py
+
+# --- Datasets e modelos grandes ---
+data/*.parquet
+data/*.pkl
+data/*.txt
+data/dataset_*.csv
+data/log_previsoes*.csv
+models/v11c/*
+data/pipeline_log.txt
+
+# --- Logs ---
+logs/*.log
+logs/*.jsonl
