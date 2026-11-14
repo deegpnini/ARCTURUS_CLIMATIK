@@ -80,7 +80,7 @@ if chuva_file.exists():
     except Exception as e:
         print(f"[AVISO] Erro ao ler chuva: {e}")
 
-# --- 5) Previsão do tempo (agrupada por região da bacia) ---
+# --- 5) Previsão do tempo (por dia, com data explícita) ---
 tempo_texto = ""
 tempo_file = BASE / "data" / "previsao_tempo.json"
 if tempo_file.exists():
@@ -90,33 +90,58 @@ if tempo_file.exists():
         
         tempo_texto = "\n\n🌤️ *Previsão do Tempo — Bacia do Rio Tubarão*\n"
         
-        # --- Cabeceira ---
+        # Data de hoje, amanhã, depois de amanhã
+        from datetime import datetime, timedelta
+        hoje = datetime.now()
+        datas = [
+            ("hoje", hoje.strftime("%d/%m")),
+            ("amanha", (hoje + timedelta(days=1)).strftime("%d/%m")),
+            ("depois_amanha", (hoje + timedelta(days=2)).strftime("%d/%m")),
+        ]
+        
+        # Cabeceira
         tempo_texto += "\n*🏔️ Cabeceira (Serra):*\n"
         for cidade in ["lauro_muller", "orleans", "anitapolis", "sao_bonifacio"]:
             if cidade in tempo:
                 t = tempo[cidade]
                 nome = cidade.replace("_", " ").title()
-                tempo_texto += f"• *{nome}:* {t['temp_atual']:.0f}°C (máx {t['temp_max']:.0f}°C / mín {t['temp_min']:.0f}°C) | Chuva: {t['chuva_total']:.1f} mm\n"
+                tempo_texto += f"*{nome}:*\n"
+                for chave, data in datas:
+                    if chave in t:
+                        d = t[chave]
+                        tempo_texto += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | Chuva: {d['chuva']:.1f} mm\n"
         
-        # --- Médio Curso ---
+        # Médio Curso
         tempo_texto += "\n*🌳 Médio Curso:*\n"
         for cidade in ["braco_do_norte", "sao_ludgero", "pedras_grandes", "armazem", "gravatal"]:
             if cidade in tempo:
                 t = tempo[cidade]
                 nome = cidade.replace("_", " ").title()
-                tempo_texto += f"• *{nome}:* {t['temp_atual']:.0f}°C (máx {t['temp_max']:.0f}°C / mín {t['temp_min']:.0f}°C) | Chuva: {t['chuva_total']:.1f} mm\n"
+                tempo_texto += f"*{nome}:*\n"
+                for chave, data in datas:
+                    if chave in t:
+                        d = t[chave]
+                        tempo_texto += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | Chuva: {d['chuva']:.1f} mm\n"
         
-        # --- Foz / Litoral ---
+        # Foz / Litoral
         tempo_texto += "\n*🌊 Foz / Litoral:*\n"
         for cidade in ["tubarao", "capivari_de_baixo", "jaguaruna", "laguna"]:
             if cidade in tempo:
                 t = tempo[cidade]
                 nome = cidade.replace("_", " ").title()
-                tempo_texto += f"• *{nome}:* {t['temp_atual']:.0f}°C (máx {t['temp_max']:.0f}°C / mín {t['temp_min']:.0f}°C) | Chuva: {t['chuva_total']:.1f} mm\n"
+                tempo_texto += f"*{nome}:*\n"
+                for chave, data in datas:
+                    if chave in t:
+                        d = t[chave]
+                        tempo_texto += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | Chuva: {d['chuva']:.1f} mm\n"
         
-        # Rodapé com resumo geral
-        total_chuva = sum(t["chuva_total"] for t in tempo.values())
-        tempo_texto += f"\n*Chuva total prevista na bacia:* {total_chuva:.1f} mm (próximas 48h)\n"
+        # Rodapé: chuva total na bacia (hoje + amanhã + depois)
+        total_chuva = 0
+        for cidade, dias in tempo.items():
+            for chave in ["hoje", "amanha", "depois_amanha"]:
+                if chave in dias:
+                    total_chuva += dias[chave]["chuva"]
+        tempo_texto += f"\n*Chuva total prevista na bacia (3 dias):* {total_chuva:.1f} mm\n"
     
     except Exception as e:
         print(f"[AVISO] Erro ao ler previsão do tempo: {e}")
