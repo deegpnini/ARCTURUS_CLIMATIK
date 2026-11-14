@@ -269,3 +269,31 @@ logs/*.log
 model/*.gguf
 cache/
 backup/
+
+# --- Scripts de diagnóstico (temporários) ---
+diagnostico_*.py
+corrigir_*.py
+inserir_*.py
+remover_*.py
+esconder_*.py
+ocultar_*.py
+adicionar_*.py
+atualizar_mapa_*.py
+voltar_*.py
+auditoria_ana.py
+pipeline_m1s13.py
+preparar_dataset_ana.py
+treinar_v11_ana.py
+
+# --- Datasets grandes (não vão para o Git) ---
+data/dataset_treino_ana_preparado.parquet
+data/dataset_treino_ana.csv
+modelos/modelo_v11_ana.txt
+
+# --- Backups de JSON ---
+resultados/*.json.desativado
+resultados/*.json.bak
+
+# --- Logs de sombra ---
+logs/sombra_v11c.log
+logs/sombra_v11c.jsonl

@@ -10,7 +10,6 @@ from datetime import datetime
 BASE = Path(__file__).resolve().parents[2]
 DATA = BASE / "data"
 
-# Coordenadas aproximadas de cada município da bacia
 PONTOS = {
     # Cabeceira
     "lauro_muller": (-28.39, -49.39),
@@ -33,7 +32,7 @@ PONTOS = {
     "treze_de_maio": (-28.55, -49.15),
     "jaguaruna": (-28.61, -49.03),
     "sangao": (-28.63, -49.13),
-    "laguna": (-28.48, -48.78),  # Foz na Lagoa de Santo Antônio
+    "laguna": (-28.48, -48.78),
 }
 
 URL = "https://api.open-meteo.com/v1/forecast"
@@ -44,7 +43,7 @@ for nome, (lat, lon) in PONTOS.items():
         "latitude": lat,
         "longitude": lon,
         "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum",
-        "forecast_days": 3,  # Hoje, amanhã, depois de amanhã
+        "forecast_days": 3,
         "timezone": "America/Sao_Paulo",
     }
     try:
@@ -53,11 +52,11 @@ for nome, (lat, lon) in PONTOS.items():
         dados = r.json()
         daily = dados["daily"]
         
-        # Extrair os 3 dias
         dias = {}
         for i in range(3):
             data = daily["time"][i]
             dias[data] = {
+                "data": data,
                 "temp_max": daily["temperature_2m_max"][i],
                 "temp_min": daily["temperature_2m_min"][i],
                 "chuva": daily["precipitation_sum"][i],
