@@ -1,107 +1,55 @@
-import pandas as pd
-import numpy as np
-from pathlib import Path
-import sys
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Confronto de fontes de chuva (lê o JSON consolidado do baixar_previsao_tripla.py)."""
 
 import json
-from src.relatorios.log_incidentes import registrar
+from pathlib import Path
 
-BASE = Path.cwd()
-DATA_DIR = BASE / "data"
+BASE = Path(__file__).resolve().parents[2]
+DATA = BASE / "data"
+JSON_ENSEMBLE = DATA / "chuva_ensemble_consolidada.json"
 
-FILE_OPENMETEO = DATA_DIR / "previsao_chuva_bacia.csv"
-FILE_ECMWF = DATA_DIR / "previsao_chuva_ecmwf.csv"
-OUT_JSON = DATA_DIR / "chuva_ensemble_consolidada.json"
+print("=== ARCTURUS CLIMATIK: CONFRONTO E ENSEMBLE DE PREVISÃO DE CHUVA (3 FONTES) ===")
 
-print("=== ARCTURUS CLIMATIK: CONFRONTO E ENSEMBLE DE PREVISÃO DE CHUVA ===")
+if not JSON_ENSEMBLE.exists():
+    print("[ERRO] JSON consolidado não encontrado. Rode baixar_previsao_tripla.py primeiro.")
+    exit(1)
 
-# --- 1. CARREGAMENTO E LEITURA OPEN-METEO ---
-total_openmeteo = 0.0
-if FILE_OPENMETEO.exists():
-    try:
-        df_om = pd.read_csv(FILE_OPENMETEO)
-        col_chuva = next((c for c in df_om.columns if 'chuva' in c.lower() or 'precip' in c.lower()), None)
-        if col_chuva:
-            total_openmeteo = float(df_om[col_chuva].iloc[:48].sum())
-            print(f"[OK] Open-Meteo carregado: {total_openmeteo:.1f} mm (48h)")
-        else:
-            print("[AVISO] Coluna de chuva não identificada no arquivo da Open-Meteo.")
-    except Exception as e:
-        print(f"[ERRO] Falha ao ler Open-Meteo: {e}")
-else:
-    print("[AVISO] Arquivo previsao_chuva_bacia.csv não localizado.")
+with open(JSON_ENSEMBLE, "r") as f:
+    dados = json.load(f)
 
-# --- 2. CARREGAMENTO E LEITURA ECMWF ---
-total_ecmwf = 0.0
-if FILE_ECMWF.exists():
-    try:
-        df_ec = pd.read_csv(FILE_ECMWF)
-        col_chuva = next((c for c in df_ec.columns if 'chuva' in c.lower() or 'precip' in c.lower()), None)
-        if col_chuva:
-            total_ecmwf = float(df_ec[col_chuva].iloc[:48].sum())
-            print(f"[OK] ECMWF IFS carregado: {total_ecmwf:.1f} mm (48h)")
-        else:
-            print("[AVISO] Coluna de chuva não identificada no arquivo do ECMWF.")
-    except Exception as e:
-        print(f"[ERRO] Falha ao ler ECMWF: {e}")
-else:
-    print("[AVISO] Arquivo previsao_chuva_ecmwf.csv não localizado.")
+ecmwf = dados.get("ecmwf_72h_mm", 0)
+gfs = dados.get("gfs_72h_mm", 0)
+ukmo = dados.get("ukmo_72h_mm", 0)
+media = dados.get("media_72h_mm", 0)
+pior = dados.get("pior_caso_72h_mm", 0)
+div_total = dados.get("divergencia_total_mm", 0)
+div_horaria = dados.get("divergencia_horaria_max_mm", 0)
+confianca = dados.get("confianca", "DESCONHECIDA")
 
-# --- 3. CÁLCULO DE ESTATÍSTICAS E ANÁLISE DE INCERTEZA ---
-media_chuva = (total_openmeteo + total_ecmwf) / 2.0
-pior_caso = max(total_openmeteo, total_ecmwf)
-diferenca_abs = abs(total_openmeteo - total_ecmwf)
-
-# --- ÍNDICE DE CONFIANÇA (IDEIA DO ENGENHEIRO) ---
-if diferenca_abs <= 15:
-    confianca = "ALTA"
-elif diferenca_abs <= 35:
-    confianca = "MÉDIA"
-else:
-    confianca = "BAIXA"
-print(f"📊 Índice de Confiança: {confianca} (Δ = {diferenca_abs:.1f} mm)")
-if confianca == "BAIXA":
-    registrar("DIVERGENCIA_MODELOS", {"delta_mm": round(diferenca_abs, 1), "confianca": confianca})
-
-# Limiar de incerteza crítica: divergência superior a 20 mm
-LIMIAR_INCERTEZA = 35.0  # Alinhado com o limiar de confiança BAIXA
-incerteza_alta = diferenca_abs > LIMIAR_INCERTEZA
+print(f"[OK] ECMWF: {ecmwf:.1f} mm (72h)")
+print(f"[OK] GFS:   {gfs:.1f} mm (72h)")
+print(f"[OK] UKMO:  {ukmo:.1f} mm (72h)")
+print(f"📊 Índice de Confiança: {confianca} (Δ total = {div_total:.1f} mm | Δ horária máx = {div_horaria:.1f} mm)")
 
 print("\n" + "="*60)
-print("📊 RESUMO DO CONFRONTO DE PREVISÃO (48 HORAS)")
+print("📊 RESUMO DO CONFRONTO DE PREVISÃO (72 HORAS)")
 print("="*60)
-print(f"• Fonte A (Open-Meteo):   {total_openmeteo:6.1f} mm")
-print(f"• Fonte B (ECMWF IFS):    {total_ecmwf:6.1f} mm")
-print(f"• Média das Fontes:       {media_chuva:6.1f} mm")
-print(f"• Pior Caso (Conservador): {pior_caso:6.1f} mm  <-- Valor recomendado para o Alerta")
-print(f"• Amplitude de Incerteza: {diferenca_abs:6.1f} mm")
+print(f"• Fonte A (ECMWF):  {ecmwf:6.1f} mm")
+print(f"• Fonte B (GFS):    {gfs:6.1f} mm")
+print(f"• Fonte C (UKMO):   {ukmo:6.1f} mm")
+print(f"• Média das Fontes: {media:6.1f} mm")
+print(f"• Pior Caso:        {pior:6.1f} mm  <-- Valor recomendado para o Alerta")
+print(f"• Divergência total: {div_total:6.1f} mm")
+print(f"• Divergência horária máx: {div_horaria:6.1f} mm")
 
-if incerteza_alta:
+if confianca == "BAIXA":
     print("\n🚨 ALERTA DE ALTA INCERTEZA METEOROLÓGICA!")
-    print(f"   A divergência entre os modelos ({diferenca_abs:.1f} mm) ultrapassou o limiar de {LIMIAR_INCERTEZA:.1f} mm.")
+    print(f"   A divergência entre os modelos ({div_total:.1f} mm) é ALTA.")
     print("   Recomendação: Adotar a premissa do Pior Caso (Conservador) na matriz de decisão do ARCTURUS.")
+elif confianca == "MÉDIA":
+    print("\n⚠️  CONFIANÇA MÉDIA: Os modelos divergem moderadamente. Usar a média com cautela.")
 else:
     print("\n✅ COERÊNCIA MODELAR: Os modelos apresentam convergência dentro da margem aceitável.")
 
-# --- 4. CONSOLIDAÇÃO EM JSON PARA O PAINEL ---
-payload = {
-    "openmeteo_48h_mm": round(total_openmeteo, 2),
-    "ecmwf_48h_mm": round(total_ecmwf, 2),
-    "media_48h_mm": round(media_chuva, 2),
-    "pior_caso_48h_mm": round(pior_caso, 2),
-    "diferenca_mm": round(diferenca_abs, 2),
-    "incerteza_alta": bool(incerteza_alta),
-    "indice_confianca": confianca,
-    "confianca_score": int(max(0, 100 - (diferenca_abs * 2)))  # Score de 0 a 100
-}
-
-with open(OUT_JSON, "w", encoding="utf-8") as f:
-    json.dump(payload, f, indent=4)
-
-print(f"\n[OK] Resultado consolidado salvo em: {OUT_JSON}")
-
+print(f"\n[OK] Resultado consolidado (JSON): {JSON_ENSEMBLE}")
