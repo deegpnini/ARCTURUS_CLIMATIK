@@ -384,7 +384,9 @@ def gerar_mapa_previsao_tempo():
         texto = f"<b>{cidade.replace('_', ' ').title()}</b><br>"
         for dia_nome, dia_chave in [("Hoje", "hoje"), ("Amanhã", "amanha"), ("Depois", "depois_amanha")]:
             d = t.get(dia_chave, {})
-            texto += f"<b>{dia_nome}:</b> {d.get('temp_min', 0):.0f}°C a {d.get('temp_max', 0):.0f}°C | Chuva: {d.get('chuva', 0):.1f} mm<br>"
+            data_partes = d.get("data", "").split("-")
+            data_str = f"{data_partes[2]}/{data_partes[1]}" if len(data_partes) == 3 else "N/D"
+            texto += f"<b>{dia_nome} ({data_str}):</b> {d.get('temp_min', 0):.0f}°C a {d.get('temp_max', 0):.0f}°C | Chuva: {d.get('chuva', 0):.1f} mm<br>"
         
         lats.append(lat)
         lons.append(lon)
