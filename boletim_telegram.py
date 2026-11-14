@@ -80,7 +80,48 @@ if chuva_file.exists():
     except Exception as e:
         print(f"[AVISO] Erro ao ler chuva: {e}")
 
-# --- 5) Formata a mensagem ---
+# --- 5) Previsão do tempo (agrupada por região da bacia) ---
+tempo_texto = ""
+tempo_file = BASE / "data" / "previsao_tempo.json"
+if tempo_file.exists():
+    try:
+        with open(tempo_file, "r") as f:
+            tempo = json.load(f)
+        
+        tempo_texto = "\n\n🌤️ *Previsão do Tempo — Bacia do Rio Tubarão*\n"
+        
+        # --- Cabeceira ---
+        tempo_texto += "\n*🏔️ Cabeceira (Serra):*\n"
+        for cidade in ["lauro_muller", "orleans", "anitapolis", "sao_bonifacio"]:
+            if cidade in tempo:
+                t = tempo[cidade]
+                nome = cidade.replace("_", " ").title()
+                tempo_texto += f"• *{nome}:* {t['temp_atual']:.0f}°C (máx {t['temp_max']:.0f}°C / mín {t['temp_min']:.0f}°C) | Chuva: {t['chuva_total']:.1f} mm\n"
+        
+        # --- Médio Curso ---
+        tempo_texto += "\n*🌳 Médio Curso:*\n"
+        for cidade in ["braco_do_norte", "sao_ludgero", "pedras_grandes", "armazem", "gravatal"]:
+            if cidade in tempo:
+                t = tempo[cidade]
+                nome = cidade.replace("_", " ").title()
+                tempo_texto += f"• *{nome}:* {t['temp_atual']:.0f}°C (máx {t['temp_max']:.0f}°C / mín {t['temp_min']:.0f}°C) | Chuva: {t['chuva_total']:.1f} mm\n"
+        
+        # --- Foz / Litoral ---
+        tempo_texto += "\n*🌊 Foz / Litoral:*\n"
+        for cidade in ["tubarao", "capivari_de_baixo", "jaguaruna", "laguna"]:
+            if cidade in tempo:
+                t = tempo[cidade]
+                nome = cidade.replace("_", " ").title()
+                tempo_texto += f"• *{nome}:* {t['temp_atual']:.0f}°C (máx {t['temp_max']:.0f}°C / mín {t['temp_min']:.0f}°C) | Chuva: {t['chuva_total']:.1f} mm\n"
+        
+        # Rodapé com resumo geral
+        total_chuva = sum(t["chuva_total"] for t in tempo.values())
+        tempo_texto += f"\n*Chuva total prevista na bacia:* {total_chuva:.1f} mm (próximas 48h)\n"
+    
+    except Exception as e:
+        print(f"[AVISO] Erro ao ler previsão do tempo: {e}")
+
+# --- 6) Formata a mensagem ---
 def cor_cota(cota):
     if cota < 50: return "🔵 Baixo"
     elif cota < 250: return "🟢 Normal"
@@ -107,11 +148,11 @@ _{ts_atual.strftime('%d/%m/%Y %H:%M')}_
 
 *Chuva acumulada 24h:* {chuva_24h:.1f} mm
 *Probabilidade de cheia:* {prob:.2f}%
-
+{tempo_texto}
 _Modo sombra. Não é alerta de perigo._
 """
 
-# --- 6) Envia para o Telegram ---
+# --- 7) Envia para o Telegram ---
 url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
 resp = requests.post(url, data={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown"})
 if resp.status_code == 200:
