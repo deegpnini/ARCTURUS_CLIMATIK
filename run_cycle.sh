@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Coleta em tempo real da Defesa Civil SC (Bacia do Rio Tubarao)
+.venv/bin/python3 src/coleta/coletar_defesacivil_sc.py >> logs/defesacivil_sc.log 2>&1 || true
+
 set -euo pipefail
 
 BASE_DIR="/home/oikos/projetos/ARCTURUS_CLIMATIK"

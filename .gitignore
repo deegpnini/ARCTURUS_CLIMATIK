@@ -326,3 +326,6 @@ data/pipeline_log.txt
 # --- Logs ---
 logs/*.log
 logs/*.jsonl
+
+# Backups temporarios
+*.bak_*
