@@ -13,25 +13,50 @@ from src.relatorios.postgres_db import get_postgres_connection
 
 import pandas as pd
 
+import json
 CHUVA_CSV = BASE / "data" / "chuva_bacia_openmeteo.csv"
+CHUVA_DCSC_JSON = BASE / "data" / "chuva_defesacivil_realtime.json"
+
+
+def _ler_chuva_defesacivil_24h(max_idade_horas: float = 2.0):
+    """Retorna o maior acumulado 24h da Defesa Civil SC se o snapshot estiver fresco."""
+    try:
+        if not CHUVA_DCSC_JSON.exists():
+            return None
+        dados = json.loads(CHUVA_DCSC_JSON.read_text(encoding="utf-8"))
+        ts_str = dados.get("timestamp_coleta")
+        if ts_str:
+            ts_coleta = datetime.fromisoformat(ts_str)
+            idade_h = (datetime.now() - ts_coleta).total_seconds() / 3600.0
+            if idade_h > max_idade_horas:
+                return None
+        val = dados.get("pior_caso_bacia", {}).get("max_chuva_24h_mm")
+        return float(val) if val is not None else None
+    except Exception as e:
+        print(f"[AVISO] Falha ao ler chuva Defesa Civil SC: {e}")
+        return None
 
 
 def calcular_chuva_24h():
-    """Soma a chuva das ultimas 24h do CSV (media dos 8 pontos da bacia)."""
+    """Funde a chuva 24h da Open-Meteo (grade) com a Defesa Civil SC (telemetria fisica)."""
+    chuva_om = None
     try:
         df = pd.read_csv(CHUVA_CSV, index_col=0, parse_dates=True)
-        if df.empty:
-            return None
-        df.index = pd.to_datetime(df.index, errors="coerce")
-        df = df.loc[~df.index.isna()].sort_index()
-        corte = pd.Timestamp.now() - pd.Timedelta(hours=24)
-        janela = df[df.index >= corte]
-        if janela.empty:
-            return None
-        return float(janela.mean(axis=1).sum())
+        if not df.empty:
+            df.index = pd.to_datetime(df.index, errors="coerce")
+            df = df.loc[~df.index.isna()].sort_index()
+            corte = pd.Timestamp.now() - pd.Timedelta(hours=24)
+            janela = df[df.index >= corte]
+            if not janela.empty:
+                chuva_om = float(janela.mean(axis=1).sum())
     except Exception as e:
-        print(f"[AVISO] Falha ao calcular chuva_24h: {e}")
+        print(f"[AVISO] Falha ao calcular chuva_24h Open-Meteo: {e}")
+
+    chuva_dc = _ler_chuva_defesacivil_24h()
+    valores = [v for v in (chuva_om, chuva_dc) if v is not None]
+    if not valores:
         return None
+    return max(valores)
 
 
 REGIME_FILE = BASE / "data" / "regime_atual.json"
