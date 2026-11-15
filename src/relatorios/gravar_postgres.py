@@ -16,29 +16,12 @@ import pandas as pd
 import json
 CHUVA_CSV = BASE / "data" / "chuva_bacia_openmeteo.csv"
 CHUVA_DCSC_JSON = BASE / "data" / "chuva_defesacivil_realtime.json"
+PROVENIENCIA_JSONL = BASE / "data" / "proveniencia_observacoes.jsonl"
 
 
-def _ler_chuva_defesacivil_24h(max_idade_horas: float = 2.0):
-    """Retorna o maior acumulado 24h da Defesa Civil SC se o snapshot estiver fresco."""
-    try:
-        if not CHUVA_DCSC_JSON.exists():
-            return None
-        dados = json.loads(CHUVA_DCSC_JSON.read_text(encoding="utf-8"))
-        ts_str = dados.get("timestamp_coleta")
-        if ts_str:
-            ts_coleta = datetime.fromisoformat(ts_str)
-            idade_h = (datetime.now() - ts_coleta).total_seconds() / 3600.0
-            if idade_h > max_idade_horas:
-                return None
-        val = dados.get("pior_caso_bacia", {}).get("max_chuva_24h_mm")
-        return float(val) if val is not None else None
-    except Exception as e:
-        print(f"[AVISO] Falha ao ler chuva Defesa Civil SC: {e}")
-        return None
-
-
-def calcular_chuva_24h():
-    """Funde a chuva 24h da Open-Meteo (grade) com a Defesa Civil SC (telemetria fisica)."""
+def _avaliar_fontes_chuva(max_idade_horas: float = 2.0) -> dict:
+    """Preserva valores originais por fonte/estacao com timestamps e calcula estimativa conservadora."""
+    agora = datetime.now()
     chuva_om = None
     try:
         df = pd.read_csv(CHUVA_CSV, index_col=0, parse_dates=True)
@@ -48,15 +31,93 @@ def calcular_chuva_24h():
             corte = pd.Timestamp.now() - pd.Timedelta(hours=24)
             janela = df[df.index >= corte]
             if not janela.empty:
-                chuva_om = float(janela.mean(axis=1).sum())
+                chuva_om = round(float(janela.mean(axis=1).sum()), 3)
     except Exception as e:
-        print(f"[AVISO] Falha ao calcular chuva_24h Open-Meteo: {e}")
+        print(f"[AVISO] Falha ao ler Open-Meteo: {e}")
 
-    chuva_dc = _ler_chuva_defesacivil_24h()
-    valores = [v for v in (chuva_om, chuva_dc) if v is not None]
-    if not valores:
-        return None
-    return max(valores)
+    chuva_dc_max = None
+    dc_fresco = False
+    dc_atraso_min = None
+    dc_ts_coleta = None
+    estacoes_detalhe = []
+
+    try:
+        if CHUVA_DCSC_JSON.exists():
+            dados = json.loads(CHUVA_DCSC_JSON.read_text(encoding="utf-8"))
+            dc_ts_coleta = dados.get("timestamp_coleta")
+            if dc_ts_coleta:
+                dt_col = datetime.fromisoformat(dc_ts_coleta)
+                dc_atraso_min = round((agora - dt_col).total_seconds() / 60.0, 1)
+                dc_fresco = (dc_atraso_min / 60.0) <= max_idade_horas
+            for est in dados.get("estacoes", []):
+                atraso_est_min = None
+                ts_est_str = est.get("atualizacao_estacao")
+                if ts_est_str:
+                    try:
+                        dt_est = datetime.strptime(ts_est_str, "%d/%m/%Y %H:%M:%S")
+                        atraso_est_min = round((agora - dt_est).total_seconds() / 60.0, 1)
+                    except ValueError:
+                        pass
+                estacoes_detalhe.append({
+                    "codigo": est.get("codigo"),
+                    "trecho_bacia": est.get("trecho_bacia"),
+                    "ts_medido": ts_est_str,
+                    "atraso_min": atraso_est_min,
+                    "chuva_1h_mm": est.get("chuva_1h_mm"),
+                    "chuva_6h_mm": est.get("chuva_6h_mm"),
+                    "chuva_24h_mm": est.get("chuva_24h_mm"),
+                    "rio_m": est.get("rio_m"),
+                })
+            if dc_fresco:
+                val = dados.get("pior_caso_bacia", {}).get("max_chuva_24h_mm")
+                if val is not None:
+                    chuva_dc_max = round(float(val), 3)
+    except Exception as e:
+        print(f"[AVISO] Falha ao ler Defesa Civil SC: {e}")
+
+    candidatos = {}
+    if chuva_om is not None:
+        candidatos["OPEN_METEO_GRADE_8PTS"] = chuva_om
+    if chuva_dc_max is not None:
+        candidatos["DEFESA_CIVIL_SC_TELEMETRIA"] = chuva_dc_max
+
+    if candidatos:
+        fonte_dominante = max(candidatos, key=candidatos.get)
+        estimativa_conservadora = candidatos[fonte_dominante]
+    else:
+        fonte_dominante = "NENHUMA_DISPONIVEL"
+        estimativa_conservadora = None
+
+    registro = {
+        "ts_ciclo_gravacao": agora.isoformat(timespec="seconds"),
+        "criterio_fusao": "ESTIMATIVA_CONSERVADORA_MAX",
+        "fonte_dominante": fonte_dominante,
+        "estimativa_conservadora_24h_mm": estimativa_conservadora,
+        "fontes_originais": {
+            "open_meteo_media_bacia_24h_mm": chuva_om,
+            "defesa_civil_sc": {
+                "ts_coleta": dc_ts_coleta,
+                "atraso_coleta_min": dc_atraso_min,
+                "fresco": dc_fresco,
+                "max_24h_mm": chuva_dc_max,
+                "estacoes": estacoes_detalhe,
+            },
+        },
+    }
+
+    try:
+        with open(PROVENIENCIA_JSONL, "a", encoding="utf-8") as f:
+            f.write(json.dumps(registro, ensure_ascii=False) + "\n")
+    except Exception as e:
+        print(f"[AVISO] Falha ao gravar proveniencia_observacoes.jsonl: {e}")
+
+    return registro
+
+
+def calcular_chuva_24h():
+    """Retorna a estimativa conservadora 24h e registra a proveniencia completa das fontes."""
+    reg = _avaliar_fontes_chuva()
+    return reg.get("estimativa_conservadora_24h_mm")
 
 
 REGIME_FILE = BASE / "data" / "regime_atual.json"
