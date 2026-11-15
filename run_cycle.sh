@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# Coleta em tempo real da Defesa Civil SC (Bacia do Rio Tubarao)
-.venv/bin/python3 src/coleta/coletar_defesacivil_sc.py >> logs/defesacivil_sc.log 2>&1 || true
-
 set -euo pipefail
 
 BASE_DIR="/home/oikos/projetos/ARCTURUS_CLIMATIK"
@@ -14,16 +11,23 @@ if ! flock -n 9; then
     exit 0
 fi
 
-# Trap: se o script sair (sucesso ou erro), destrava o lock explicitamente
 trap 'flock -u 9' EXIT
 
 cd "$BASE_DIR"
 
-# Preserve the existing collection and hydrology processing pipeline.
+# 1. Coleta primária em tempo real da Defesa Civil SC (ARIA DOM — 6 pontos da bacia)
+"$PYTHON" "$BASE_DIR/src/coleta/coletar_defesacivil_sc.py" >> "$BASE_DIR/logs/defesacivil_sc.log" 2>&1 || true
+
+# 2. Coleta complementar, fusão conservadora no PostgreSQL e modelos (v8 produção + backfill)
 bash "$BASE_DIR/cron_motor.sh" &&
     "$PYTHON" "$BASE_DIR/src/relatorios/gravar_postgres.py" &&
     "$PYTHON" "$BASE_DIR/model_runner.py" &&
     "$PYTHON" "$BASE_DIR/backfill_y_true.py"
 
-# Modo Sombra v11c (LightGBM + Chuva Tripla)
-.venv/bin/python3 src/modelo/rodar_sombra_v11c.py >> logs/sombra_v11c.log 2>&1 || true
+# 3. Modo Sombra v11c (LightGBM + Chuva Tripla — isolado de produção)
+"$PYTHON" "$BASE_DIR/src/modelo/rodar_sombra_v11c.py" >> "$BASE_DIR/logs/sombra_v11c.log" 2>&1 || true
+
+# 4. Avaliação de cadência e envio do boletim (somente após coleta + banco + modelos concluídos)
+if bash "$BASE_DIR/boletim_cadencia.sh" >> "$BASE_DIR/logs/boletim.log" 2>&1; then
+    "$PYTHON" "$BASE_DIR/boletim_telegram.py" >> "$BASE_DIR/logs/boletim.log" 2>&1 || true
+fi

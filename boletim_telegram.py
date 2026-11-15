@@ -175,6 +175,25 @@ if tempo_file.exists():
         with open(tempo_file, "r", encoding="utf-8") as f:
             tempo = json.load(f)
 
+        # Mapeia chuva real observada (24h) das estações Defesa Civil SC por cidade
+        obs_cidade_24h = {}
+        if dc_file.exists():
+            try:
+                dc_tmp = json.loads(dc_file.read_text(encoding="utf-8"))
+                mapa_cod = {
+                    "DCSC-00054": "lauro_muller",
+                    "DCSC-00046": "orleans",
+                    "DCSC-00151": "grao_para",
+                    "DCSC-00122": "sao_ludgero",
+                    "DCSC-00048": "tubarao",
+                }
+                for est in dc_tmp.get("estacoes", []):
+                    cid_key = mapa_cod.get(est.get("codigo"))
+                    if cid_key and est.get("chuva_24h_mm") is not None:
+                        obs_cidade_24h[cid_key] = float(est["chuva_24h_mm"])
+            except Exception:
+                pass
+
         tempo_texto = "\n🌤️ *Previsão do Tempo — Bacia do Rio Tubarão*\n"
         hoje = datetime.now()
         datas = [
@@ -183,45 +202,44 @@ if tempo_file.exists():
             ("depois_amanha", (hoje + timedelta(days=2)).strftime("%d/%m")),
         ]
 
-        tempo_texto += "\n*🏔️ Cabeceira (Serra):*\n"
-        for cidade in ["lauro_muller", "orleans", "anitapolis", "sao_bonifacio"]:
-            if cidade in tempo:
-                t = tempo[cidade]
-                nome = cidade.replace("_", " ").title()
-                tempo_texto += f"*{nome}:*\n"
-                for chave, data in datas:
-                    if chave in t:
-                        d = t[chave]
-                        tempo_texto += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | Chuva: {d['chuva']:.1f} mm\n"
+        def formatar_bloco_cidades(lista_cidades):
+            out = ""
+            for cidade in lista_cidades:
+                if cidade in tempo:
+                    t = tempo[cidade]
+                    nome = cidade.replace("_", " ").title()
+                    out += f"*{nome}:*\n"
+                    for chave, data in datas:
+                        if chave in t:
+                            d = t[chave]
+                            if chave == "hoje":
+                                if cidade in obs_cidade_24h:
+                                    info_chuva = f"Obs. 24h: {obs_cidade_24h[cidade]:.1f} mm (modelo prev. {d['chuva']:.1f} mm)"
+                                elif chuva_24h > 5.0 and d["chuva"] < 1.0:
+                                    info_chuva = f"Chuva ativa na bacia (modelo prev. {d['chuva']:.1f} mm)"
+                                else:
+                                    info_chuva = f"Chuva prev.: {d['chuva']:.1f} mm"
+                            else:
+                                info_chuva = f"Chuva prev.: {d['chuva']:.1f} mm"
+                            out += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | {info_chuva}\n"
+            return out
 
-        tempo_texto += "\n*🌳 Médio Curso:*\n"
-        for cidade in ["braco_do_norte", "sao_ludgero", "pedras_grandes", "armazem", "gravatal"]:
-            if cidade in tempo:
-                t = tempo[cidade]
-                nome = cidade.replace("_", " ").title()
-                tempo_texto += f"*{nome}:*\n"
-                for chave, data in datas:
-                    if chave in t:
-                        d = t[chave]
-                        tempo_texto += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | Chuva: {d['chuva']:.1f} mm\n"
+        tempo_texto += "\n*🏔️ Cabeceira (Serra):*\n" + formatar_bloco_cidades(
+            ["lauro_muller", "orleans", "anitapolis", "sao_bonifacio"]
+        )
+        tempo_texto += "\n*🌳 Médio Curso:*\n" + formatar_bloco_cidades(
+            ["braco_do_norte", "sao_ludgero", "pedras_grandes", "armazem", "gravatal"]
+        )
+        tempo_texto += "\n*🌊 Foz / Litoral:*\n" + formatar_bloco_cidades(
+            ["tubarao", "capivari_de_baixo", "jaguaruna", "laguna"]
+        )
 
-        tempo_texto += "\n*🌊 Foz / Litoral:*\n"
-        for cidade in ["tubarao", "capivari_de_baixo", "jaguaruna", "laguna"]:
-            if cidade in tempo:
-                t = tempo[cidade]
-                nome = cidade.replace("_", " ").title()
-                tempo_texto += f"*{nome}:*\n"
-                for chave, data in datas:
-                    if chave in t:
-                        d = t[chave]
-                        tempo_texto += f"  {data}: {d['temp_min']:.0f}°C a {d['temp_max']:.0f}°C | Chuva: {d['chuva']:.1f} mm\n"
-
-        total_chuva = 0.0
+        total_chuva_fut = 0.0
         for cidade, dias in tempo.items():
-            for chave in ["hoje", "amanha", "depois_amanha"]:
+            for chave in ["amanha", "depois_amanha"]:
                 if chave in dias:
-                    total_chuva += dias[chave]["chuva"]
-        tempo_texto += f"\n*Chuva total prevista na bacia (3 dias):* {total_chuva:.1f} mm\n"
+                    total_chuva_fut += dias[chave]["chuva"]
+        tempo_texto += f"\n*Chuva total prevista (próximos 2 dias):* {total_chuva_fut:.1f} mm\n"
 
     except Exception as e:
         print(f"[AVISO] Erro ao ler previsão do tempo: {e}")
