@@ -44,7 +44,22 @@ import time
 from pathlib import Path
 
 cota = float(sys.argv[1])
-chuva = float(sys.argv[2])
+chuva_banco = float(sys.argv[2])
+chuva_dcsc = 0.0
+dcsc_path = Path("/home/oikos/projetos/ARCTURUS_CLIMATIK/data/defesacivil_sc_atual.json")
+if dcsc_path.exists():
+    try:
+        dcsc_data = json.loads(dcsc_path.read_text(encoding="utf-8"))
+        vals = [
+            float(e["chuva_24h_mm"])
+            for e in dcsc_data.get("estacoes", [])
+            if e.get("chuva_24h_mm") is not None
+        ]
+        if vals:
+            chuva_dcsc = max(vals)
+    except Exception:
+        pass
+chuva = max(chuva_banco, chuva_dcsc)
 vz = float(sys.argv[3])
 estado_file = Path(sys.argv[4])
 log_file = Path(sys.argv[5])
