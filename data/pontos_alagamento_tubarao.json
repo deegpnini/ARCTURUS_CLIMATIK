@@ -1,0 +1,135 @@
+[
+  {
+    "id": "DEHON",
+    "nome": "Dehon",
+    "tipo": "drenagem_urbana",
+    "criticidade": "alta",
+    "zona": "Bacia Urbana Central",
+    "gatilho_principal": "drenagem",
+    "historico": [
+      "2019",
+      "2022",
+      "2023",
+      "2026"
+    ],
+    "latitude": -28.4812,
+    "longitude": -49.0205,
+    "fonte": "Plano de Contingência Tubarão 2024/2025 e Inquérito MPSC 2026"
+  },
+  {
+    "id": "VILA_MOEMA",
+    "nome": "Vila Moema",
+    "tipo": "drenagem_urbana",
+    "criticidade": "alta",
+    "zona": "Bacia Urbana Central",
+    "gatilho_principal": "drenagem",
+    "historico": [
+      "2019",
+      "2022",
+      "2023",
+      "2026"
+    ],
+    "latitude": -28.4775,
+    "longitude": -49.0085,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  },
+  {
+    "id": "CENTRO",
+    "nome": "Centro",
+    "tipo": "drenagem_urbana",
+    "criticidade": "media",
+    "zona": "Bacia Urbana Central",
+    "gatilho_principal": "drenagem_e_comportas",
+    "historico": [
+      "2019",
+      "2022",
+      "2023",
+      "2026"
+    ],
+    "latitude": -28.4718,
+    "longitude": -49.0069,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  },
+  {
+    "id": "OFICINAS",
+    "nome": "Oficinas",
+    "tipo": "drenagem_urbana",
+    "criticidade": "alta",
+    "zona": "Bacia Urbana Central",
+    "gatilho_principal": "drenagem",
+    "historico": [
+      "2019",
+      "2022",
+      "2023",
+      "2026"
+    ],
+    "latitude": -28.4865,
+    "longitude": -48.9995,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  },
+  {
+    "id": "PASSAGEM",
+    "nome": "Passagem",
+    "tipo": "cheia_fluvial",
+    "criticidade": "alta",
+    "zona": "Margem Esquerda / Calha Principal",
+    "gatilho_principal": "onda_fluvial_e_drenagem",
+    "historico": [
+      "2019",
+      "2022",
+      "2023",
+      "2026"
+    ],
+    "latitude": -28.4622,
+    "longitude": -48.996,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  },
+  {
+    "id": "SAO_MARTINHO",
+    "nome": "São Martinho",
+    "tipo": "cheia_fluvial",
+    "criticidade": "alta",
+    "zona": "Margem Esquerda / Baixada",
+    "gatilho_principal": "onda_fluvial",
+    "historico": [
+      "2019",
+      "2022",
+      "2023"
+    ],
+    "latitude": -28.4485,
+    "longitude": -49.0185,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  },
+  {
+    "id": "GUARDA",
+    "nome": "Guarda (Margem Esquerda/Direita)",
+    "tipo": "confluencia_e_montante",
+    "criticidade": "alta",
+    "zona": "Corredor Rural Oeste / Montante ERAB",
+    "gatilho_principal": "onda_fluvial",
+    "historico": [
+      "2019",
+      "2022",
+      "2023"
+    ],
+    "latitude": -28.4455,
+    "longitude": -49.0645,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  },
+  {
+    "id": "CONGONHAS",
+    "nome": "Congonhas",
+    "tipo": "planicie_e_remanso",
+    "criticidade": "alta",
+    "zona": "Planície Sul / Tributário Congonhas",
+    "gatilho_principal": "remanso_e_tributario",
+    "historico": [
+      "2019",
+      "2022",
+      "2023"
+    ],
+    "latitude": -28.5145,
+    "longitude": -49.015,
+    "fonte": "Plano de Contingência Tubarão 2024/2025"
+  }
+]

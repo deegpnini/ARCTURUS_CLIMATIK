@@ -358,6 +358,81 @@ msg = formatar_boletim(
     }
 )
 
+# --- 6.5) Camada Hidrológica: Risco Urbano vs. Fluvial + Eixo dos 3 Braços ---
+try:
+    from src.hidrologia.vulnerabilidade import carregar_pontos_vulnerabilidade
+
+    pontos_vuln = carregar_pontos_vulnerabilidade()
+    dc_estacoes = []
+    dc_rt = BASE / "data" / "chuva_defesacivil_realtime.json"
+    if dc_rt.exists():
+        dc_payload = json.loads(dc_rt.read_text(encoding="utf-8"))
+        dc_estacoes = dc_payload.get("estacoes") or []
+
+    def _max_chuva_braco(termos):
+        vals = [0.0]
+        for est in dc_estacoes:
+            if not isinstance(est, dict):
+                continue
+            rotulo = f"{est.get('trecho_bacia', '')} {est.get('nome_oficial', '')} {est.get('nome', '')}".lower()
+            if any(t in rotulo for t in termos):
+                v24 = est.get("chuva_24h_mm")
+                if v24 is not None:
+                    vals.append(float(v24))
+        return max(vals)
+
+    c_oeste = _max_chuva_braco(["lauro", "orleans"])
+    c_norte = _max_chuva_braco(["ludgero", "grão", "grao", "braço", "braco"])
+    c_leste = _max_chuva_braco(["martinho", "gravatal", "armazém", "armazem"])
+    c_local_tub = _max_chuva_braco(["tubarão", "tubarao", "guarda"])
+
+    eixos = [
+        ("Ramo Oeste (Rio Tubarão — Lauro Müller/Orleans)", c_oeste),
+        ("Ramo Norte (Rio Braço do Norte — São Ludgero/Grão-Pará)", c_norte),
+        ("Ramo Leste (Rio Capivari — São Martinho/Gravatal)", c_leste),
+    ]
+    eixo_dom, chuva_eixo_dom = max(eixos, key=lambda x: x[1])
+
+    risco_fluvial = (
+        (cota_atual is not None and float(cota_atual) >= 220.0)
+        or (variacao is not None and float(variacao) >= 5.0)
+        or (chuva_eixo_dom >= 15.0)
+    )
+    risco_urbano = c_local_tub >= 15.0
+
+    if risco_fluvial and risco_urbano:
+        diag_risco = "⚠️ <b>Vigilância Combinada (Fluvial + Urbano):</b> Onda de montante + chuva local na planície."
+        tipos_alvo = {"fluvial", "urbano", "misto", "confluencia", "planicie"}
+    elif risco_fluvial:
+        diag_risco = "🌊 <b>Risco Fluvial (Calha Principal):</b> Propagação de onda vinda de montante pela régua ERAB."
+        tipos_alvo = {"fluvial", "misto", "confluencia", "planicie"}
+    elif risco_urbano:
+        diag_risco = "🏙️ <b>Risco Urbano (Macro/Microdrenagem):</b> Chuva concentrada em Tubarão; calha ainda sob controle."
+        tipos_alvo = {"urbano", "drenagem", "misto"}
+    else:
+        diag_risco = "🟢 <b>Baixo Risco Hidrológico:</b> Sem gatilho ativo de transbordamento fluvial ou alagamento urbano."
+        tipos_alvo = set()
+
+    bloco_hidro = [
+        "",
+        "🧭 <b>Diagnóstico Espacial (3 Braços & Vulnerabilidade)</b>",
+        diag_risco,
+        f"• <b>Eixo dominante:</b> {eixo_dom} ({chuva_eixo_dom:.1f} mm/24h)",
+    ]
+
+    if tipos_alvo and pontos_vuln:
+        filtrados = [
+            p for p in pontos_vuln
+            if any(t in str(p.get("tipo", "")).lower() for t in tipos_alvo)
+        ][:3]
+        if filtrados:
+            nomes_pts = ", ".join(p.get("nome", "") for p in filtrados if p.get("nome"))
+            bloco_hidro.append(f"• <b>Pontos críticos em atenção:</b> {nomes_pts}")
+
+    msg = msg.rstrip() + "\n" + "\n".join(bloco_hidro)
+except Exception as exc_hidro:
+    print(f"[AVISO] Camada espacial nao anexada ao boletim: {exc_hidro}")
+
 if DRY_RUN:
     print("=== DRY-RUN: MENSAGEM QUE SERÁ ENVIADA AO TELEGRAM ===")
     print(msg)
