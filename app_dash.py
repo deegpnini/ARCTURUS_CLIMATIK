@@ -392,7 +392,7 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
 # ============================================================
 
 # MAPA DE PREVISÃO DO TEMPO (Plotly Scattermap) — CORRIGIDO
-def get_mapa_clima(modo_mapa="satelite"):
+def get_mapa_clima(modo_mapa="satelite", center=None, zoom=None):
     """Monta o mapa completo da Bacia do Rio Tubarão: curso do rio até a lagoa, 19 municípios e chuva real + prevista."""
     import json
     from pathlib import Path
@@ -450,6 +450,8 @@ def get_mapa_clima(modo_mapa="satelite"):
         except Exception:
             dcsc_por_chave = {}
 
+    centro_mapa = center if isinstance(center, dict) and "lat" in center and "lon" in center else dict(lat=-28.28, lon=-49.08)
+    zoom_mapa = float(zoom) if zoom is not None else 8.55
     fig = go.Figure()
 
     # 1. Traçado do Rio Tubarão (cabeceira na Serra Geral até o encontro com a Lagoa em Laguna)
@@ -622,8 +624,8 @@ def get_mapa_clima(modo_mapa="satelite"):
         map=(
             dict(
                 style="carto-darkmatter",
-                center=dict(lat=-28.28, lon=-49.08),
-                zoom=8.55,
+                center=centro_mapa,
+                zoom=zoom_mapa,
                 layers=[
                     {
                         "below": "traces",
@@ -638,8 +640,8 @@ def get_mapa_clima(modo_mapa="satelite"):
             if modo_mapa == "satelite"
             else dict(
                 style="open-street-map",
-                center=dict(lat=-28.28, lon=-49.08),
-                zoom=8.55,
+                center=centro_mapa,
+                zoom=zoom_mapa,
             )
         ),
         showlegend=True,
@@ -840,8 +842,8 @@ def serve_layout():
         dbc.Row([
             dbc.Col([
                 dbc.ButtonGroup([
-                    dbc.Button("🛰️ Visão Satélite (Zoom Profundo)", id="btn-mapa-satelite", color="info", size="sm"),
-                    dbc.Button("🗺️ Mapa Vetorial (Ruas)", id="btn-mapa-vetorial", color="outline-secondary", size="sm"),
+                    dbc.Button("🛰️ Satélite", id="btn-mapa-satelite", color="info", size="sm"),
+                    dbc.Button("🗺️ Mapa Normal", id="btn-mapa-vetorial", color="outline-secondary", size="sm"),
                 ], className="mb-2"),
                 dcc.Store(id="store-modo-mapa", data="satelite"),
                 dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima("satelite"), config={"displayModeBar": False}),
@@ -1151,10 +1153,21 @@ def atualizar_kpis_e_zoom(n_clicks, n_intervals, escala_modo):
      Output("mapa-previsao-tempo", "figure")],
     [Input("btn-mapa-satelite", "n_clicks"),
      Input("btn-mapa-vetorial", "n_clicks")],
+    [State("mapa-previsao-tempo", "relayoutData")],
     prevent_initial_call=True,
 )
-def alternar_estilo_mapa(n_sat, n_vet):
+def alternar_estilo_mapa(n_sat, n_vet, relayout):
     from dash import ctx
+    center_atual = None
+    zoom_atual = None
+    if isinstance(relayout, dict):
+        if "map.center" in relayout:
+            center_atual = relayout["map.center"]
+        elif "map.center.lat" in relayout and "map.center.lon" in relayout:
+            center_atual = {"lat": relayout["map.center.lat"], "lon": relayout["map.center.lon"]}
+        if "map.zoom" in relayout:
+            zoom_atual = relayout["map.zoom"]
+
     if ctx.triggered_id == "btn-mapa-vetorial":
-        return "vetorial", "outline-info", "secondary", get_mapa_clima("vetorial")
-    return "satelite", "info", "outline-secondary", get_mapa_clima("satelite")
+        return "vetorial", "outline-info", "info", get_mapa_clima("vetorial", center=center_atual, zoom=zoom_atual)
+    return "satelite", "info", "outline-secondary", get_mapa_clima("satelite", center=center_atual, zoom=zoom_atual)
