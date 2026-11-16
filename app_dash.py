@@ -392,7 +392,7 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
 # ============================================================
 
 # MAPA DE PREVISÃO DO TEMPO (Plotly Scattermap) — CORRIGIDO
-def get_mapa_clima():
+def get_mapa_clima(modo_mapa="satelite"):
     """Monta o mapa completo da Bacia do Rio Tubarão: curso do rio até a lagoa, 19 municípios e chuva real + prevista."""
     import json
     from pathlib import Path
@@ -564,11 +564,54 @@ def get_mapa_clima():
         marker=dict(size=tamanhos, color=cores, opacity=0.92),
         text=nomes_curtos,
         textposition="top center",
-        textfont=dict(size=11, color="#111111"),
+        textfont=dict(size=11, color="#FFFFFF" if modo_mapa == "satelite" else "#111111"),
         hovertext=textos,
         hoverinfo="text",
         name="Municípios da Bacia",
     ))
+
+    # 3. Camada de Vulnerabilidade Hidrológica (8 pontos prioritários de Tubarão)
+    vuln_path = base_dir / "data" / "pontos_alagamento_tubarao.json"
+    if vuln_path.exists():
+        try:
+            pontos_v = json.loads(vuln_path.read_text(encoding="utf-8"))
+            v_lats, v_lons, v_cores, v_textos = [], [], [], []
+            mapa_cor = {"alta": "#EF4444", "media": "#F97316", "baixa": "#EAB308"}
+            mapa_tipo = {
+                "drenagem_urbana": "Risco Urbano (Drenagem)",
+                "cheia_fluvial": "Risco Fluvial (Calha Principal)",
+                "confluencia_e_montante": "Risco Fluvial (Confluência / Montante)",
+                "planicie_e_remanso": "Risco Fluvial (Planície / Remanso)",
+            }
+            for pv in pontos_v:
+                lat_v, lon_v = pv.get("latitude"), pv.get("longitude")
+                if lat_v is None or lon_v is None:
+                    continue
+                crit = str(pv.get("criticidade", "media")).lower()
+                v_lats.append(lat_v)
+                v_lons.append(lon_v)
+                v_cores.append(mapa_cor.get(crit, "#F97316"))
+                hist_str = ", ".join(pv.get("historico", []))
+                tipo_lbl = mapa_tipo.get(pv.get("tipo", ""), pv.get("tipo", ""))
+                v_textos.append(
+                    f"<b>📍 {pv.get('nome')}</b><br>"
+                    f"Sistema: {tipo_lbl}<br>"
+                    f"Criticidade: <b>{crit.upper()}</b><br>"
+                    f"Zona: {pv.get('zona', '')}<br>"
+                    f"Histórico: {hist_str}"
+                )
+            if v_lats:
+                fig.add_trace(go.Scattermap(
+                    lat=v_lats,
+                    lon=v_lons,
+                    mode="markers",
+                    marker=dict(size=11, color=v_cores, opacity=0.95),
+                    hovertext=v_textos,
+                    hoverinfo="text",
+                    name="Vulnerabilidade Histórica (8 pontos)",
+                ))
+        except Exception:
+            pass
 
     subtitulo_ts = f"DCSC: {ts_dcsc}" if ts_dcsc else datetime.now().strftime("%d/%m/%Y %H:%M")
     if data_prev_ref:
@@ -576,10 +619,28 @@ def get_mapa_clima():
 
     fig.update_layout(
         title=f"Bacia Hidrográfica do Rio Tubarão — Cidades, Curso do Rio e Chuva ({subtitulo_ts})",
-        map=dict(
-            style="open-street-map",
-            center=dict(lat=-28.28, lon=-49.08),
-            zoom=8.55,
+        map=(
+            dict(
+                style="carto-darkmatter",
+                center=dict(lat=-28.28, lon=-49.08),
+                zoom=8.55,
+                layers=[
+                    {
+                        "below": "traces",
+                        "sourcetype": "raster",
+                        "sourceattribution": "Esri World Imagery",
+                        "source": [
+                            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                        ],
+                    }
+                ],
+            )
+            if modo_mapa == "satelite"
+            else dict(
+                style="open-street-map",
+                center=dict(lat=-28.28, lon=-49.08),
+                zoom=8.55,
+            )
         ),
         showlegend=True,
         legend=dict(
@@ -777,7 +838,14 @@ def serve_layout():
         html.H3("🌤️ Previsão do Tempo — Bacia do Rio Tubarão", className="text-center mt-4"),
         html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
         dbc.Row([
-            dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima(), config={"displayModeBar": False}), width=12),
+            dbc.Col([
+                dbc.ButtonGroup([
+                    dbc.Button("🛰️ Visão Satélite (Zoom Profundo)", id="btn-mapa-satelite", color="info", size="sm"),
+                    dbc.Button("🗺️ Mapa Vetorial (Ruas)", id="btn-mapa-vetorial", color="outline-secondary", size="sm"),
+                ], className="mb-2"),
+                dcc.Store(id="store-modo-mapa", data="satelite"),
+                dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima("satelite"), config={"displayModeBar": False}),
+            ], width=12),
         ]),
         html.Hr(),
     dbc.Row([
@@ -1074,3 +1142,19 @@ def atualizar_kpis_e_zoom(n_clicks, n_intervals, escala_modo):
         estado_txt, estado_style, dcsc_txt,
         ts_txt, fig
     )
+
+
+@app.callback(
+    [Output("store-modo-mapa", "data"),
+     Output("btn-mapa-satelite", "color"),
+     Output("btn-mapa-vetorial", "color"),
+     Output("mapa-previsao-tempo", "figure")],
+    [Input("btn-mapa-satelite", "n_clicks"),
+     Input("btn-mapa-vetorial", "n_clicks")],
+    prevent_initial_call=True,
+)
+def alternar_estilo_mapa(n_sat, n_vet):
+    from dash import ctx
+    if ctx.triggered_id == "btn-mapa-vetorial":
+        return "vetorial", "outline-info", "secondary", get_mapa_clima("vetorial")
+    return "satelite", "info", "outline-secondary", get_mapa_clima("satelite")
