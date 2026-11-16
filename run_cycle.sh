@@ -31,3 +31,6 @@ bash "$BASE_DIR/cron_motor.sh" &&
 if bash "$BASE_DIR/boletim_cadencia.sh" >> "$BASE_DIR/logs/boletim.log" 2>&1; then
     "$PYTHON" "$BASE_DIR/boletim_telegram.py" >> "$BASE_DIR/logs/boletim.log" 2>&1 || true
 fi
+
+# Rastreamento automatico de lag hidrologico (chuva -> ERAB)
+.venv/bin/python3 src/analise/atualizar_lag_eventos.py >> logs/lag_eventos.log 2>&1 || true
