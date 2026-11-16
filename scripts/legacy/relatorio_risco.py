@@ -2,7 +2,7 @@ import json
 import pandas as pd
 from pathlib import Path
 
-BASE = Path(".")
+BASE = Path(__file__).resolve().parents[2]
 MODELOS = BASE / "modelos"
 
 def gerar_relatorio():

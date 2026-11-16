@@ -44,6 +44,7 @@ em tempo real.
 │   ├── auditoria/              # auditorias e diagnósticos
 │   ├── coleta_hist/            # utilitários históricos de coleta
 │   ├── geo_utils/              # ferramentas geográficas
+│   ├── legacy/                 # ferramentas legadas sem chamada pelo ciclo atual
 │   ├── modelo_treino/          # avaliação, experimentos e treinamento
 │   ├── analise/                # análises auxiliares existentes
 │   └── simulacao/              # simulações
@@ -57,9 +58,10 @@ Alguns módulos de apoio, como `dashboard_correcoes.py`, `ana_auth.py`,
 `model_runner.py`, `persistir_shadow.py` e `backfill_y_true.py`, também ficam
 ali por ainda serem importados ou chamados por esses pontos de entrada. Código
 reutilizável e componentes do pipeline ficam em `src/`; ferramentas de análise,
-auditoria, treinamento e utilitários ficam em `scripts/`. Conteúdo local
-temporário em `scripts/local_tmp/` é ignorado pelo Git e não faz parte da
-estrutura publicada.
+auditoria, treinamento e utilitários ficam em `scripts/`. `scripts/legacy/`
+guarda ferramentas antigas sem referência no ciclo atual; sua presença não
+significa que façam parte da operação contínua. O conteúdo local temporário em
+`scripts/local_tmp/` é ignorado pelo Git e não faz parte da estrutura publicada.
 
 ### Operação contínua configurada
 
@@ -73,6 +75,60 @@ verificação dos logs nem confirmam que uma execução específica teve sucesso
 
 Há ainda um pipeline diário de promoção/sombra configurado em outro diretório
 (`~/projetos/arcturus_coleta`); ele é externo a este repositório.
+
+### Produção (`v8`) vs. Modo Sombra (`v11c`)
+
+| Aspecto | Produção (`v8`) | Modo Sombra (`v11c`) |
+|---|---|---|
+| Função | Fluxo operacional vigente, orientado por telemetria, regras físicas e verificações hidrometeorológicas. | Modelo experimental executado em paralelo para acumular previsões e permitir calibração/avaliação. |
+| Saída | O ciclo pode emitir boletim ou alerta humano pelo Telegram segundo os dados atuais e a cadência configurada; a saída não é decidida pelo v11c. | Registra predições nos artefatos de sombra/logs; não envia alerta à população nem promove o modelo automaticamente neste ciclo. |
+| Execução | `cron_motor.sh`, persistência operacional e `boletim_telegram.py`, orquestrados por `run_cycle.sh`. | `src/modelo/rodar_sombra_v11c.py`, também chamado pelo ciclo, com log isolado. |
+| Segurança operacional | Mantém-se como caminho de comunicação operacional; dados inválidos ou indisponíveis devem ser tratados pelos controles existentes. | Não substitui nem altera o caminho de produção; resultados precisam de validação antes de qualquer promoção. |
+
+O boletim pode ser informativo e não equivale, por si só, a um alerta oficial da
+Defesa Civil. A crontab e os logs indicam configuração e execução observável;
+esta tabela descreve a separação de responsabilidades do código, não garante
+que um envio específico tenha ocorrido.
+
+## Como Validar em 5 Minutos
+
+1. **Executar os testes automatizados (offline):**
+
+   ```bash
+   .venv/bin/python -m pytest -q
+   ```
+
+   A suíte usa fixtures, dados temporários e dependências simuladas para testar
+   os caminhos locais. Não requer `.env`, conexão PostgreSQL ou telemetria ao
+   vivo e não envia mensagens ao Telegram.
+
+2. **Validar somente a formatação do boletim com dados de teste:**
+
+   ```bash
+   .venv/bin/python -m pytest -q tests/test_telegram_formatador.py
+   ```
+
+   Esse teste não valida credenciais nem a aceitação de um envio pela API do
+   Telegram.
+
+3. **Gerar uma prévia do boletim a partir dos dados locais:**
+
+   ```bash
+   .venv/bin/python boletim_telegram.py --dry-run
+   ```
+
+   O dry-run não envia mensagem e não exige `TELEGRAM_TOKEN` ou
+   `TELEGRAM_CHAT_ID`, mas **não é offline**: conecta ao PostgreSQL (por
+   `DATABASE_URL` ou à base local padrão `arcturus`) e lê snapshots locais de
+   telemetria/previsão. Para dados atuais, o banco e os coletores precisam estar
+   disponíveis. Não use um envio normal como teste; ele pode publicar no chat
+   configurado.
+
+O dashboard e o ciclo operacional também dependem dos dados locais e de acesso
+ao PostgreSQL. As credenciais de produção, incluindo `TELEGRAM_TOKEN` e
+`TELEGRAM_CHAT_ID`, devem ser fornecidas no `.env` local ou no ambiente do
+processo; não devem ser incluídas no Git. O `.env.example` documenta apenas
+variáveis de integração Nylas e não substitui a configuração operacional.
 
 ### Histórico de eventos auditados
 

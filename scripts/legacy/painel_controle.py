@@ -8,7 +8,7 @@ import pandas as pd
 import re
 import time
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[2]
 LOG_FILE = BASE / "monitor_ciclone.log"
 JSON_COTA = BASE / "tubarao_saneamento_dados.json"
 PREV_CHUVA = BASE / "data" / "previsao_chuva_bacia.csv"
@@ -258,7 +258,7 @@ with col3:
     st.subheader("🗺️ 3. Gêmeo Digital (GEE)")
     if st.button("📄 Gerar Relatório de Risco", use_container_width=True):
         with st.spinner("Gerando relatório..."):
-            script = BASE / "relatorio_risco.py"
+            script = BASE / "scripts" / "legacy" / "relatorio_risco.py"
             if script.exists():
                 result = subprocess.run(["python", str(script)], capture_output=True, text=True)
                 relatorio_path = BASE / "docs" / "RELATORIO_RISCO.md"

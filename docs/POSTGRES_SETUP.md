@@ -3,7 +3,7 @@
 From the project root, run:
 
 ```bash
-./setup_postgres_wsl.sh
+./scripts/legacy/setup_postgres_wsl.sh
 ```
 
 The script installs PostgreSQL, PostGIS, and SQLite tools; starts the

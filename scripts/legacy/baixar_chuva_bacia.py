@@ -15,7 +15,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[2]
 OUT_CSV = BASE / "data" / "chuva_bacia_openmeteo.csv"
 META_JSON = BASE / "data" / "chuva_bacia_meta.json"
 HEALTH = BASE / "resultados" / "health_fontes.json"
