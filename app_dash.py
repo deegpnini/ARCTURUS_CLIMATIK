@@ -11,7 +11,7 @@ def get_clima_consolidado():
     return None
 
 from dashboard_correcoes import get_chuva_48h, get_status_unificado, get_selo_confianca, get_cota_v11c
-from dash import dcc, html, Input, Output
+from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import plotly.express as px
