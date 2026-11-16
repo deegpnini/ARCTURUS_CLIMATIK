@@ -479,218 +479,248 @@ def ler_previsao_v11c():
         print(f"[AVISO] Erro ao ler log do v11c: {e}")
         return None
 
-app.layout = dbc.Container([
-    # --- BARRA LATERAL (SIDEBAR) ---
-    html.Div([
-        # Logo do ARCTURUS (preservada)
-        html.Img(src="assets/logo_arcturus.jpg", style={"width": "100%", "marginBottom": "20px"}),
-        html.H4("A.C.", className="text-white mb-3"),
-        html.Hr(),
-        dbc.Nav([
-            dbc.NavLink("📊 A.C. Monitor", href="/", active="exact", className="text-white"),
-            dbc.NavLink("📷 A.C. Vision (Câmera ERAB)", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="text-white"),
-            dbc.Button(
-                "🗺️ A.C. Geo (Mapa 2019)",
-                id="btn-mapa-geo",
-                color="dark",
-                className="text-white text-start w-100",
-            ),
-            dbc.NavLink("🛰️ A.C. Sentinel (Satélite)", href="https://earth.google.com/web/@-28.48,-49.02,100a,1000d,35y,0h,0t,0r", target="_blank", className="text-white"),
-        ], vertical=True, pills=True),
-    ], style={
-        "backgroundColor": "#1a1a1a", 
-        "padding": "20px", 
-        "height": "100vh", 
-        "overflowY": "auto",
-        "position": "fixed", 
-        "width": "250px", 
-        "left": 0, 
-        "top": 0, 
-        "zIndex": 1000
-    }),
-    # --- CONTEÚDO PRINCIPAL (com margem à esquerda para não ficar atrás da barra) ---
-    html.Div([
-    dcc.Interval(
-        id='intervalo-atualizacao',
-        interval=30*1000, # Atualiza a cada 30 segundos
-        n_intervals=0
-    ),
-    dbc.Row([
-        dbc.Col([
-            # === SPRINT 1: BARRA EXECUTIVA DE KPIs OPERACIONAIS (3 SEGUNDOS) ===
-            dbc.Row([
-                dbc.Col(dbc.Card(dbc.CardBody([
-                    html.Small("🌊 COTA ATUAL (ERAB)", className="text-muted fw-bold d-block"),
-                    html.H3(id="kpi-cota-val", children="-- cm", className="text-info mb-0 mt-1"),
-                    html.Small(id="kpi-cota-sub", children="Δ 24h: --", className="text-light"),
-                ]), className="border-info bg-dark shadow-sm h-100"), xs=12, md=2),
+def _carregar_kpis_iniciais():
+    try:
+        k = obter_kpis_operacionais()
+        idade = f"{k['dcsc_idade_min']} min" if k['dcsc_idade_min'] is not None else 'N/D'
+        return {
+            'cota_txt': f"{k['cota_cm']:.1f} cm" if k['cota_cm'] is not None else '-- cm',
+            'delta_txt': f"Δ 24h: {k['delta_24h_cm']:+.1f} cm" if k['delta_24h_cm'] is not None else 'Δ 24h: --',
+            'tend_txt': k['tendencia_label'],
+            'tend_style': {'color': k['tendencia_cor']},
+            'az_txt': f"Aceleração az: {k['az_cm_h2']:+.2f} cm/h²",
+            'chuva_txt': f"{k['chuva_max_24h_mm']:.1f} mm",
+            'est_txt': f"{k['estacao_dominante']} (6h: {k['chuva_6h_mm']:.1f} mm)",
+            'estado_txt': k['estado_operacional'],
+            'estado_style': {'color': k['estado_cor']},
+            'dcsc_txt': f"DCSC {k['dcsc_validas']} • {idade}",
+            'ts_txt': k['ts_leitura'],
+        }
+    except Exception:
+        return {
+            'cota_txt': '-- cm', 'delta_txt': 'Δ 24h: --',
+            'tend_txt': '--', 'tend_style': {}, 'az_txt': 'az: --',
+            'chuva_txt': '-- mm', 'est_txt': 'Estação: --',
+            'estado_txt': '--', 'estado_style': {}, 'dcsc_txt': 'DCSC: --',
+            'ts_txt': '--',
+        }
 
-                dbc.Col(dbc.Card(dbc.CardBody([
-                    html.Small("📈 TENDÊNCIA / VELOCIDADE", className="text-muted fw-bold d-block"),
-                    html.H5(id="kpi-tend-val", children="--", className="mb-1 mt-2 fw-bold"),
-                    html.Small(id="kpi-tend-sub", children="az: --", className="text-muted"),
-                ]), className="border-secondary bg-dark shadow-sm h-100"), xs=12, md=3),
-
-                dbc.Col(dbc.Card(dbc.CardBody([
-                    html.Small("🌧️ CHUVA MÁX (24H)", className="text-muted fw-bold d-block"),
-                    html.H3(id="kpi-chuva-val", children="-- mm", className="text-primary mb-0 mt-1"),
-                    html.Small(id="kpi-chuva-sub", children="Estação: --", className="text-light"),
-                ]), className="border-primary bg-dark shadow-sm h-100"), xs=12, md=3),
-
-                dbc.Col(dbc.Card(dbc.CardBody([
-                    html.Small("🚦 ESTADO OPERACIONAL", className="text-muted fw-bold d-block"),
-                    html.H3(id="kpi-estado-val", children="--", className="mb-0 mt-1 fw-bold"),
-                    html.Small(id="kpi-estado-sub", children="DCSC: --", className="text-light"),
-                ]), className="border-warning bg-dark shadow-sm h-100"), xs=12, md=2),
-
-                dbc.Col(dbc.Card(dbc.CardBody([
-                    html.Small("🕒 ÚLTIMA LEITURA", className="text-muted fw-bold d-block"),
-                    html.H4(id="kpi-ts-val", children="--", className="text-white mb-0 mt-1"),
-                    html.Small("Ciclo automático 15m", className="text-muted"),
-                ]), className="border-secondary bg-dark shadow-sm h-100"), xs=12, md=2),
-            ], className="g-2 mb-3 mt-2"),
-            dcc.Store(id="store-escala-cota", data="local"),
+def serve_layout():
+    _k0 = _carregar_kpis_iniciais()
+    return dbc.Container([
+        # --- BARRA LATERAL (SIDEBAR) ---
+        html.Div([
+            # Logo do ARCTURUS (preservada)
+            html.Img(src="assets/logo_arcturus.jpg", style={"width": "100%", "marginBottom": "20px"}),
+            html.H4("A.C.", className="text-white mb-3"),
             html.Hr(),
-            dbc.Row([
-                dbc.Col(criar_card("Cota Atual (ERAB)", "cota-val", "cota-sub"), width=3),
-                dbc.Col(criar_card("Previsão v11c (D+1)", "v11c-cota-amanha", "v11c-delta"), width=3),
-                dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
-                dbc.Col(
-                    html.Div([
-                        criar_card(
-                            "Probabilidade de Cheia",
-                            "prob-val",
-                            "prob-sub",
-                            "text-success",
-                        ),
-                        html.Small(
-                            "Modo Sombra — Não é sistema de alerta "
-                            "(LOEO reprovado: PR-AUC 0.30, Recall 0.16)",
-                            className="text-warning d-block mt-2",
-                        ),
-                    ]),
-                    width=3,
+            dbc.Nav([
+                dbc.NavLink("📊 A.C. Monitor", href="/", active="exact", className="text-white"),
+                dbc.NavLink("📷 A.C. Vision (Câmera ERAB)", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="text-white"),
+                dbc.Button(
+                    "🗺️ A.C. Geo (Mapa 2019)",
+                    id="btn-mapa-geo",
+                    color="dark",
+                    className="text-white text-start w-100",
                 ),
-                dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
-                dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
-                dbc.Col(html.Div([
-                    html.H5("Último Alerta", className="card-title"),
-                    html.P(ler_ultimo_alerta(), id="ultimo-alerta-val", className="card-text"),
-                ], className="card-body"), width=3),
-                dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
-            ], className="mb-4"),
-
-            dbc.Row([
-                dbc.Col(
-                    dbc.Card(
-                        dbc.CardBody([
-                            html.H5("A.C. Atlas — Impacto 2019", className="card-title"),
-                            html.Div(
-                                [
-                                    html.P(
-                                        f"Edificações afetadas: {impacto['edificacoes']}"
-                                    ),
-                                    html.P(
-                                        f"Escolas afetadas: {impacto['escolas']}"
-                                    ),
-                                    html.P(f"UBS afetadas: {impacto['ubs']}"),
-                                    html.P(
-                                        f"População estimada: {impacto['populacao']}"
-                                    ),
-                                    html.Small(
-                                        impacto["limitacao_populacao"],
-                                        className="text-muted",
-                                    ),
-                                ]
-                                if (impacto := ler_resumo_impacto_2019())
-                                else [html.P("Relatório de impacto indisponível.")]
+                dbc.NavLink("🛰️ A.C. Sentinel (Satélite)", href="https://earth.google.com/web/@-28.48,-49.02,100a,1000d,35y,0h,0t,0r", target="_blank", className="text-white"),
+            ], vertical=True, pills=True),
+        ], style={
+            "backgroundColor": "#1a1a1a", 
+            "padding": "20px", 
+            "height": "100vh", 
+            "overflowY": "auto",
+            "position": "fixed", 
+            "width": "250px", 
+            "left": 0, 
+            "top": 0, 
+            "zIndex": 1000
+        }),
+        # --- CONTEÚDO PRINCIPAL (com margem à esquerda para não ficar atrás da barra) ---
+        html.Div([
+        dcc.Interval(
+            id='intervalo-atualizacao',
+            interval=30*1000, # Atualiza a cada 30 segundos
+            n_intervals=0
+        ),
+        dbc.Row([
+            dbc.Col([
+                # === SPRINT 1: BARRA EXECUTIVA DE KPIs OPERACIONAIS (3 SEGUNDOS) ===
+                dbc.Row([
+                    dbc.Col(dbc.Card(dbc.CardBody([
+                        html.Small("🌊 COTA ATUAL (ERAB)", className="text-muted fw-bold d-block"),
+                        html.H3(id="kpi-cota-val", children=_k0["cota_txt"], className="text-info mb-0 mt-1"),
+                        html.Small(id="kpi-cota-sub", children=_k0["delta_txt"], className="text-light"),
+                    ]), className="border-info bg-dark shadow-sm h-100"), xs=12, md=2),
+    
+                    dbc.Col(dbc.Card(dbc.CardBody([
+                        html.Small("📈 TENDÊNCIA / VELOCIDADE", className="text-muted fw-bold d-block"),
+                        html.H5(id="kpi-tend-val", children=_k0["tend_txt"], style=_k0["tend_style"], className="mb-1 mt-2 fw-bold"),
+                        html.Small(id="kpi-tend-sub", children=_k0["az_txt"], className="text-muted"),
+                    ]), className="border-secondary bg-dark shadow-sm h-100"), xs=12, md=3),
+    
+                    dbc.Col(dbc.Card(dbc.CardBody([
+                        html.Small("🌧️ CHUVA MÁX (24H)", className="text-muted fw-bold d-block"),
+                        html.H3(id="kpi-chuva-val", children=_k0["chuva_txt"], className="text-primary mb-0 mt-1"),
+                        html.Small(id="kpi-chuva-sub", children=_k0["est_txt"], className="text-light"),
+                    ]), className="border-primary bg-dark shadow-sm h-100"), xs=12, md=3),
+    
+                    dbc.Col(dbc.Card(dbc.CardBody([
+                        html.Small("🚦 ESTADO OPERACIONAL", className="text-muted fw-bold d-block"),
+                        html.H3(id="kpi-estado-val", children=_k0["estado_txt"], style=_k0["estado_style"], className="mb-0 mt-1 fw-bold"),
+                        html.Small(id="kpi-estado-sub", children=_k0["dcsc_txt"], className="text-light"),
+                    ]), className="border-warning bg-dark shadow-sm h-100"), xs=12, md=2),
+    
+                    dbc.Col(dbc.Card(dbc.CardBody([
+                        html.Small("🕒 ÚLTIMA LEITURA", className="text-muted fw-bold d-block"),
+                        html.H4(id="kpi-ts-val", children=_k0["ts_txt"], className="text-white mb-0 mt-1"),
+                        html.Small("Ciclo automático 15m", className="text-muted"),
+                    ]), className="border-secondary bg-dark shadow-sm h-100"), xs=12, md=2),
+                ], className="g-2 mb-3 mt-2"),
+                dcc.Store(id="store-escala-cota", data="local"),
+                html.Hr(),
+                dbc.Row([
+                    dbc.Col(criar_card("Cota Atual (ERAB)", "cota-val", "cota-sub"), width=3),
+                    dbc.Col(criar_card("Previsão v11c (D+1)", "v11c-cota-amanha", "v11c-delta"), width=3),
+                    dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
+                    dbc.Col(
+                        html.Div([
+                            criar_card(
+                                "Probabilidade de Cheia",
+                                "prob-val",
+                                "prob-sub",
+                                "text-success",
+                            ),
+                            html.Small(
+                                "Modo Sombra — Não é sistema de alerta "
+                                "(LOEO reprovado: PR-AUC 0.30, Recall 0.16)",
+                                className="text-warning d-block mt-2",
                             ),
                         ]),
-                        color="dark",
-                        outline=True,
+                        width=3,
                     ),
-                    width=12,
-                )
-            ], className="mb-4"),
-            
-            dbc.Row([
-                dbc.Col([
-                    dcc.Loading(
-                        id="loading-atualizar",
-                        type="circle",
-                        children=[
-                            dbc.Button("🔄 Atualizar Tudo", id="btn-atualizar", color="danger", className="w-100 mb-2")
-                        ]
-                    ),
-                    html.Div(id="status-msg", className="text-center text-muted small")
-                ], width=4)
-            ], className="justify-content-center mb-4"),
-            
-            
-    # ============================================================
-    # SEÇÃO: MAPA DE PREVISÃO DO TEMPO (Bacia do Rio Tubarão)
-    # ============================================================
-    html.Hr(),
-    html.H3("🌤️ Previsão do Tempo — Bacia do Rio Tubarão", className="text-center mt-4"),
-    html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
-    dbc.Row([
-        dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima()), width=12),
-    ]),
-    html.Hr(),
-dbc.Row([
-                dbc.Col([
-                    dbc.ButtonGroup([
-                        dbc.Button("🔍 Escala Local (Zoom)", id="btn-escala-local", color="info", size="sm"),
-                        dbc.Button("🌐 Escala Completa (0–1000 cm)", id="btn-escala-completa", color="outline-secondary", size="sm"),
-                    ], className="mb-2"),
-                    dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota("local")),
-                ], width=12),
-                # === LEGENDA DAS CORES (Defesa Civil) ===
+                    dbc.Col(criar_card("Regime Hidráulico", "regime-val", "regime-sub", "text-success"), width=3),
+                    dbc.Col(criar_card("Saúde do Sistema", "health-val", "health-sub", "text-success"), width=3),
+                    dbc.Col(html.Div([
+                        html.H5("Último Alerta", className="card-title"),
+                        html.P(ler_ultimo_alerta(), id="ultimo-alerta-val", className="card-text"),
+                    ], className="card-body"), width=3),
+                    dbc.Col(criar_card("ARCTURUS STATUS", "score-val", "score-sub", "text-success"), width=3),
+                ], className="mb-4"),
+    
+                
                 dbc.Row([
-                    dbc.Col(html.Div([
-                        html.Div(style={"backgroundColor": "#0077FF", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
-                        html.Span("Baixo (<0,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
-                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
-                    dbc.Col(html.Div([
-                        html.Div(style={"backgroundColor": "#00C800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
-                        html.Span("Normal (0,5-2,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
-                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
-                    dbc.Col(html.Div([
-                        html.Div(style={"backgroundColor": "#FFC800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
-                        html.Span("Atenção (2,5-3,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
-                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
-                    dbc.Col(html.Div([
-                        html.Div(style={"backgroundColor": "#FF7800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
-                        html.Span("Alerta (3,5-6,0m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
-                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
-                    dbc.Col(html.Div([
-                        html.Div(style={"backgroundColor": "#FF0000", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
-                        html.Span("Emergência (>6,0m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
-                    ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
-                ], justify="center", style={"marginTop": "10px", "marginBottom": "20px"})
-            ]),
-            html.Div(
-                [
-                    html.H3("Mapa de Inundação — Tubarão, Maio/2019"),
-                    html.Img(
-                        src="/assets/mapa_inundacao_tubarao_2019_satelite.png",
-                        alt="Mapa de inundação de Tubarão em maio de 2019",
-                        style={"width": "100%", "height": "auto"},
-                    ),
-                    html.A(
-                        "Abrir arquivo original",
-                        href="/assets/mapa_inundacao_tubarao_2019_satelite.png",
-                        target="_blank",
-                        className="btn btn-outline-info mt-2",
-                    ),
-                ],
-                id="secao-mapa-geo",
-                style={"display": "none", "marginTop": "24px"},
-            ),
-        ], width=12, style={"padding": "20px"})
-    ], className="g-0"),
-    ], style={"marginLeft": "250px"}),
-], fluid=True, style={"minHeight": "100vh", "backgroundColor": "#000"})
+                    dbc.Col([
+                        dcc.Loading(
+                            id="loading-atualizar",
+                            type="circle",
+                            children=[
+                                dbc.Button("🔄 Atualizar Tudo", id="btn-atualizar", color="danger", className="w-100 mb-2")
+                            ]
+                        ),
+                        html.Div(id="status-msg", className="text-center text-muted small")
+                    ], width=4)
+                ], className="justify-content-center mb-4"),
+                
+                
+        # ============================================================
+        # SEÇÃO: MAPA DE PREVISÃO DO TEMPO (Bacia do Rio Tubarão)
+        # ============================================================
+        html.Hr(),
+        html.H3("🌤️ Previsão do Tempo — Bacia do Rio Tubarão", className="text-center mt-4"),
+        html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima(), config={"displayModeBar": False}), width=12),
+        ]),
+        html.Hr(),
+    dbc.Row([
+                    dbc.Col([
+                        dbc.ButtonGroup([
+                            dbc.Button("🔍 Escala Local (Zoom)", id="btn-escala-local", color="info", size="sm"),
+                            dbc.Button("🌐 Escala Completa (0–1000 cm)", id="btn-escala-completa", color="outline-secondary", size="sm"),
+                        ], className="mb-2"),
+                        dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota("local"), config={"displayModeBar": False}),
+                    ], width=12),
+                    # === LEGENDA DAS CORES (Defesa Civil) ===
+                    dbc.Row([
+                        dbc.Col(html.Div([
+                            html.Div(style={"backgroundColor": "#0077FF", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                            html.Span("Baixo (<0,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                        ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                        dbc.Col(html.Div([
+                            html.Div(style={"backgroundColor": "#00C800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                            html.Span("Normal (0,5-2,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                        ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                        dbc.Col(html.Div([
+                            html.Div(style={"backgroundColor": "#FFC800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                            html.Span("Atenção (2,5-3,5m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                        ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                        dbc.Col(html.Div([
+                            html.Div(style={"backgroundColor": "#FF7800", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                            html.Span("Alerta (3,5-6,0m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                        ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                        dbc.Col(html.Div([
+                            html.Div(style={"backgroundColor": "#FF0000", "width": "20px", "height": "20px", "display": "inline-block", "marginRight": "5px", "verticalAlign": "middle"}),
+                            html.Span("Emergência (>6,0m)", style={"fontSize": "12px", "color": "#aaa", "verticalAlign": "middle"}),
+                        ], style={"display": "inline-block", "marginRight": "15px"}), width="auto"),
+                    ], justify="center", style={"marginTop": "10px", "marginBottom": "20px"})
+                ]),
+                html.Div(
+                    [
+                        html.H3("Mapa de Inundação — Tubarão, Maio/2019"),
+                        html.Img(
+                            src="/assets/mapa_inundacao_tubarao_2019_satelite.png",
+                            alt="Mapa de inundação de Tubarão em maio de 2019",
+                            style={"width": "100%", "height": "auto"},
+                        ),
+                        html.A(
+                            "Abrir arquivo original",
+                            href="/assets/mapa_inundacao_tubarao_2019_satelite.png",
+                            target="_blank",
+                            className="btn btn-outline-info mt-2",
+                        ),
+                dbc.Row([
+                    dbc.Col(
+                        dbc.Card(
+                            dbc.CardBody([
+                                html.H5("A.C. Atlas — Impacto 2019", className="card-title"),
+                                html.Div(
+                                    [
+                                        html.P(
+                                            f"Edificações afetadas: {impacto['edificacoes']}"
+                                        ),
+                                        html.P(
+                                            f"Escolas afetadas: {impacto['escolas']}"
+                                        ),
+                                        html.P(f"UBS afetadas: {impacto['ubs']}"),
+                                        html.P(
+                                            f"População estimada: {impacto['populacao']}"
+                                        ),
+                                        html.Small(
+                                            impacto["limitacao_populacao"],
+                                            className="text-muted",
+                                        ),
+                                    ]
+                                    if (impacto := ler_resumo_impacto_2019())
+                                    else [html.P("Relatório de impacto indisponível.")]
+                                ),
+                            ]),
+                            color="dark",
+                            outline=True,
+                        ),
+                        width=12,
+                    )
+                ], className="mb-4"),
+                    ],
+                    id="secao-mapa-geo",
+                    style={"display": "none", "marginTop": "24px"},
+                ),
+            ], width=12, style={"padding": "20px"})
+        ], className="g-0"),
+        ], style={"marginLeft": "250px"}),
+    ], fluid=True, style={"minHeight": "100vh", "backgroundColor": "#000"})
+
+app.layout = serve_layout
 
 @app.callback(
     Output("secao-mapa-geo", "style"),
