@@ -510,20 +510,12 @@ app.layout = dbc.Container([
     }),
     # --- CONTEÚDO PRINCIPAL (com margem à esquerda para não ficar atrás da barra) ---
     html.Div([
-        # (o conteúdo original do dbc.Container começa aqui)
-    ], style={"marginLeft": "250px"}),
     dcc.Interval(
         id='intervalo-atualizacao',
         interval=30*1000, # Atualiza a cada 30 segundos
         n_intervals=0
     ),
     dbc.Row([
-        dbc.Col([
-            html.Img(src="/assets/logo_arcturus.jpg", style={"width": "150px"}),
-            html.H2("🌊 ARCTURUS CLIMATIK", className="text-primary mt-2"),
-            html.P("Painel de Controle — Gêmeo Digital Hidrológico", className="text-muted"),
-        ], width=2, style={"backgroundColor": "#0a0a0a", "padding": "20px", "minHeight": "100vh"}),
-        
         dbc.Col([
             # === SPRINT 1: BARRA EXECUTIVA DE KPIs OPERACIONAIS (3 SEGUNDOS) ===
             dbc.Row([
@@ -695,8 +687,9 @@ dbc.Row([
                 id="secao-mapa-geo",
                 style={"display": "none", "marginTop": "24px"},
             ),
-        ], width=10, style={"padding": "20px"})
-    ], className="g-0")
+        ], width=12, style={"padding": "20px"})
+    ], className="g-0"),
+    ], style={"marginLeft": "250px"}),
 ], fluid=True, style={"minHeight": "100vh", "backgroundColor": "#000"})
 
 @app.callback(
