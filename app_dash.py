@@ -633,8 +633,10 @@ def _carregar_kpis_iniciais():
             'est_txt': f"{k['estacao_dominante']} (6h: {k['chuva_6h_mm']:.1f} mm)",
             'estado_txt': k['estado_operacional'],
             'estado_style': {'color': k['estado_cor']},
-            'dcsc_txt': f"DCSC {k['dcsc_validas']} • {idade}",
+            'dcsc_txt': f"Rio: {k['estado_rio']} • DCSC {k['dcsc_validas']} ({idade})",
             'ts_txt': k['ts_leitura'],
+            'sombra_val': k['sombra_resumo'],
+            'sombra_sub': k['sombra_detalhe'],
         }
     except Exception:
         return {
@@ -643,6 +645,7 @@ def _carregar_kpis_iniciais():
             'chuva_txt': '-- mm', 'est_txt': 'Estação: --',
             'estado_txt': '--', 'estado_style': {}, 'dcsc_txt': 'DCSC: --',
             'ts_txt': '--',
+            'sombra_val': 'Indisponível', 'sombra_sub': 'Modo sombra • Aguardando ciclo',
         }
 
 def serve_layout():
@@ -721,7 +724,11 @@ def serve_layout():
                 html.Hr(),
                 dbc.Row([
                     dbc.Col(criar_card("Cota Atual (ERAB)", "cota-val", "cota-sub"), width=3),
-                    dbc.Col(criar_card("Previsão v11c (D+1)", "v11c-cota-amanha", "v11c-delta"), width=3),
+                    dbc.Col(html.Div([
+                        html.H5("Projeção Experimental (Sombra)", className="card-title"),
+                        html.H3(_k0["sombra_val"], id="v11c-cota-amanha", className="text-warning"),
+                        html.P(_k0["sombra_sub"], id="v11c-delta", className="card-text"),
+                    ], className="card-body"), width=3),
                     dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
                     dbc.Col(
                         html.Div([
@@ -885,6 +892,7 @@ def alternar_mapa_geo(n_clicks):
      Input("intervalo-atualizacao", "n_intervals")]
 )
 def atualizar_painel(n_clicks, n_intervals):
+    cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color = ler_dados()
     # O Dash apenas LÊ os dados atualizados pelo cron. Não roda mais subprocessos em loop.
     # --- RESUMO EXECUTIVO (IDEIA DO ENGENHEIRO) ---
     try:
@@ -909,7 +917,6 @@ def atualizar_painel(n_clicks, n_intervals):
     except Exception:
         hora_formatada = "Desconhecida"
 
-    cota_val, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_sub, regime_color, health_status, health_color = ler_dados()
     
     cota_sub = f"Última leitura: {hora_formatada}"
     regime_class = f"card-title {regime_color}"
@@ -974,6 +981,8 @@ def atualizar_painel(n_clicks, n_intervals):
         score_color = "text-danger"
         score_status, cor, score = get_status_unificado()
 
+    if regime_val == "OPERACIONAL":
+        regime_color = "text-success"
     return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color, score_status, score_status, score_color, ler_ultimo_alerta()
 
 
@@ -985,14 +994,8 @@ def atualizar_painel(n_clicks, n_intervals):
     Input("intervalo-atualizacao", "n_intervals"),
 )
 def update_v11c_card(n):
-    prev = ler_previsao_v11c()
-    if prev is None:
-        return "-- cm", "Sem previsão"
-    cota_amanha = prev["cota_amanha"]
-    delta = prev["delta"]
-    # SEMPRE 🟡 SOMBRA (não é confiança ALTA)
-    return f"{cota_amanha:.1f} cm 🟡", f"SOMBRA | Delta: {delta:+.1f} cm (MAE ±22 cm)"
-
+    k = obter_kpis_operacionais()
+    return k["sombra_resumo"], k["sombra_detalhe"]
 
 if __name__ == "__main__":
     import threading
@@ -1061,7 +1064,7 @@ def atualizar_kpis_e_zoom(n_clicks, n_intervals, escala_modo):
     estado_txt = k["estado_operacional"]
     estado_style = {"color": k["estado_cor"]}
     idade = f"{k['dcsc_idade_min']} min" if k["dcsc_idade_min"] is not None else "N/D"
-    dcsc_txt = f"DCSC {k['dcsc_validas']} • {idade}"
+    dcsc_txt = f"Rio: {k['estado_rio']} • DCSC {k['dcsc_validas']} ({idade})"
     ts_txt = k["ts_leitura"]
     fig = gerar_grafico_cota(escala_modo or "local")
     return (
