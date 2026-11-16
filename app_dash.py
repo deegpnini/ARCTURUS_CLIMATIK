@@ -841,11 +841,18 @@ def serve_layout():
         html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
         dbc.Row([
             dbc.Col([
-                dbc.ButtonGroup([
-                    dbc.Button("🛰️ Satélite", id="btn-mapa-satelite", color="info", size="sm"),
-                    dbc.Button("🗺️ Mapa Normal", id="btn-mapa-vetorial", color="outline-secondary", size="sm"),
-                ], className="mb-2"),
-                dcc.Store(id="store-modo-mapa", data="satelite"),
+                dbc.RadioItems(
+                    id="seletor-modo-mapa",
+                    className="btn-group mb-2",
+                    inputClassName="btn-check",
+                    labelClassName="btn btn-sm btn-outline-info",
+                    labelCheckedClassName="active",
+                    options=[
+                        {"label": "🛰️ Satélite", "value": "satelite"},
+                        {"label": "🗺️ Mapa Normal", "value": "vetorial"},
+                    ],
+                    value="satelite",
+                ),
                 dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima("satelite"), config={"displayModeBar": False}),
             ], width=12),
         ]),
@@ -1147,17 +1154,12 @@ def atualizar_kpis_e_zoom(n_clicks, n_intervals, escala_modo):
 
 
 @app.callback(
-    [Output("store-modo-mapa", "data"),
-     Output("btn-mapa-satelite", "color"),
-     Output("btn-mapa-vetorial", "color"),
-     Output("mapa-previsao-tempo", "figure")],
-    [Input("btn-mapa-satelite", "n_clicks"),
-     Input("btn-mapa-vetorial", "n_clicks")],
-    [State("mapa-previsao-tempo", "relayoutData")],
+    Output("mapa-previsao-tempo", "figure"),
+    Input("seletor-modo-mapa", "value"),
+    State("mapa-previsao-tempo", "relayoutData"),
     prevent_initial_call=True,
 )
-def alternar_estilo_mapa(n_sat, n_vet, relayout):
-    from dash import ctx
+def alternar_estilo_mapa(modo_selecionado, relayout):
     center_atual = None
     zoom_atual = None
     if isinstance(relayout, dict):
@@ -1168,6 +1170,4 @@ def alternar_estilo_mapa(n_sat, n_vet, relayout):
         if "map.zoom" in relayout:
             zoom_atual = relayout["map.zoom"]
 
-    if ctx.triggered_id == "btn-mapa-vetorial":
-        return "vetorial", "outline-info", "info", get_mapa_clima("vetorial", center=center_atual, zoom=zoom_atual)
-    return "satelite", "info", "outline-secondary", get_mapa_clima("satelite", center=center_atual, zoom=zoom_atual)
+    return get_mapa_clima(modo_selecionado or "satelite", center=center_atual, zoom=zoom_atual)
