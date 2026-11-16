@@ -15,6 +15,12 @@ trap 'flock -u 9' EXIT
 
 cd "$BASE_DIR"
 
+# Atualiza previsao meteorologica das 19 cidades se tiver mais de 3h (10800s)
+if [ ! -f "$BASE_DIR/data/previsao_tempo.json" ] || [ $(( $(date +%s) - $(stat -c %Y "$BASE_DIR/data/previsao_tempo.json") )) -gt 10800 ]; then
+    "$PYTHON" "$BASE_DIR/src/coleta/baixar_previsao_tempo.py" >> "$BASE_DIR/logs/previsao_tempo.log" 2>&1 || true
+fi
+
+
 # 1. Coleta primária em tempo real da Defesa Civil SC (ARIA DOM — 6 pontos da bacia)
 "$PYTHON" "$BASE_DIR/src/coleta/coletar_defesacivil_sc.py" >> "$BASE_DIR/logs/defesacivil_sc.log" 2>&1 || true
 
