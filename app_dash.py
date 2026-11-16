@@ -393,66 +393,206 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
 
 # MAPA DE PREVISÃO DO TEMPO (Plotly Scattermap) — CORRIGIDO
 def get_mapa_clima():
-    """Lê o clima_consolidado.json e monta o mapa com a data de hoje."""
+    """Monta o mapa completo da Bacia do Rio Tubarão: curso do rio até a lagoa, 19 municípios e chuva real + prevista."""
     import json
     from pathlib import Path
     import plotly.graph_objects as go
     from datetime import datetime
 
-    CLIMA_JSON = Path.home() / "projetos" / "arcturus_coleta" / "data" / "clima_consolidado.json"
+    base_dir = Path(__file__).resolve().parent
+    trajeto_path = base_dir / "data" / "trajeto_rio_tubarao.json"
+    prev_path = base_dir / "data" / "previsao_tempo.json"
+    dcsc_path = base_dir / "data" / "chuva_defesacivil_realtime.json"
 
-    if not CLIMA_JSON.exists():
-        return go.Figure().update_layout(
-            title="Clima consolidado não disponível",
-            height=400,
-        )
+    municipios_bacia = [
+        ("lauro_muller", "Lauro Müller (Cabeceira)", -28.3925, -49.3964),
+        ("orleans", "Orleans", -28.3589, -49.2914),
+        ("grao_para", "Grão-Pará", -28.1850, -49.2150),
+        ("anitapolis", "Anitápolis", -27.9019, -49.1289),
+        ("sao_bonifacio", "São Bonifácio", -27.9006, -48.9292),
+        ("santa_rosa_de_lima", "Santa Rosa de Lima", -28.0392, -49.1275),
+        ("rio_fortuna", "Rio Fortuna", -28.1303, -49.1053),
+        ("braco_do_norte", "Braço do Norte", -28.2750, -49.1656),
+        ("sao_ludgero", "São Ludgero", -28.3258, -49.1767),
+        ("barra_do_norte", "Barra do Norte (Confluência)", -28.4315, -49.0885),
+        ("sao_martinho", "São Martinho", -28.1653, -48.9806),
+        ("armazem", "Armazém", -28.2619, -49.0175),
+        ("gravatal", "Gravatal", -28.3311, -49.0353),
+        ("pedras_grandes", "Pedras Grandes", -28.4356, -49.1847),
+        ("tubarao", "Tubarão (ERAB)", -28.4667, -49.0069),
+        ("capivari_de_baixo", "Capivari de Baixo", -28.4447, -48.9578),
+        ("treze_de_maio", "Treze de Maio", -28.5586, -49.1478),
+        ("jaguaruna", "Jaguaruna", -28.6150, -49.0256),
+        ("sangao", "Sangão", -28.6669, -49.1297),
+        ("laguna", "Laguna (Foz / Lagoa)", -28.4825, -48.7808),
+    ]
 
-    clima = json.loads(CLIMA_JSON.read_text())
-    dias = clima.get("dias", [])
-    data_consulta = clima.get("data_consulta", datetime.now().strftime("%Y-%m-%d"))
+    prev_data = {}
+    if prev_path.exists():
+        try:
+            prev_data = json.loads(prev_path.read_text(encoding="utf-8"))
+        except Exception:
+            prev_data = {}
 
-    # Prepara os dados para o mapa
-    # Usa as coordenadas do JSON (ou as padrão da bacia)
-    lat = clima.get("lat", -28.5)
-    lon = clima.get("lon", -49.0)
+    dcsc_por_chave = {}
+    ts_dcsc = ""
+    if dcsc_path.exists():
+        try:
+            dcsc_raw = json.loads(dcsc_path.read_text(encoding="utf-8"))
+            ts_dcsc = str(dcsc_raw.get("timestamp_coleta", ""))[:16].replace("T", " ")
+            estacoes = dcsc_raw.get("estacoes", {})
+            itens = estacoes.values() if isinstance(estacoes, dict) else estacoes
+            for est in itens:
+                nome_est = str(est.get("municipio") or est.get("nome") or "").lower()
+                for chave, label, _, _ in municipios_bacia:
+                    if chave.replace("_", " ") in nome_est or label.split("(")[0].strip().lower() in nome_est:
+                        dcsc_por_chave[chave] = est
+        except Exception:
+            dcsc_por_chave = {}
 
-    # Cria uma lista de pontos com a chuva média
-    lats = []
-    lons = []
-    textos = []
-    cores = []
+    fig = go.Figure()
 
-    for i, dia in enumerate(dias[:7]):  # 7 dias
-        # Espalha os pontos ao redor do centro da bacia (simulação de grid)
-        # Para um mapa real, use as coordenadas das cidades.
-        lat_offset = lat + (i % 3 - 1) * 0.1
-        lon_offset = lon + (i // 3 - 1) * 0.1
-        lats.append(lat_offset)
-        lons.append(lon_offset)
-        chuva = dia.get("media_mm", 0)
-        data = dia.get("date", "N/A")
-        cor = "green" if chuva < 5 else ("yellow" if chuva < 20 else "red")
+    # 1. Traçado do Rio Tubarão (cabeceira na Serra Geral até o encontro com a Lagoa em Laguna)
+    if trajeto_path.exists():
+        try:
+            traj = json.loads(trajeto_path.read_text(encoding="utf-8"))
+            rio_lats, rio_lons = [], []
+            for seg in traj.get("segmentos", []):
+                if not seg:
+                    continue
+                for pt in seg:
+                    if len(pt) >= 2:
+                        rio_lats.append(pt[0])
+                        rio_lons.append(pt[1])
+                rio_lats.append(None)
+                rio_lons.append(None)
+            if rio_lats:
+                fig.add_trace(go.Scattermap(
+                    lat=rio_lats,
+                    lon=rio_lons,
+                    mode="lines",
+                    line=dict(width=3.8, color="#0057E7"),
+                    name="Rio Tubarão (Ramo Oeste → Lagoa)",
+                    hoverinfo="name",
+                ))
+            afl_lats, afl_lons = [], []
+            for seg in traj.get("afluentes", []):
+                if not seg:
+                    continue
+                for pt in seg:
+                    if len(pt) >= 2:
+                        afl_lats.append(pt[0])
+                        afl_lons.append(pt[1])
+                afl_lats.append(None)
+                afl_lons.append(None)
+            if afl_lats:
+                fig.add_trace(go.Scattermap(
+                    lat=afl_lats,
+                    lon=afl_lons,
+                    mode="lines",
+                    line=dict(width=2.2, color="#00B4D8"),
+                    name="Rio Braço do Norte / Afluentes (Ramo Norte)",
+                    hoverinfo="name",
+                ))
+        except Exception:
+            pass
+
+    # 2. Marcadores e rótulos dos 19 municípios da bacia
+    lats, lons, textos, nomes_curtos, cores, tamanhos = [], [], [], [], [], []
+    data_prev_ref = ""
+
+    for chave, nome_exibicao, lat_m, lon_m in municipios_bacia:
+        lats.append(lat_m)
+        lons.append(lon_m)
+        nomes_curtos.append(nome_exibicao.split("(")[0].strip())
+
+        info_p = prev_data.get(chave, {}) if isinstance(prev_data, dict) else {}
+        hoje = info_p.get("hoje", {}) if isinstance(info_p, dict) else {}
+        amanha = info_p.get("amanha", {}) if isinstance(info_p, dict) else {}
+        d2 = info_p.get("depois_de_amanha", {}) if isinstance(info_p, dict) else {}
+
+        if not data_prev_ref and hoje.get("data"):
+            data_prev_ref = hoje.get("data", "")
+
+        chuva_prev_hoje = float(hoje.get("chuva", 0) or 0)
+        chuva_prev_amanha = float(amanha.get("chuva", 0) or 0)
+        chuva_prev_d2 = float(d2.get("chuva", 0) or 0)
+        tmin = hoje.get("temp_min")
+        tmax = hoje.get("temp_max")
+
+        est_real = dcsc_por_chave.get(chave)
+        chuva_obs_24h = None
+        chuva_obs_6h = None
+        if isinstance(est_real, dict):
+            chuva_obs_24h = est_real.get("chuva_24h_mm") if est_real.get("chuva_24h_mm") is not None else est_real.get("acumulado_24h")
+            chuva_obs_6h = est_real.get("chuva_6h_mm") if est_real.get("chuva_6h_mm") is not None else est_real.get("acumulado_6h")
+
+        # Intensidade considera o maior valor entre chuva observada (24h) e prevista (hoje/amanhã)
+        ref_chuva = max(float(chuva_obs_24h or 0), chuva_prev_hoje, chuva_prev_amanha)
+        if ref_chuva >= 30:
+            cor = "#FF3B30"   # Chuva forte / atenção
+            tam = 16
+        elif ref_chuva >= 10:
+            cor = "#FFCC00"   # Chuva moderada
+            tam = 14
+        else:
+            cor = "#2ECC71"   # Tempo firme / chuva fraca
+            tam = 12
+
+        if chave in ("tubarao", "lauro_muller", "laguna", "sao_ludgero", "orleans", "braco_do_norte"):
+            tam += 3
+
         cores.append(cor)
-        textos.append(f"{data}: {chuva:.1f} mm (média de 3 fontes)")
+        tamanhos.append(tam)
 
-    fig = go.Figure(go.Scattermap(
+        linhas_hover = [f"<b>{nome_exibicao}</b>"]
+        if chuva_obs_24h is not None:
+            linhas_hover.append(f"🌧️ Observado DCSC (24h): <b>{float(chuva_obs_24h):.1f} mm</b> (6h: {float(chuva_obs_6h or 0):.1f} mm)")
+        if hoje:
+            temp_str = f" | 🌡️ {tmin:.0f}°–{tmax:.0f}°C" if (tmin is not None and tmax is not None) else ""
+            linhas_hover.append(f"📅 Hoje ({hoje.get('data', '')}): {chuva_prev_hoje:.1f} mm{temp_str}")
+            linhas_hover.append(f"📅 Amanhã: {chuva_prev_amanha:.1f} mm | +48h: {chuva_prev_d2:.1f} mm")
+        else:
+            linhas_hover.append("Previsão municipal: aguardando ciclo")
+
+        textos.append("<br>".join(linhas_hover))
+
+    fig.add_trace(go.Scattermap(
         lat=lats,
         lon=lons,
-        mode="markers",
-        marker=dict(size=20, color=cores),
-        text=textos,
+        mode="markers+text",
+        marker=dict(size=tamanhos, color=cores, opacity=0.92),
+        text=nomes_curtos,
+        textposition="top center",
+        textfont=dict(size=11, color="#111111"),
+        hovertext=textos,
         hoverinfo="text",
+        name="Municípios da Bacia",
     ))
 
+    subtitulo_ts = f"DCSC: {ts_dcsc}" if ts_dcsc else datetime.now().strftime("%d/%m/%Y %H:%M")
+    if data_prev_ref:
+        subtitulo_ts += f" | Previsão base: {data_prev_ref}"
+
     fig.update_layout(
-        title=f"Previsão do Tempo — Bacia do Rio Tubarão (Data: {data_consulta})",
+        title=f"Bacia Hidrográfica do Rio Tubarão — Cidades, Curso do Rio e Chuva ({subtitulo_ts})",
         map=dict(
             style="open-street-map",
-            center=dict(lat=lat, lon=lon),
-            zoom=8,
+            center=dict(lat=-28.28, lon=-49.08),
+            zoom=8.55,
         ),
-        height=500,
-        margin=dict(l=0, r=0, t=40, b=0),
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=0.01,
+            xanchor="left",
+            x=0.01,
+            bgcolor="rgba(20,20,20,0.75)",
+            font=dict(color="white", size=11),
+        ),
+        height=560,
+        margin=dict(l=0, r=0, t=42, b=0),
     )
 
     return fig
