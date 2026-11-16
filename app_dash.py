@@ -392,7 +392,7 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
 # ============================================================
 
 # MAPA DE PREVISÃO DO TEMPO (Plotly Scattermap) — CORRIGIDO
-def get_mapa_clima(modo_mapa="satelite", center=None, zoom=None):
+def get_mapa_clima():
     """Monta o mapa completo da Bacia do Rio Tubarão: curso do rio até a lagoa, 19 municípios e chuva real + prevista."""
     import json
     from pathlib import Path
@@ -450,8 +450,6 @@ def get_mapa_clima(modo_mapa="satelite", center=None, zoom=None):
         except Exception:
             dcsc_por_chave = {}
 
-    centro_mapa = center if isinstance(center, dict) and "lat" in center and "lon" in center else dict(lat=-28.28, lon=-49.08)
-    zoom_mapa = float(zoom) if zoom is not None else 8.55
     fig = go.Figure()
 
     # 1. Traçado do Rio Tubarão (cabeceira na Serra Geral até o encontro com a Lagoa em Laguna)
@@ -566,7 +564,7 @@ def get_mapa_clima(modo_mapa="satelite", center=None, zoom=None):
         marker=dict(size=tamanhos, color=cores, opacity=0.92),
         text=nomes_curtos,
         textposition="top center",
-        textfont=dict(size=11, color="#FFFFFF" if modo_mapa == "satelite" else "#111111"),
+        textfont=dict(size=11, color="#FFFFFF"),
         hovertext=textos,
         hoverinfo="text",
         name="Municípios da Bacia",
@@ -621,29 +619,64 @@ def get_mapa_clima(modo_mapa="satelite", center=None, zoom=None):
 
     fig.update_layout(
         title=f"Bacia Hidrográfica do Rio Tubarão — Cidades, Curso do Rio e Chuva ({subtitulo_ts})",
-        map=(
+        map=dict(
+            style="carto-darkmatter",
+            center=dict(lat=-28.28, lon=-49.08),
+            zoom=8.55,
+            layers=[
+                {
+                    "below": "traces",
+                    "sourcetype": "raster",
+                    "sourceattribution": "Esri World Imagery",
+                    "source": [
+                        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    ],
+                }
+            ],
+        ),
+        updatemenus=[
             dict(
-                style="carto-darkmatter",
-                center=centro_mapa,
-                zoom=zoom_mapa,
-                layers=[
-                    {
-                        "below": "traces",
-                        "sourcetype": "raster",
-                        "sourceattribution": "Esri World Imagery",
-                        "source": [
-                            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                        ],
-                    }
+                type="buttons",
+                direction="right",
+                x=0.01,
+                y=0.99,
+                xanchor="left",
+                yanchor="top",
+                bgcolor="rgba(20, 20, 20, 0.85)",
+                bordercolor="#00BFFF",
+                borderwidth=1,
+                font=dict(color="#FFFFFF", size=12),
+                showactive=True,
+                active=0,
+                buttons=[
+                    dict(
+                        label="🛰️ Satélite",
+                        method="relayout",
+                        args=[{
+                            "map.style": "carto-darkmatter",
+                            "map.layers": [{
+                                "below": "traces",
+                                "sourcetype": "raster",
+                                "sourceattribution": "Esri World Imagery",
+                                "source": [
+                                    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                                ],
+                            }],
+                            "data[2].textfont.color": "#FFFFFF",
+                        }],
+                    ),
+                    dict(
+                        label="🗺️ Mapa Normal",
+                        method="relayout",
+                        args=[{
+                            "map.style": "open-street-map",
+                            "map.layers": [],
+                            "data[2].textfont.color": "#111111",
+                        }],
+                    ),
                 ],
             )
-            if modo_mapa == "satelite"
-            else dict(
-                style="open-street-map",
-                center=centro_mapa,
-                zoom=zoom_mapa,
-            )
-        ),
+        ],
         showlegend=True,
         legend=dict(
             orientation="h",
@@ -657,7 +690,6 @@ def get_mapa_clima(modo_mapa="satelite", center=None, zoom=None):
         height=560,
         margin=dict(l=0, r=0, t=42, b=0),
     )
-
     return fig
 
 def ler_previsao_v11c():
@@ -840,21 +872,7 @@ def serve_layout():
         html.H3("🌤️ Previsão do Tempo — Bacia do Rio Tubarão", className="text-center mt-4"),
         html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
         dbc.Row([
-            dbc.Col([
-                dbc.RadioItems(
-                    id="seletor-modo-mapa",
-                    className="btn-group mb-2",
-                    inputClassName="btn-check",
-                    labelClassName="btn btn-sm btn-outline-info",
-                    labelCheckedClassName="active",
-                    options=[
-                        {"label": "🛰️ Satélite", "value": "satelite"},
-                        {"label": "🗺️ Mapa Normal", "value": "vetorial"},
-                    ],
-                    value="satelite",
-                ),
-                dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima("satelite"), config={"displayModeBar": False}),
-            ], width=12),
+            dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima(), config={"displayModeBar": False}), width=12),
         ]),
         html.Hr(),
     dbc.Row([
@@ -1152,22 +1170,3 @@ def atualizar_kpis_e_zoom(n_clicks, n_intervals, escala_modo):
         ts_txt, fig
     )
 
-
-@app.callback(
-    Output("mapa-previsao-tempo", "figure"),
-    Input("seletor-modo-mapa", "value"),
-    State("mapa-previsao-tempo", "relayoutData"),
-    prevent_initial_call=True,
-)
-def alternar_estilo_mapa(modo_selecionado, relayout):
-    center_atual = None
-    zoom_atual = None
-    if isinstance(relayout, dict):
-        if "map.center" in relayout:
-            center_atual = relayout["map.center"]
-        elif "map.center.lat" in relayout and "map.center.lon" in relayout:
-            center_atual = {"lat": relayout["map.center.lat"], "lon": relayout["map.center.lon"]}
-        if "map.zoom" in relayout:
-            zoom_atual = relayout["map.zoom"]
-
-    return get_mapa_clima(modo_selecionado or "satelite", center=center_atual, zoom=zoom_atual)
