@@ -66,7 +66,9 @@ def _avaliar_fontes_chuva(max_idade_horas: float = 2.0) -> dict:
                     "chuva_1h_mm": est.get("chuva_1h_mm"),
                     "chuva_6h_mm": est.get("chuva_6h_mm"),
                     "chuva_24h_mm": est.get("chuva_24h_mm"),
-                    "rio_m": est.get("rio_m"),
+                    "cota_altimetrica_m": est.get(
+                        "cota_altimetrica_m", est.get("rio_m")
+                    ),
                 })
             if dc_fresco:
                 val = dados.get("pior_caso_bacia", {}).get("max_chuva_24h_mm")

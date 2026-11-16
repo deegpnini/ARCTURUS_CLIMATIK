@@ -51,7 +51,7 @@ class GravarPostgresQCTests(unittest.TestCase):
         self.assertIsNotNone(vals, "O INSERT nao foi chamado!")
         self.assertEqual(vals[2], 111.0)          # cota_cm
         self.assertEqual(vals[5], "ATENCAO")      # regime
-        self.assertEqual(vals[6], "SUSPEITO")     # qc
+        self.assertEqual(vals[7], "SUSPEITO")     # qc
         self.assertTrue(connection.committed)
         self.assertTrue(connection.closed)
 
@@ -67,7 +67,7 @@ class GravarPostgresQCTests(unittest.TestCase):
         vals = connection.cursor_instance.inserted_values
         self.assertIsNotNone(vals)
         self.assertIsNone(vals[2])               # cota_cm
-        self.assertEqual(vals[6], "CORROMPIDO")  # qc
+        self.assertEqual(vals[7], "CORROMPIDO")  # qc
 
     def test_empty_regime_defaults_to_desconhecido(self):
         connection = FakeConnection(cota_anterior=80.0)

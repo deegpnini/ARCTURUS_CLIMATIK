@@ -4,6 +4,7 @@
 
 import requests
 import json
+import os
 from pathlib import Path
 from datetime import datetime
 
@@ -72,7 +73,27 @@ for nome, (lat, lon) in PONTOS.items():
         print(f"[ERRO] {nome}: {e}")
 
 json_path = DATA / "previsao_tempo.json"
-with open(json_path, "w") as f:
-    json.dump(resultado, f, indent=2)
+tmp_path = json_path.with_suffix(".json.tmp")
+with open(tmp_path, "w", encoding="utf-8") as f:
+    json.dump(resultado, f, indent=2, ensure_ascii=False)
+os.replace(tmp_path, json_path)
+
+meta_path = DATA / "previsao_tempo_meta.json"
+meta_tmp = meta_path.with_suffix(".json.tmp")
+with open(meta_tmp, "w", encoding="utf-8") as f:
+    json.dump(
+        {
+            "consulta_em": datetime.now().astimezone().isoformat(timespec="minutes"),
+            "provedor": "Open-Meteo Forecast API",
+            "modelo_solicitado": "best_match",
+            "rodada_modelo": None,
+            "observacao": "A API consultada não expõe o horário de inicialização da rodada.",
+        },
+        f,
+        indent=2,
+        ensure_ascii=False,
+    )
+os.replace(meta_tmp, meta_path)
 print(f"\n[OK] Previsão salva: {json_path} ({len(resultado)} cidades)")
-print(f"Data da coleta: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+print(f"Consulta realizada em: {datetime.now().astimezone().strftime('%Y-%m-%d %H:%M %z')}")
+print("Rodada de inicialização do modelo: não fornecida pela API.")

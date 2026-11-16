@@ -40,10 +40,19 @@ def calcular_features_bacia(data_alvo) -> dict:
         if df.empty:
             return _vazio()
 
+        nan_count = int(df.isna().sum().sum())
+        if nan_count:
+            LOGGER.warning(
+                "CSV de chuva contém %d valores NaN; eles serão preservados "
+                "como ausentes, não convertidos em zero.",
+                nan_count,
+            )
+
         data_alvo = pd.Timestamp(data_alvo)
         if df.index.max() > data_alvo:
             LOGGER.warning(
-                "Chuva com linhas > origem (%s > %s); linhas futuras serão ignoradas.",
+                "Possível leakage na chuva: última linha %s > origem %s; "
+                "linhas futuras serão ignoradas.",
                 df.index.max(), data_alvo,
             )
 

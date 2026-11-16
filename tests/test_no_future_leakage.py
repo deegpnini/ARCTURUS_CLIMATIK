@@ -47,7 +47,11 @@ def test_invariancia_ao_futuro(monkeypatch, tmp_path):
     f_truncado = fb.calcular_features_bacia(ts_origem)
     
     # As features devem ser idênticas
-    assert f_completo == f_truncado, f"LEAKAGE DETECTADO: {f_completo} != {f_truncado}"
+    assert f_completo.keys() == f_truncado.keys()
+    for feature in f_completo:
+        assert np.isclose(
+            f_completo[feature], f_truncado[feature], equal_nan=True
+        ), f"LEAKAGE DETECTADO em {feature}: {f_completo} != {f_truncado}"
     print("[OK] Features invariantes ao futuro (sem leakage)")
 
 if __name__ == "__main__":

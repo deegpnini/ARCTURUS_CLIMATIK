@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """
 atualizar_lag_eventos.py — Rastreia a resposta hidrologica (lag e amplitude)
-em duas escalas:
-  1) Evento completo: cota_pre_evento -> cota_atual (delta_total)
-  2) Pulso/repique local: cota_base_repique -> cota_atual (delta_repique)
-Separa tambem dominante_24h (acumulado do evento) e dominante_6h (chuva recente).
+em duas escalas temporais (evento completo vs. repique local) e calcula
+a assinatura espacial da chuva por setor da bacia (cabeceira vs. medio curso).
 """
 import json
 import subprocess
@@ -16,14 +14,18 @@ EVENTO_FILE = BASE_DIR / "data" / "evento_atual_bacia.json"
 DCSC_FILE = BASE_DIR / "data" / "chuva_defesacivil_realtime.json"
 LAG_FILE = BASE_DIR / "data" / "lag_eventos.jsonl"
 
+CODIGOS_CABECEIRA = {"DCSC-00054", "DCSC-00046", "DCSC-00151"}  # Lauro Muller, Orleans, Grao-Para
+CODIGOS_MEDIO_CURSO = {"DCSC-00122"}  # Sao Ludgero
+CODIGOS_BACIA_PRINCIPAL = CODIGOS_CABECEIRA | CODIGOS_MEDIO_CURSO | {"DCSC-00048"}  # + Tubarao/Guarda
+
 
 def ler_serie_erab(horas=12):
     """Busca leituras validas das ultimas N horas ordenadas cronologicamente."""
     sql = f"""
     SELECT
         to_char(timestamp, 'YYYY-MM-DD"T"HH24:MI:SS'),
-        cota_cm,
-        COALESCE(vz_cm_h, 0)
+        ROUND(cota_cm::numeric, 2),
+        ROUND(COALESCE(vz_cm_h, 0)::numeric, 2)
     FROM leituras
     WHERE qc = 'VALIDO'
       AND cota_cm IS NOT NULL
@@ -43,83 +45,124 @@ def ler_serie_erab(horas=12):
         ts_iso, cota_s, vz_s = linha.split("|")
         serie.append({
             "timestamp": ts_iso,
-            "cota_cm": float(cota_s),
-            "vz_cm_h": float(vz_s),
+            "cota_cm": round(float(cota_s), 2),
+            "vz_cm_h": round(float(vz_s), 2),
         })
     return serie
 
 
+def _media(vals):
+    validos = [v for v in vals if v is not None]
+    return round(sum(validos) / len(validos), 2) if validos else None
+
+
 def ler_telemetria_dcsc():
-    """Extrai acumulados de 24h e 6h por estacao e identifica ambas as dominantes."""
+    """
+    Extrai acumulados de 24h e 6h por estacao (usando trecho_bacia / nome_oficial),
+    identifica dominante_24h e dominante_6h, e calcula medias espaciais por setor.
+    """
     if not DCSC_FILE.exists():
-        return {}, {}, None, 0.0, None, 0.0
+        return {}
 
     dados = json.loads(DCSC_FILE.read_text(encoding="utf-8"))
-    estacoes = dados.get("estacoes", [])
+    lista = dados.get("estacoes") or dados.get("pontos") or []
 
     chuvas_24h = {}
     chuvas_6h = {}
     dom_24h, max_24h = None, -1.0
     dom_6h, max_6h = None, -1.0
 
-    for est in estacoes:
-        nome = (est.get("nome") or "").strip()
+    vals_cab_24h, vals_med_24h, vals_bacia_24h = [], [], []
+    vals_cab_6h, vals_med_6h, vals_bacia_6h = [], [], []
+
+    for est in lista:
+        cod = (est.get("codigo") or "").strip()
+        nome = (
+            est.get("trecho_bacia")
+            or est.get("nome_oficial")
+            or est.get("nome")
+            or est.get("estacao")
+            or cod
+        ).strip()
         if not nome:
             continue
-        c24 = est.get("chuva_24h_mm")
-        c6 = est.get("chuva_6h_mm")
+
+        c24 = est.get("chuva_24h_mm") if est.get("chuva_24h_mm") is not None else est.get("chuva_24h")
+        c6 = est.get("chuva_6h_mm") if est.get("chuva_6h_mm") is not None else est.get("chuva_6h")
 
         if c24 is not None:
-            v24 = float(c24)
+            v24 = round(float(c24), 2)
             chuvas_24h[nome] = v24
             if v24 > max_24h:
                 max_24h = v24
                 dom_24h = nome
+            if cod in CODIGOS_CABECEIRA:
+                vals_cab_24h.append(v24)
+            if cod in CODIGOS_MEDIO_CURSO:
+                vals_med_24h.append(v24)
+            if cod in CODIGOS_BACIA_PRINCIPAL:
+                vals_bacia_24h.append(v24)
 
         if c6 is not None:
-            v6 = float(c6)
+            v6 = round(float(c6), 2)
             chuvas_6h[nome] = v6
             if v6 > max_6h:
                 max_6h = v6
                 dom_6h = nome
+            if cod in CODIGOS_CABECEIRA:
+                vals_cab_6h.append(v6)
+            if cod in CODIGOS_MEDIO_CURSO:
+                vals_med_6h.append(v6)
+            if cod in CODIGOS_BACIA_PRINCIPAL:
+                vals_bacia_6h.append(v6)
 
-    return (
-        chuvas_24h,
-        chuvas_6h,
-        dom_24h,
-        max(max_24h, 0.0),
-        dom_6h,
-        max(max_6h, 0.0),
-    )
+    return {
+        "chuvas_24h": chuvas_24h,
+        "chuvas_6h": chuvas_6h,
+        "dom_24h": dom_24h,
+        "max_24h": round(max(max_24h, 0.0), 2),
+        "dom_6h": dom_6h,
+        "max_6h": round(max(max_6h, 0.0), 2),
+        "chuva_media_bacia": _media(vals_bacia_24h),
+        "chuva_cabeceira": _media(vals_cab_24h),
+        "chuva_medio_curso": _media(vals_med_24h),
+        "chuva_media_bacia_6h": _media(vals_bacia_6h),
+        "chuva_cabeceira_6h": _media(vals_cab_6h),
+        "chuva_medio_curso_6h": _media(vals_med_6h),
+    }
 
 
 def detectar_base_repique(serie):
     """
-    Identifica a cota de base local imediatamente antes do repique atual
-    (ex: patamar de 97 cm antes do salto para 105 cm) e o momento de inicio da subida.
+    Identifica o ultimo patamar estavel (variacao <= 1 cm) imediatamente antes
+    da subida atual (ex: 97 cm as 21:00 antes do salto para 105 cm as 21:15).
     """
     if len(serie) < 2:
         pt = serie[-1]
         return pt["cota_cm"], pt["timestamp"], None
 
-    # Percorre de tras para frente para achar o ultimo patamar estavel antes da subida atual
     idx_base = len(serie) - 1
     for i in range(len(serie) - 2, -1, -1):
-        if serie[i]["cota_cm"] <= serie[idx_base]["cota_cm"]:
+        diff = serie[idx_base]["cota_cm"] - serie[i]["cota_cm"]
+        if diff >= 2.0:
             idx_base = i
-        elif (serie[i]["cota_cm"] - serie[idx_base]["cota_cm"]) > 2.0:
-            # Encontrou uma onda anterior mais alta; para no vale entre ondas
+        elif abs(diff) <= 1.0 and idx_base < len(serie) - 1:
+            idx_base = i
+        elif idx_base < len(serie) - 1:
             break
 
-    base_pt = serie[idx_base]
-    cota_base = base_pt["cota_cm"]
+    cota_base = serie[idx_base]["cota_cm"]
 
-    # Primeiro ponto apos a base em que a cota subiu >= 3 cm
+    idx_fim_patamar = idx_base
+    while idx_fim_patamar + 1 < len(serie) and abs(serie[idx_fim_patamar + 1]["cota_cm"] - cota_base) <= 1.0:
+        idx_fim_patamar += 1
+
+    fim_patamar_pt = serie[idx_fim_patamar]
     ponto_subida = next(
-        (p for p in serie[idx_base + 1:] if (p["cota_cm"] - cota_base) >= 3.0),
+        (p for p in serie[idx_fim_patamar + 1:] if (p["cota_cm"] - cota_base) >= 3.0),
         None,
     )
-    return cota_base, base_pt["timestamp"], ponto_subida
+    return cota_base, fim_patamar_pt["timestamp"], ponto_subida
 
 
 def main():
@@ -137,14 +180,11 @@ def main():
     cota_atual = erab["cota_cm"]
     vz_atual = erab["vz_cm_h"]
 
-    # Escala 1: Base hidrologica completa (menor cota pre-evento nas ultimas 12h)
     pt_pre = min(serie, key=lambda x: x["cota_cm"])
     cota_pre_evento = pt_pre["cota_cm"]
 
-    # Escala 2: Base local do repique atual (ex: 97 cm)
     cota_base_repique, ts_base_repique, ponto_subida = detectar_base_repique(serie)
-
-    chuvas_24h, chuvas_6h, dom_24h, max_24h, dom_6h, max_6h = ler_telemetria_dcsc()
+    tel = ler_telemetria_dcsc()
 
     agora = datetime.now()
     evento_id = str(
@@ -153,9 +193,8 @@ def main():
         or agora.strftime("%Y%m%d")
     )
 
-    if not dom_24h:
-        dom_24h = evento.get("estacao_dominante") or "Desconhecida"
-        max_24h = float(evento.get("chuva_max_24h") or 0.0)
+    dom_24h = tel.get("dom_24h") or evento.get("estacao_dominante") or "Desconhecida"
+    max_24h = tel.get("max_24h") if tel.get("dom_24h") else round(float(evento.get("chuva_max_24h") or 0.0), 2)
 
     registros = []
     if LAG_FILE.exists():
@@ -178,17 +217,15 @@ def main():
         registros.append(reg)
     else:
         reg = registros[idx_existente]
-        # Preserva a menor cota pre-evento (ex: 66.0 cm)
         cota_pre_ant = reg.get("cota_pre_evento") or reg.get("cota_inicial") or cota_pre_evento
-        reg["cota_pre_evento"] = min(float(cota_pre_ant), cota_pre_evento)
+        reg["cota_pre_evento"] = round(min(float(cota_pre_ant), cota_pre_evento), 2)
         reg.pop("cota_inicial", None)
         reg.pop("delta_cota", None)
 
-    cota_pre = float(reg["cota_pre_evento"])
+    cota_pre = round(float(reg["cota_pre_evento"]), 2)
     delta_repique = round(cota_atual - cota_base_repique, 2)
     delta_total = round(cota_atual - cota_pre, 2)
 
-    # Calcula lag ate a subida do repique atual (a partir do inicio do repique)
     t_base = datetime.fromisoformat(ts_base_repique[:19])
     if ponto_subida is not None:
         t_sub = datetime.fromisoformat(ponto_subida["timestamp"][:19])
@@ -198,8 +235,7 @@ def main():
         horas_ate_subida = None
         ts_subida = None
 
-    # Calcula pico e lag ate o pico desde o inicio do repique
-    cota_pico_ant = float(reg.get("cota_pico") or cota_atual)
+    cota_pico_ant = round(float(reg.get("cota_pico") or cota_atual), 2)
     if cota_atual >= cota_pico_ant:
         t_pico = datetime.fromisoformat(erab["timestamp"][:19])
         cota_pico = cota_atual
@@ -220,9 +256,15 @@ def main():
     reg.update({
         "ultima_atualizacao": erab["timestamp"],
         "dominante_24h": dom_24h,
-        "chuva_max_24h": round(max_24h, 2),
-        "dominante_6h": dom_6h,
-        "chuva_max_6h": round(max_6h, 2),
+        "chuva_max_24h": max_24h,
+        "dominante_6h": tel.get("dom_6h"),
+        "chuva_max_6h": tel.get("max_6h"),
+        "chuva_media_bacia": tel.get("chuva_media_bacia"),
+        "chuva_cabeceira": tel.get("chuva_cabeceira"),
+        "chuva_medio_curso": tel.get("chuva_medio_curso"),
+        "chuva_media_bacia_6h": tel.get("chuva_media_bacia_6h"),
+        "chuva_cabeceira_6h": tel.get("chuva_cabeceira_6h"),
+        "chuva_medio_curso_6h": tel.get("chuva_medio_curso_6h"),
         "cota_pre_evento": cota_pre,
         "cota_base_repique": cota_base_repique,
         "ts_base_repique": ts_base_repique,
@@ -235,15 +277,15 @@ def main():
         "horas_ate_subida": horas_ate_subida,
         "horas_ate_pico": horas_ate_pico,
         "status": status,
-        "chuvas_estacoes_24h": chuvas_24h,
-        "chuvas_estacoes_6h": chuvas_6h,
+        "chuvas_estacoes_24h": tel.get("chuvas_24h", {}),
+        "chuvas_estacoes_6h": tel.get("chuvas_6h", {}),
     })
 
     LAG_FILE.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False) for r in registros) + "\n",
         encoding="utf-8",
     )
-    print("=== REGISTRO ATUALIZADO EM data/lag_eventos.jsonl ===")
+    print("=== REGISTRO ESPACIAL E TEMPORAL ATUALIZADO ===")
     print(json.dumps(reg, indent=2, ensure_ascii=False))
 
 
