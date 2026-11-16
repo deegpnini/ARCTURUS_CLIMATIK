@@ -1,4 +1,16 @@
+from src.relatorios.dashboard_kpis import obter_kpis_operacionais
 import dash
+import json
+from pathlib import Path
+
+CLIMA_JSON = Path.home() / "projetos" / "arcturus_coleta" / "data" / "clima_consolidado.json"
+
+def get_clima_consolidado():
+    if CLIMA_JSON.exists():
+        return json.loads(CLIMA_JSON.read_text())
+    return None
+
+from dashboard_correcoes import get_chuva_48h, get_status_unificado, get_selo_confianca, get_cota_v11c
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
@@ -24,7 +36,7 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG], title="ARCTU
 
 def ler_dados():
     cota_val = "-- cm"
-    health_status = "⚪ Health Check indisponível"
+    health_status, cor, score = get_status_unificado()
     health_color = "text-muted"
     chuva_val = "-- mm"
     chuva_sub = "Aguardando dados..."
@@ -63,10 +75,10 @@ def ler_dados():
             health = json.load(f)
         if (health.get("sensor_erab", {}).get("status", "").startswith("🟢") and
             health.get("pipeline_regime", {}).get("status", "").startswith("🟢")):
-            health_status = "🟢 Todos os sistemas operacionais"
+            health_status, cor, score = get_status_unificado()
             health_color = "text-success"
         else:
-            health_status = "🟡 Atenção ao sistema"
+            health_status, cor, score = get_status_unificado()
             health_color = "text-warning"
     except Exception:
         pass
@@ -75,7 +87,7 @@ def ler_dados():
         try:
             with open(FILE_REGIME, "r") as f:
                 reg = json.load(f)
-                status = reg.get("regime", "NORMAL")
+                status, cor, score = get_status_unificado()
                 vz = reg.get("delta_60m", 0.0)
                 regime_val = status
                 sinal = "+" if vz > 0 else ""
@@ -129,8 +141,13 @@ def ler_ultimo_alerta():
 
 
 def ler_resumo_impacto_2019():
+    candidatos = (
+        FILE_IMPACT_2019,
+        BASE / "resultados" / "atlas_impacto_2019.json.bak",
+    )
+    arquivo_impacto = next((path for path in candidatos if path.is_file()), FILE_IMPACT_2019)
     try:
-        with FILE_IMPACT_2019.open("r", encoding="utf-8") as arquivo:
+        with arquivo_impacto.open("r", encoding="utf-8") as arquivo:
             impacto = json.load(arquivo)
     except (OSError, json.JSONDecodeError):
         logging.exception("Não foi possível ler o relatório de impacto de 2019.")
@@ -208,11 +225,11 @@ def gerar_resumo_executivo(cota, vz, az, regime):
         else:
             return f"✅ NORMAL: Rio em {cota:.1f} cm, estável. Sem tendência de subida ou queda."
 
-def gerar_grafico_cota():
+def gerar_grafico_cota(escala_modo="local"):
     import pandas as pd
     import plotly.graph_objects as go
     from datetime import datetime, timedelta
-    
+
     try:
         connection = get_postgres_connection()
         try:
@@ -222,7 +239,7 @@ def gerar_grafico_cota():
                     FROM leituras
                     WHERE cota_cm IS NOT NULL
                     ORDER BY timestamp DESC, id DESC
-                    LIMIT 100
+                    LIMIT 120
                 """)
                 rows = cursor.fetchall()
         finally:
@@ -249,64 +266,116 @@ def gerar_grafico_cota():
             )
             return fig
 
+        cota_min = float(df["cota_cm"].min())
+        cota_max = float(df["cota_cm"].max())
+        if escala_modo == "completa":
+            y_min, y_max = 0.0, 1000.0
+        else:
+            folga = max(12.0, (cota_max - cota_min) * 0.25)
+            y_min = max(0.0, cota_min - folga)
+            y_max = cota_max + folga
+
         # === FAIXAS DE FUNDO (cores da Defesa Civil) ===
         zonas = [
-            (0, 50, "rgba(0, 119, 255, 0.15)", "Baixo (<0,5m)"),          # Azul
-            (50, 250, "rgba(0, 200, 0, 0.15)", "Normal (0,5-2,5m)"),       # Verde
-            (250, 350, "rgba(255, 200, 0, 0.20)", "Atenção (2,5-3,5m)"),   # Amarelo
-            (350, 600, "rgba(255, 120, 0, 0.20)", "Alerta (3,5-6,0m)"),    # Laranja
-            (600, 1000, "rgba(255, 0, 0, 0.20)", "Emergência (>6,0m)"),    # Vermelho
+            (0, 50, "rgba(0, 119, 255, 0.15)", "Baixo (<0,5m)"),
+            (50, 250, "rgba(0, 200, 0, 0.15)", "Normal (0,5-2,5m)"),
+            (250, 350, "rgba(255, 200, 0, 0.20)", "Atenção (2,5-3,5m)"),
+            (350, 600, "rgba(255, 120, 0, 0.20)", "Alerta (3,5-6,0m)"),
+            (600, 1000, "rgba(255, 0, 0, 0.20)", "Emergência (>6,0m)"),
         ]
         for y0, y1, cor, nome in zonas:
+            if y1 < y_min or y0 > y_max:
+                continue
+            y0_vis = max(y0, y_min)
+            y1_vis = min(y1, y_max)
             fig.add_shape(
-                type="rect", x0=df["timestamp"].min(), x1=agora + timedelta(minutes=10),
-                y0=y0, y1=y1, line=dict(width=0), fillcolor=cor, layer="below"
+                type="rect",
+                x0=df["timestamp"].min(),
+                x1=agora + timedelta(minutes=10),
+                y0=y0_vis,
+                y1=y1_vis,
+                line=dict(width=0),
+                fillcolor=cor,
+                layer="below",
             )
-            # Rótulo da zona (lado direito)
             fig.add_annotation(
-                x=agora + timedelta(minutes=8), y=(y0 + y1) / 2,
-                text=nome, showarrow=False, xanchor="left",
-                font=dict(size=9, color="rgba(255,255,255,0.6)")
+                xref="paper",
+                x=1.01,
+                y=(y0_vis + y1_vis) / 2,
+                text=nome,
+                showarrow=False,
+                xanchor="left",
+                font=dict(size=10, color="rgba(255,255,255,0.75)"),
             )
 
-        # === LINHA COLORIDA (muda de cor conforme a cota) ===
         def cor_por_cota(cota):
-            if cota < 50: return "#0077FF"      # Azul (Baixo)
-            elif cota < 250: return "#00C800"    # Verde (Normal)
-            elif cota < 350: return "#FFC800"   # Amarelo (Atenção)
-            elif cota < 600: return "#FF7800"   # Laranja (Alerta)
-            else: return "#FF0000"              # Vermelho (Emergência)
+            if cota < 50:
+                return "#0077FF"
+            elif cota < 250:
+                return "#00C800"
+            elif cota < 350:
+                return "#FFC800"
+            elif cota < 600:
+                return "#FF7800"
+            else:
+                return "#FF0000"
 
         cores = [cor_por_cota(c) for c in df["cota_cm"]]
         fig.add_trace(go.Scatter(
-            x=df["timestamp"], y=df["cota_cm"],
-            mode='lines+markers', name='Cota (cm)',
-            line=dict(color='#00d2ff', width=1, dash='dot'),
-            marker=dict(size=8, color=cores, line=dict(width=1, color='white')),
-            hovertemplate='<b>%{x|%d/%m/%Y %H:%M}</b><br>Cota: %{y:.1f} cm<extra></extra>'
+            x=df["timestamp"],
+            y=df["cota_cm"],
+            mode="lines+markers",
+            name="Cota (cm)",
+            line=dict(color="#38bdf8", width=2.2),
+            marker=dict(size=7, color=cores, line=dict(width=1, color="white")),
+            hovertemplate="<b>%{x|%d/%m/%Y %H:%M}</b><br>Cota: %{y:.1f} cm<extra></extra>",
         ))
-        
-        # WORKAROUND: add_shape + add_annotation separados (evita bug do Plotly)
-        fig.add_shape(type="line", x0=agora, x1=agora, y0=0, y1=1, yref="paper",
-                      line=dict(color="#ff6b6b", width=2, dash="dot"))
-        fig.add_annotation(x=agora, y=1, yref="paper", text=f"Agora: {agora.strftime('%d/%m/%Y %H:%M:%S')}",
-                           showarrow=False, xanchor="left", yanchor="bottom",
-                           font=dict(size=10, color="#ff6b6b"))
 
+        fig.add_shape(
+            type="line",
+            x0=agora,
+            x1=agora,
+            y0=0,
+            y1=1,
+            yref="paper",
+            line=dict(color="#ff6b6b", width=2, dash="dot"),
+        )
+        fig.add_annotation(
+            x=agora,
+            y=1,
+            yref="paper",
+            text=f"Agora: {agora.strftime('%H:%M:%S')}",
+            showarrow=False,
+            xanchor="right",
+            yanchor="bottom",
+            font=dict(size=10, color="#ff6b6b"),
+        )
+
+        titulo_escala = "Escala Local (Zoom)" if escala_modo != "completa" else "Escala Completa (0–1000 cm)"
         fig.update_layout(
-            title="Cota do Rio Tubarão (Tempo Real)", xaxis_title="Data / Hora", yaxis_title="Cota (cm)",
-            template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=40, r=20, t=60, b=40),
-            xaxis=dict(range=[df['timestamp'].min(), agora + timedelta(minutes=10)],
-                       tickformat="%d/%m<br>%H:%M", tickangle=-45, tickfont=dict(size=9))
+            title=f"Cota do Rio Tubarão (Tempo Real) — {titulo_escala}",
+            xaxis_title="Data / Hora",
+            yaxis_title="Cota (cm)",
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            margin=dict(l=50, r=130, t=60, b=45),
+            yaxis=dict(range=[y_min, y_max]),
+            xaxis=dict(
+                range=[df["timestamp"].min(), agora + timedelta(minutes=10)],
+                tickformat="%d/%m<br>%H:%M",
+                tickangle=-45,
+                tickfont=dict(size=9),
+            ),
         )
         return fig
     except Exception as e:
         logging.exception("Não foi possível carregar as leituras do PostgreSQL para o gráfico.")
         fig = go.Figure()
         fig.add_annotation(text=f"Erro PostgreSQL: {e}", showarrow=False, font=dict(color="red"))
-        fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         return fig
+
 
 def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#111"):
     return dbc.Card(
@@ -321,126 +390,94 @@ def criar_card(titulo, id_valor, id_sub, color_class="text-white", card_color="#
 
 
 # ============================================================
-# MAPA DE PREVISÃO DO TEMPO (Plotly Scattermapbox)
-# ============================================================
-def gerar_mapa_previsao_tempo():
-    """Gera o mapa interativo da bacia com as previsões do tempo."""
+
+# MAPA DE PREVISÃO DO TEMPO (Plotly Scattermap) — CORRIGIDO
+def get_mapa_clima():
+    """Lê o clima_consolidado.json e monta o mapa com a data de hoje."""
     import json
     from pathlib import Path
-    
-    BASE = Path(__file__).resolve().parent
-    tempo_file = BASE / "data" / "previsao_tempo.json"
-    
-    if not tempo_file.exists():
+    import plotly.graph_objects as go
+    from datetime import datetime
+
+    CLIMA_JSON = Path.home() / "projetos" / "arcturus_coleta" / "data" / "clima_consolidado.json"
+
+    if not CLIMA_JSON.exists():
         return go.Figure().update_layout(
-            title="Previsão do tempo indisponível",
-            height=500,
+            title="Clima consolidado não disponível",
+            height=400,
         )
-    
-    with open(tempo_file, "r") as f:
-        tempo = json.load(f)
-    
-    # Coordenadas das cidades
-    COORDENADAS = {
-        "lauro_muller": (-28.39, -49.39),
-        "orleans": (-28.35, -49.30),
-        "anitapolis": (-27.90, -49.13),
-        "sao_bonifacio": (-27.90, -48.93),
-        "grao_para": (-28.18, -49.22),
-        "rio_fortuna": (-28.13, -49.10),
-        "santa_rosa_de_lima": (-28.03, -49.13),
-        "braco_do_norte": (-28.27, -49.17),
-        "sao_ludgero": (-28.32, -49.20),
-        "pedras_grandes": (-28.43, -49.18),
-        "armazem": (-28.26, -49.02),
-        "gravatal": (-28.33, -49.05),
-        "sao_martinho": (-28.16, -48.98),
-        "tubarao": (-28.48, -49.02),
-        "capivari_de_baixo": (-28.45, -48.98),
-        "treze_de_maio": (-28.55, -49.15),
-        "jaguaruna": (-28.61, -49.03),
-        "sangao": (-28.63, -49.13),
-        "laguna": (-28.48, -48.78),
-    }
-    
-    lats, lons, textos, cores = [], [], [], []
-    
-    for cidade, (lat, lon) in COORDENADAS.items():
-        if cidade not in tempo:
-            continue
-        t = tempo[cidade]
-        hoje = t.get("hoje", {})
-        chuva_hoje = hoje.get("chuva", 0)
-        
-        if chuva_hoje >= 20:
-            cor = "#FF0000"
-        elif chuva_hoje >= 5:
-            cor = "#FF7800"
-        elif chuva_hoje >= 1:
-            cor = "#FFC800"
-        else:
-            cor = "#00C800"
-        
-        texto = f"<b>{cidade.replace('_', ' ').title()}</b><br>"
-        for dia_nome, dia_chave in [("Hoje", "hoje"), ("Amanhã", "amanha"), ("Depois", "depois_amanha")]:
-            d = t.get(dia_chave, {})
-            data_partes = d.get("data", "").split("-")
-            data_str = f"{data_partes[2]}/{data_partes[1]}" if len(data_partes) == 3 else "N/D"
-            texto += f"<b>{dia_nome} ({data_str}):</b> {d.get('temp_min', 0):.0f}°C a {d.get('temp_max', 0):.0f}°C | Chuva: {d.get('chuva', 0):.1f} mm<br>"
-        
-        lats.append(lat)
-        lons.append(lon)
-        textos.append(texto)
+
+    clima = json.loads(CLIMA_JSON.read_text())
+    dias = clima.get("dias", [])
+    data_consulta = clima.get("data_consulta", datetime.now().strftime("%Y-%m-%d"))
+
+    # Prepara os dados para o mapa
+    # Usa as coordenadas do JSON (ou as padrão da bacia)
+    lat = clima.get("lat", -28.5)
+    lon = clima.get("lon", -49.0)
+
+    # Cria uma lista de pontos com a chuva média
+    lats = []
+    lons = []
+    textos = []
+    cores = []
+
+    for i, dia in enumerate(dias[:7]):  # 7 dias
+        # Espalha os pontos ao redor do centro da bacia (simulação de grid)
+        # Para um mapa real, use as coordenadas das cidades.
+        lat_offset = lat + (i % 3 - 1) * 0.1
+        lon_offset = lon + (i // 3 - 1) * 0.1
+        lats.append(lat_offset)
+        lons.append(lon_offset)
+        chuva = dia.get("media_mm", 0)
+        data = dia.get("date", "N/A")
+        cor = "green" if chuva < 5 else ("yellow" if chuva < 20 else "red")
         cores.append(cor)
-    
-    # Traçado do rio (carregar se existir)
-    import json
-    from pathlib import Path
-    caminho_rio = Path("data/trajeto_rio_tubarao.json")
-    tracos_rio = []
-    if caminho_rio.exists():
-        try:
-            dados_rio = json.loads(caminho_rio.read_text(encoding="utf-8"))
-            for segmento in dados_rio.get("segmentos", []):
-                if len(segmento) >= 2:
-                    lat_seg = [p[0] for p in segmento]
-                    lon_seg = [p[1] for p in segmento]
-                    tracos_rio.append((lat_seg, lon_seg))
-        except Exception:
-            pass
-    
+        textos.append(f"{data}: {chuva:.1f} mm (média de 3 fontes)")
+
     fig = go.Figure(go.Scattermap(
         lat=lats,
         lon=lons,
         mode="markers",
-        marker=dict(size=15, color=cores, opacity=0.9),
+        marker=dict(size=20, color=cores),
         text=textos,
         hoverinfo="text",
     ))
-    
-    # Adicionar o traçado do rio (linhas tracejadas)
-    for lat_seg, lon_seg in tracos_rio:
-        fig.add_trace(go.Scattermap(
-            lat=lat_seg,
-            lon=lon_seg,
-            mode="lines",
-            line=dict(width=3, color="#0284c7"),
-            hoverinfo="skip",
-            showlegend=False,
-        ))
-    
+
     fig.update_layout(
+        title=f"Previsão do Tempo — Bacia do Rio Tubarão (Data: {data_consulta})",
         map=dict(
             style="open-street-map",
-            center=dict(lat=-28.45, lon=-49.10),
-            zoom=9,
+            center=dict(lat=lat, lon=lon),
+            zoom=8,
         ),
         height=500,
-        margin=dict(l=0, r=0, t=0, b=0),
-        showlegend=False,
+        margin=dict(l=0, r=0, t=40, b=0),
     )
-    
+
     return fig
+
+def ler_previsao_v11c():
+    """Lê a última previsão do v11c (modo sombra) do log."""
+    import pandas as pd
+    from pathlib import Path
+    log_path = Path.home() / "projetos" / "arcturus_coleta" / "data" / "log_previsoes_sombra.csv"
+    if not log_path.exists():
+        return None
+    try:
+        df = pd.read_csv(log_path)
+        if len(df) == 0:
+            return None
+        ultima = df.iloc[-1]
+        return {
+            "data_previsao": ultima.get("data_previsao", ""),
+            "cota_hoje": float(ultima.get("cota_hoje_cm", 0)),
+            "delta": float(ultima.get("delta_previsto_cm", 0)),
+            "cota_amanha": float(ultima.get("cota_prevista_amanha_cm", 0)),
+        }
+    except Exception as e:
+        print(f"[AVISO] Erro ao ler log do v11c: {e}")
+        return None
 
 app.layout = dbc.Container([
     # --- BARRA LATERAL (SIDEBAR) ---
@@ -488,9 +525,43 @@ app.layout = dbc.Container([
         ], width=2, style={"backgroundColor": "#0a0a0a", "padding": "20px", "minHeight": "100vh"}),
         
         dbc.Col([
+            # === SPRINT 1: BARRA EXECUTIVA DE KPIs OPERACIONAIS (3 SEGUNDOS) ===
+            dbc.Row([
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.Small("🌊 COTA ATUAL (ERAB)", className="text-muted fw-bold d-block"),
+                    html.H3(id="kpi-cota-val", children="-- cm", className="text-info mb-0 mt-1"),
+                    html.Small(id="kpi-cota-sub", children="Δ 24h: --", className="text-light"),
+                ]), className="border-info bg-dark shadow-sm h-100"), xs=12, md=2),
+
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.Small("📈 TENDÊNCIA / VELOCIDADE", className="text-muted fw-bold d-block"),
+                    html.H5(id="kpi-tend-val", children="--", className="mb-1 mt-2 fw-bold"),
+                    html.Small(id="kpi-tend-sub", children="az: --", className="text-muted"),
+                ]), className="border-secondary bg-dark shadow-sm h-100"), xs=12, md=3),
+
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.Small("🌧️ CHUVA MÁX (24H)", className="text-muted fw-bold d-block"),
+                    html.H3(id="kpi-chuva-val", children="-- mm", className="text-primary mb-0 mt-1"),
+                    html.Small(id="kpi-chuva-sub", children="Estação: --", className="text-light"),
+                ]), className="border-primary bg-dark shadow-sm h-100"), xs=12, md=3),
+
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.Small("🚦 ESTADO OPERACIONAL", className="text-muted fw-bold d-block"),
+                    html.H3(id="kpi-estado-val", children="--", className="mb-0 mt-1 fw-bold"),
+                    html.Small(id="kpi-estado-sub", children="DCSC: --", className="text-light"),
+                ]), className="border-warning bg-dark shadow-sm h-100"), xs=12, md=2),
+
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.Small("🕒 ÚLTIMA LEITURA", className="text-muted fw-bold d-block"),
+                    html.H4(id="kpi-ts-val", children="--", className="text-white mb-0 mt-1"),
+                    html.Small("Ciclo automático 15m", className="text-muted"),
+                ]), className="border-secondary bg-dark shadow-sm h-100"), xs=12, md=2),
+            ], className="g-2 mb-3 mt-2"),
+            dcc.Store(id="store-escala-cota", data="local"),
             html.Hr(),
             dbc.Row([
                 dbc.Col(criar_card("Cota Atual (ERAB)", "cota-val", "cota-sub"), width=3),
+                dbc.Col(criar_card("Previsão v11c (D+1)", "v11c-cota-amanha", "v11c-delta"), width=3),
                 dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
                 dbc.Col(
                     html.Div([
@@ -571,11 +642,17 @@ app.layout = dbc.Container([
     html.H3("🌤️ Previsão do Tempo — Bacia do Rio Tubarão", className="text-center mt-4"),
     html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
     dbc.Row([
-        dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=gerar_mapa_previsao_tempo()), width=12),
+        dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima()), width=12),
     ]),
     html.Hr(),
 dbc.Row([
-                dbc.Col(dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota()), width=12),
+                dbc.Col([
+                    dbc.ButtonGroup([
+                        dbc.Button("🔍 Escala Local (Zoom)", id="btn-escala-local", color="info", size="sm"),
+                        dbc.Button("🌐 Escala Completa (0–1000 cm)", id="btn-escala-completa", color="outline-secondary", size="sm"),
+                    ], className="mb-2"),
+                    dcc.Graph(id="grafico-cota", figure=gerar_grafico_cota("local")),
+                ], width=12),
                 # === LEGENDA DAS CORES (Defesa Civil) ===
                 dbc.Row([
                     dbc.Col(html.Div([
@@ -723,18 +800,35 @@ def atualizar_painel(n_clicks, n_intervals):
     score = calcular_score_operacional()
     if score >= 75:
         score_color = "text-success"
-        score_status = f"🟢 {score}/100 (Saudável)"
+        score_status, cor, score = get_status_unificado()
     elif score >= 50:
         score_color = "text-warning"
-        score_status = f"🟡 {score}/100 (Atenção)"
+        score_status, cor, score = get_status_unificado()
     elif score >= 25:
         score_color = "text-warning"
-        score_status = f"🟠 {score}/100 (Degradado)"
+        score_status, cor, score = get_status_unificado()
     else:
         score_color = "text-danger"
-        score_status = f"🔴 {score}/100 (Crítico)"
+        score_status, cor, score = get_status_unificado()
 
     return cota_val, cota_sub, chuva_val, chuva_sub, prob_val, prob_sub, regime_val, regime_class, regime_sub, msg, fig, health_status, health_status, health_color, score_status, score_status, score_color, ler_ultimo_alerta()
+
+
+
+
+@app.callback(
+    Output("v11c-cota-amanha", "children"),
+    Output("v11c-delta", "children"),
+    Input("intervalo-atualizacao", "n_intervals"),
+)
+def update_v11c_card(n):
+    prev = ler_previsao_v11c()
+    if prev is None:
+        return "-- cm", "Sem previsão"
+    cota_amanha = prev["cota_amanha"]
+    delta = prev["delta"]
+    # SEMPRE 🟡 SOMBRA (não é confiança ALTA)
+    return f"{cota_amanha:.1f} cm 🟡", f"SOMBRA | Delta: {delta:+.1f} cm (MAE ±22 cm)"
 
 
 if __name__ == "__main__":
@@ -754,3 +848,63 @@ if __name__ == "__main__":
 
     # Inicia o servidor Dash (use_reloader=False impede que ele abra duas abas e quebre a thread)
     app.run(debug=False, use_reloader=False, host="0.0.0.0", port=8050)
+
+
+@app.callback(
+    [Output("store-escala-cota", "data"),
+     Output("btn-escala-local", "color"),
+     Output("btn-escala-completa", "color")],
+    [Input("btn-escala-local", "n_clicks"),
+     Input("btn-escala-completa", "n_clicks")],
+    prevent_initial_call=True,
+)
+def alternar_escala_cota(n_local, n_comp):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        return "local", "info", "outline-secondary"
+    btn_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    if btn_id == "btn-escala-completa":
+        return "completa", "outline-info", "secondary"
+    return "local", "info", "outline-secondary"
+
+
+@app.callback(
+    [Output("kpi-cota-val", "children"),
+     Output("kpi-cota-sub", "children"),
+     Output("kpi-tend-val", "children"),
+     Output("kpi-tend-val", "style"),
+     Output("kpi-tend-sub", "children"),
+     Output("kpi-chuva-val", "children"),
+     Output("kpi-chuva-sub", "children"),
+     Output("kpi-estado-val", "children"),
+     Output("kpi-estado-val", "style"),
+     Output("kpi-estado-sub", "children"),
+     Output("kpi-ts-val", "children"),
+     Output("grafico-cota", "figure", allow_duplicate=True)],
+    [Input("btn-atualizar", "n_clicks"),
+     Input("intervalo-atualizacao", "n_intervals"),
+     Input("store-escala-cota", "data")],
+    prevent_initial_call="initial_duplicate",
+)
+def atualizar_kpis_e_zoom(n_clicks, n_intervals, escala_modo):
+    k = obter_kpis_operacionais()
+    cota_txt = f"{k['cota_cm']:.1f} cm" if k["cota_cm"] is not None else "-- cm"
+    delta_txt = f"Δ 24h: {k['delta_24h_cm']:+.1f} cm" if k["delta_24h_cm"] is not None else "Δ 24h: --"
+    tend_txt = k["tendencia_label"]
+    tend_style = {"color": k["tendencia_cor"]}
+    az_txt = f"Aceleração az: {k['az_cm_h2']:+.2f} cm/h²"
+    chuva_txt = f"{k['chuva_max_24h_mm']:.1f} mm"
+    est_txt = f"{k['estacao_dominante']} (6h: {k['chuva_6h_mm']:.1f} mm)"
+    estado_txt = k["estado_operacional"]
+    estado_style = {"color": k["estado_cor"]}
+    idade = f"{k['dcsc_idade_min']} min" if k["dcsc_idade_min"] is not None else "N/D"
+    dcsc_txt = f"DCSC {k['dcsc_validas']} • {idade}"
+    ts_txt = k["ts_leitura"]
+    fig = gerar_grafico_cota(escala_modo or "local")
+    return (
+        cota_txt, delta_txt,
+        tend_txt, tend_style, az_txt,
+        chuva_txt, est_txt,
+        estado_txt, estado_style, dcsc_txt,
+        ts_txt, fig
+    )
