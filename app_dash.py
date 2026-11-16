@@ -452,46 +452,59 @@ def get_mapa_clima():
 
     fig = go.Figure()
 
-    # 1. Traçado do Rio Tubarão (cabeceira na Serra Geral até o encontro com a Lagoa em Laguna)
-    if trajeto_path.exists():
+    # 1. Traçado completo dos 3 Braços da Bacia (Rio Tubarão, Rio Braço do Norte e Rio Capivari)
+    traj_path = base_dir / "data" / "trajeto_rio_tubarao.json"
+    if traj_path.exists():
         try:
-            traj = json.loads(trajeto_path.read_text(encoding="utf-8"))
-            rio_lats, rio_lons = [], []
-            for seg in traj.get("segmentos", []):
-                if not seg:
-                    continue
-                for pt in seg:
-                    if len(pt) >= 2:
-                        rio_lats.append(pt[0])
-                        rio_lons.append(pt[1])
-                rio_lats.append(None)
-                rio_lons.append(None)
-            if rio_lats:
+            traj = json.loads(traj_path.read_text(encoding="utf-8"))
+
+            def _extrair_lat_lon(lista_segs):
+                lats_r, lons_r = [], []
+                for seg in lista_segs or []:
+                    if not seg:
+                        continue
+                    for pt in seg:
+                        if len(pt) >= 2:
+                            lats_r.append(pt[0])
+                            lons_r.append(pt[1])
+                    lats_r.append(None)
+                    lons_r.append(None)
+                return lats_r, lons_r
+
+            # Braço 1: Rio Tubarão (Ramo Oeste: Lauro Müller -> Orleans -> Pedras Grandes -> Tubarão -> Lagoa)
+            r_lats, r_lons = _extrair_lat_lon(traj.get("segmentos", []))
+            if r_lats:
                 fig.add_trace(go.Scattermap(
-                    lat=rio_lats,
-                    lon=rio_lons,
+                    lat=r_lats,
+                    lon=r_lons,
                     mode="lines",
                     line=dict(width=3.8, color="#0057E7"),
                     name="Rio Tubarão (Ramo Oeste → Lagoa)",
                     hoverinfo="name",
                 ))
-            afl_lats, afl_lons = [], []
-            for seg in traj.get("afluentes", []):
-                if not seg:
-                    continue
-                for pt in seg:
-                    if len(pt) >= 2:
-                        afl_lats.append(pt[0])
-                        afl_lons.append(pt[1])
-                afl_lats.append(None)
-                afl_lons.append(None)
-            if afl_lats:
+
+            # Braço 2: Rio Braço do Norte (Ramo Norte: Anitápolis -> Braço do Norte -> São Ludgero -> Barra do Norte)
+            bn_segs = traj.get("braco_norte") or traj.get("afluentes") or []
+            bn_lats, bn_lons = _extrair_lat_lon(bn_segs)
+            if bn_lats:
                 fig.add_trace(go.Scattermap(
-                    lat=afl_lats,
-                    lon=afl_lons,
+                    lat=bn_lats,
+                    lon=bn_lons,
                     mode="lines",
-                    line=dict(width=2.2, color="#00B4D8"),
-                    name="Rio Braço do Norte / Afluentes (Ramo Norte)",
+                    line=dict(width=2.8, color="#00B4D8"),
+                    name="Rio Braço do Norte (Ramo Norte)",
+                    hoverinfo="name",
+                ))
+
+            # Braço 3: Rio Capivari (Ramo Leste: São Bonifácio -> São Martinho -> Armazém -> Gravatal -> Capivari)
+            cap_lats, cap_lons = _extrair_lat_lon(traj.get("capivari", []))
+            if cap_lats:
+                fig.add_trace(go.Scattermap(
+                    lat=cap_lats,
+                    lon=cap_lons,
+                    mode="lines",
+                    line=dict(width=2.8, color="#F59E0B"),
+                    name="Rio Capivari (Ramo Leste / São Martinho–Gravatal)",
                     hoverinfo="name",
                 ))
         except Exception:
@@ -662,7 +675,7 @@ def get_mapa_clima():
                                     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
                                 ],
                             }],
-                            "data[2].textfont.color": "#FFFFFF",
+                            "data[3].textfont.color": "#FFFFFF",
                         }],
                     ),
                     dict(
@@ -671,7 +684,7 @@ def get_mapa_clima():
                         args=[{
                             "map.style": "open-street-map",
                             "map.layers": [],
-                            "data[2].textfont.color": "#111111",
+                            "data[3].textfont.color": "#111111",
                         }],
                     ),
                 ],
