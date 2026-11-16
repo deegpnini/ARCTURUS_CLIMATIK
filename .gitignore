@@ -329,3 +329,6 @@ logs/*.jsonl
 
 # Backups temporarios
 *.bak_*
+
+# Rascunhos locais usados durante a reorganizacao
+scripts/local_tmp/

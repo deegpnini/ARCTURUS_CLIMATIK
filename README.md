@@ -11,11 +11,77 @@ O ARCTURUS não é um modelo. É uma plataforma de monitoramento hidrológico qu
 
 ---
 
-## Arquitetura
+## Arquitetura e Estrutura de Diretórios
 
+### Fluxo da operação
+
+O ciclo operacional coleta telemetria da Defesa Civil SC e dados meteorológicos,
+atualiza o banco e executa os componentes hidrológicos e de previsão. O v8 é
+executado no fluxo de produção; o v11c roda isolado em modo sombra. O dashboard
+e o boletim do Telegram apresentam os dados e resultados disponíveis. A
+configuração do ciclo não significa, por si só, que cada serviço esteja saudável
+em tempo real.
+
+### Estrutura versionada
+
+```text
+.
+├── app_dash.py                 # entrada do dashboard
+├── dashboard_correcoes.py     # funções de apoio importadas pelo dashboard
+├── run_cycle.sh                # orquestrador do ciclo operacional
+├── cron_motor.sh               # coleta/classificação usada pelo ciclo
+├── boletim_telegram.py         # montagem e envio do boletim
+├── boletim_cadencia.sh         # controle de cadência do boletim
+├── health_check.sh             # verificação operacional
+├── watchdog_arcturus.sh        # watchdog do ciclo
+├── backup_diario.sh            # backup agendado
+├── src/
+│   ├── coleta/                 # coletores e atualização de previsões
+│   ├── modelo/                 # modelos, inferência e modo sombra
+│   ├── relatorios/             # persistência e relatórios
+│   └── analise/                # análises do ciclo hidrológico
+├── scripts/
+│   ├── auditoria/              # auditorias e diagnósticos
+│   ├── coleta_hist/            # utilitários históricos de coleta
+│   ├── geo_utils/              # ferramentas geográficas
+│   ├── modelo_treino/          # avaliação, experimentos e treinamento
+│   ├── analise/                # análises auxiliares existentes
+│   └── simulacao/              # simulações
+├── tests/                      # testes automatizados
+├── docs/                       # documentação e registros técnicos
+└── data/                       # dados locais e artefatos operacionais
+```
+
+Os principais pontos de entrada e arquivos operacionais permanecem na raiz.
+Alguns módulos de apoio, como `dashboard_correcoes.py`, `ana_auth.py`,
+`model_runner.py`, `persistir_shadow.py` e `backfill_y_true.py`, também ficam
+ali por ainda serem importados ou chamados por esses pontos de entrada. Código
+reutilizável e componentes do pipeline ficam em `src/`; ferramentas de análise,
+auditoria, treinamento e utilitários ficam em `scripts/`. Conteúdo local
+temporário em `scripts/local_tmp/` é ignorado pelo Git e não faz parte da
+estrutura publicada.
+
+### Operação contínua configurada
+
+A crontab observada no WSL agenda o ciclo principal a cada 15 minutos. O
+`run_cycle.sh` atualiza a previsão quando necessário, coleta dados da Defesa
+Civil, executa o fluxo de produção e o modo sombra, e avalia o envio do boletim.
+Também estão configurados health check a cada 15 minutos, watchdog nos minutos
+7, 22, 37 e 52, coleta complementar de chuva a cada 6 horas e backup diário às
+03:00. Esses horários descrevem a configuração do agendador, não substituem a
+verificação dos logs nem confirmam que uma execução específica teve sucesso.
+
+Há ainda um pipeline diário de promoção/sombra configurado em outro diretório
+(`~/projetos/arcturus_coleta`); ele é externo a este repositório.
+
+### Histórico de eventos auditados
+
+Os resultados de eventos abaixo são análises históricas de um conjunto limitado
+de casos. Não descrevem a execução atual do ciclo nem devem ser interpretados
+como garantia operacional ou validação definitiva de um modelo.
 
 ---
-## Descoberta: Lag Chuva-Rio na Bacia do Tubarão (08/11/2026)
+## Histórico: análise do lag chuva-rio na Bacia do Tubarão (08/11/2026)
 
 Medimos o lag (tempo entre o pico da chuva na cabeceira e o pico da cota em Tubarão) para 5 eventos:
 
@@ -27,14 +93,22 @@ Medimos o lag (tempo entre o pico da chuva na cabeceira e o pico da cota em Tuba
 | **04/11 08:30** | **04/11 07:00** | **13.5** |
 | 07/11 21:30 | 07/11 12:00 | 16.0 |
 
-**Conclusão:** A chuva da cabeceira (Orleans, Lauro Müller, Braço do Norte) leva ~13-16h para fazer o rio atingir o pico em Tubarão. O modelo v10 (que usa o lag de 15h) está fisicamente correto. O v8 (que não usa o lag) está errado.
+**Leitura limitada da amostra:** Os cinco eventos mostram lags entre 13,5 e
+33,7 horas. A variação observada requer mais eventos antes de propor um lag
+fixo; esta amostra, isoladamente, não comprova que um modelo seja superior ou
+fisicamente correto em produção.
 
-**Próximo passo:** Acumular mais eventos (o El Niño está vindo) para refinar o lag e validar o modelo.
-O código do dashboard está versionado no repositório e roda localmente.
+**Próximo passo registrado à época:** acumular e analisar novos eventos para
+refinar essa hipótese.
 
 ---
 
-## Atualizações (14/11/2026)
+## Registro histórico de configuração e resultados (14/11/2026)
+
+Esta seção preserva um retrato documentado naquela data. Métricas, previsões e
+descrições de interface abaixo não são telemetria ao vivo nem confirmação do
+estado operacional atual; consulte a crontab e os logs para verificar a
+operação.
 
 ### 1. Cadência Adaptativa do Boletim (Telegram)
 O boletim agora envia mensagens **conforme o estado do rio**:
@@ -73,7 +147,7 @@ O **v11c** foi treinado com **2 anos de dados da ANA** (2024-2026) + **87 anos d
 
 ---
 
-## Atualizações (14/11/2026)
+## Registro histórico do modelo e do pipeline (14/11/2026)
 
 ### 1. v11c em Modo Sombra (LightGBM + Chuva Prevista)
 - **Modelo:** LightGBM (alvo = delta de cota D+1).
@@ -114,13 +188,13 @@ O **v11c** foi treinado com **2 anos de dados da ANA** (2024-2026) + **87 anos d
 - **Mapa interativo** com cores por risco de chuva.
 
 ### 6. Repositório
-- **Limpo** (`git status` vazio).
-- **README atualizado** com o estado atual.
-- **`requirements.txt` sincronizado** (pandas, numpy, psycopg2, lightgbm, playwright, etc.).
+Os itens sobre organização do repositório e dependências eram uma anotação
+daquele registro, não uma verificação do estado atual. O estado versionado atual
+deve ser conferido pelo Git e pelos testes automatizados.
 
 ---
 
-## O que falta (Próximos Passos)
+## Pendências registradas em 14/11/2026 (histórico)
 
 | Item | Prioridade | Status |
 |---|---|---|
@@ -133,4 +207,7 @@ O **v11c** foi treinado com **2 anos de dados da ANA** (2024-2026) + **87 anos d
 
 ---
 
-**O ARCTURUS está no ar, com o v8 em produção, o v11c em sombra, e o pipeline rodando todos os dias às 06:00.**
+O agendamento atual observado e os pontos de entrada da operação estão
+descritos em [Operação contínua configurada](#operação-contínua-configurada).
+Esta documentação não confirma o sucesso de uma execução em particular; para
+isso, consulte os health checks e logs operacionais.
