@@ -1,4 +1,10 @@
 from src.relatorios.dashboard_kpis import obter_kpis_operacionais
+from src.relatorios.cameras_dashboard import (
+    carregar_cameras_ativas,
+    buscar_camera_por_id,
+    renderizar_player_selecionado,
+    renderizar_grade_cameras,
+)
 import dash
 import json
 from pathlib import Path
@@ -32,7 +38,7 @@ FILE_REGIME = DATA_DIR / "regime_atual.json"
 FILE_HEALTH = DATA_DIR / "health_check.json"
 FILE_IMPACT_2019 = BASE / "resultados" / "impacto_2019.json"
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG], title="ARCTURUS CLIMATIK")
+app = dash.Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.CYBORG], title="ARCTURUS CLIMATIK")
 
 def ler_dados():
     cota_val = "-- cm"
@@ -703,6 +709,26 @@ def get_mapa_clima():
         height=560,
         margin=dict(l=0, r=0, t=42, b=0),
     )
+    # Camada de Câmeras Públicas ao Vivo (25 câmeras georreferenciadas)
+    cams_mapa = [c for c in carregar_cameras_ativas() if c.get("lat") and c.get("lon")]
+    if cams_mapa:
+        fig.add_trace(go.Scattermap(
+            lat=[c["lat"] for c in cams_mapa],
+            lon=[c["lon"] for c in cams_mapa],
+            mode="markers",
+            marker=dict(size=12, color="#A855F7", opacity=0.95),
+            name=f"📹 Câmeras Ao Vivo ({len(cams_mapa)})",
+            customdata=[c["id"] for c in cams_mapa],
+            text=[
+                f"📹 <b>{c['id'].upper()} — {c['municipio']}</b> ({c['canal']})<br>"
+                f"Região: {c['regiao_arcturus']} | Prioridade: {c['prioridade']}<br>"
+                f"{c.get('notas', '')}<br>"
+                f"<i>Clique no ponto roxo para abrir a transmissão ao vivo</i>"
+                for c in cams_mapa
+            ],
+            hoverinfo="text",
+        ))
+
     return fig
 
 def ler_previsao_v11c():
@@ -767,7 +793,7 @@ def serve_layout():
             html.Hr(),
             dbc.Nav([
                 dbc.NavLink("📊 A.C. Monitor", href="/", active="exact", className="text-white"),
-                dbc.NavLink("📷 A.C. Vision (Câmera ERAB)", href="https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico", target="_blank", className="text-white"),
+                dbc.NavLink("📹 A.C. Vision (25 Câmeras)", href="#secao-ac-vision", external_link=True, className="text-info fw-bold"),
                 dbc.Button(
                     "🗺️ A.C. Geo (Mapa 2019)",
                     id="btn-mapa-geo",
@@ -886,6 +912,28 @@ def serve_layout():
         html.P("Cores indicam a chuva prevista para hoje. Passe o mouse para ver os detalhes.", className="text-center text-muted small"),
         dbc.Row([
             dbc.Col(dcc.Graph(id="mapa-previsao-tempo", figure=get_mapa_clima(), config={"displayModeBar": False}), width=12),
+    dbc.Modal([
+        dbc.ModalHeader(dbc.ModalTitle("📹 Transmissão Ao Vivo — ARCTURUS Vision"), close_button=True),
+        dbc.ModalBody(id="conteudo-modal-camera"),
+    ], id="modal-camera-mapa", size="lg", is_open=False, centered=True),
+    dbc.Row([
+        dbc.Col([
+            html.Hr(className="my-4"),
+            html.Div([
+                html.H3("📹 A.C. Vision — Central de Monitoramento Visual (25 Câmeras 24h)", className="text-info"),
+                html.P("Clique em qualquer ponto roxo no mapa acima ou filtre por macrorregião abaixo:", className="text-muted small"),
+                dbc.ButtonGroup([
+                    dbc.Button("🌐 Todas (25)", id="btn-cam-todas", color="info", size="sm"),
+                    dbc.Button("🌊 Bacia do Tubarão (7)", id="btn-cam-bacia", color="outline-info", size="sm"),
+                    dbc.Button("🏖️ Sul SC (3)", id="btn-cam-sul", color="outline-warning", size="sm"),
+                    dbc.Button("⛰️ Serra SC (1)", id="btn-cam-serra", color="outline-success", size="sm"),
+                    dbc.Button("🌴 Litoral SC (13)", id="btn-cam-litoral", color="outline-primary", size="sm"),
+                    dbc.Button("🏞️ Vale/Norte (1)", id="btn-cam-outra", color="outline-secondary", size="sm"),
+                ], className="mb-3 flex-wrap"),
+                html.Div(id="grade-cameras-ao-vivo", children=renderizar_grade_cameras("TODAS")),
+            ], id="secao-ac-vision", className="mt-2 mb-4"),
+        ], width=12),
+    ]),
         ]),
         html.Hr(),
     dbc.Row([
@@ -1104,6 +1152,52 @@ def atualizar_painel(n_clicks, n_intervals):
 def update_v11c_card(n):
     k = obter_kpis_operacionais()
     return k["sombra_resumo"], k["sombra_detalhe"]
+
+@app.callback(
+    [Output("modal-camera-mapa", "is_open"),
+     Output("conteudo-modal-camera", "children")],
+    Input("mapa-previsao-tempo", "clickData"),
+    prevent_initial_call=True,
+)
+def abrir_modal_camera_mapa(click_data):
+    if not click_data or "points" not in click_data:
+        return dash.no_update, dash.no_update
+    for pt in click_data["points"]:
+        cid = pt.get("customdata")
+        if isinstance(cid, str) and cid.startswith("cam_"):
+            cam = buscar_camera_por_id(cid)
+            if cam:
+                return True, renderizar_player_selecionado(cam)
+    return dash.no_update, dash.no_update
+
+
+@app.callback(
+    Output("grade-cameras-ao-vivo", "children"),
+    [
+        Input("btn-cam-todas", "n_clicks"),
+        Input("btn-cam-bacia", "n_clicks"),
+        Input("btn-cam-sul", "n_clicks"),
+        Input("btn-cam-serra", "n_clicks"),
+        Input("btn-cam-litoral", "n_clicks"),
+        Input("btn-cam-outra", "n_clicks"),
+    ],
+    prevent_initial_call=True,
+)
+def filtrar_cameras_vision(n_todas, n_bacia, n_sul, n_serra, n_litoral, n_outra):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        return renderizar_grade_cameras("TODAS")
+    btn_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    mapa_filtro = {
+        "btn-cam-todas": "TODAS",
+        "btn-cam-bacia": "BACIA_TUBARAO",
+        "btn-cam-sul": "SUL_SC",
+        "btn-cam-serra": "SERRA_SC",
+        "btn-cam-litoral": "LITORAL_SC",
+        "btn-cam-outra": "VALE_ITAJAI_NORTE",
+    }
+    return renderizar_grade_cameras(mapa_filtro.get(btn_id, "TODAS"))
+
 
 if __name__ == "__main__":
     import threading
