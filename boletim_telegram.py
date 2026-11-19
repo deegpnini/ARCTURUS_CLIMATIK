@@ -470,7 +470,31 @@ def anexar_contexto_defesa_civil(texto_msg: str) -> str:
         pass
     return texto_msg
 
+
+def anexar_remanso_lagunar(texto_msg: str) -> str:
+    """Anexa aviso de remanso lagunar (Laguna) SOMENTE quando risco_remanso != NORMAL."""
+    try:
+        arq_mare = BASE / "data" / "contorno_jusante_laguna.json"
+        if not arq_mare.exists():
+            return texto_msg
+        dados_mare = json.loads(arq_mare.read_text(encoding="utf-8"))
+        atual = dados_mare.get("atual", {})
+        risco = atual.get("risco_remanso", "NORMAL")
+        if risco != "NORMAL":
+            mare_m = atual.get("mare_msl_m", 0.0)
+            comp_sul = atual.get("componente_sul_kmh", 0.0)
+            aviso = (
+                f"🌊 <b>Remanso Lagunar (Laguna — {risco}):</b> "
+                f"maré <code>{mare_m:+.2f} m</code>, vento sul <code>{comp_sul:.0f} km/h</code>. "
+                f"O rio pode demorar mais para escoar."
+            )
+            return texto_msg.rstrip() + "\n\n" + aviso
+    except Exception:
+        pass
+    return texto_msg
+
 msg = anexar_contexto_defesa_civil(msg)
+msg = anexar_remanso_lagunar(msg)
 
 if DRY_RUN:
     print("=== DRY-RUN: MENSAGEM QUE SERÁ ENVIADA AO TELEGRAM ===")

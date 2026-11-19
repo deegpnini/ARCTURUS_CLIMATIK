@@ -33,6 +33,9 @@ bash "$BASE_DIR/cron_motor.sh" &&
 # 3. Modo Sombra v11c (LightGBM + Chuva Tripla — isolado de produção)
 "$PYTHON" "$BASE_DIR/src/modelo/rodar_sombra_v11c.py" >> "$BASE_DIR/logs/sombra_v11c.log" 2>&1 || true
 
+# 3.2 Contorno de jusante: maré e vento costeiro em Laguna (remanso lagunar)
+"$PYTHON" "$BASE_DIR/src/coleta/coletar_mare_laguna.py" >> "$BASE_DIR/logs/mare_laguna.log" 2>&1 || true
+
 # 3.5 Validação contextual com comunicados oficiais (Defesa Civil SC / imprensa regional)
 "$PYTHON" "$BASE_DIR/validar_contexto_noticias.py" >> "$BASE_DIR/logs/contexto_noticias.log" 2>&1 || true
 
