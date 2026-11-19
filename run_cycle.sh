@@ -33,6 +33,9 @@ bash "$BASE_DIR/cron_motor.sh" &&
 # 3. Modo Sombra v11c (LightGBM + Chuva Tripla — isolado de produção)
 "$PYTHON" "$BASE_DIR/src/modelo/rodar_sombra_v11c.py" >> "$BASE_DIR/logs/sombra_v11c.log" 2>&1 || true
 
+# 3.5 Validação contextual com comunicados oficiais (Defesa Civil SC / imprensa regional)
+"$PYTHON" "$BASE_DIR/validar_contexto_noticias.py" >> "$BASE_DIR/logs/contexto_noticias.log" 2>&1 || true
+
 # 4. Avaliação de cadência e envio do boletim (somente após coleta + banco + modelos concluídos)
 if bash "$BASE_DIR/boletim_cadencia.sh" >> "$BASE_DIR/logs/boletim.log" 2>&1; then
     "$PYTHON" "$BASE_DIR/boletim_telegram.py" >> "$BASE_DIR/logs/boletim.log" 2>&1 || true

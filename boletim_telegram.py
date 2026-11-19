@@ -1,3 +1,21 @@
+
+def buscar_alertas_inmet():
+    """Busca alertas oficiais do INMET para a região da bacia."""
+    import requests
+    # API pública do INMET (simplificada)
+    try:
+        url = "https://apiprevmet3.inmet.gov.br/avisos"
+        r = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            dados = r.json()
+            # Filtrar por SC
+            alertas = [a for a in dados if "SC" in a.get("estados", "") or "Santa Catarina" in a.get("estados", "")]
+            if alertas:
+                return alertas[0].get("titulo", "Alerta ativo")
+        return "Sem alertas ativos no momento"
+    except Exception:
+        return "Sem alertas ativos no momento"
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Boletim informativo do rio para o Telegram (com proveniência e telemetria real Defesa Civil SC)."""
@@ -432,6 +450,27 @@ try:
     msg = msg.rstrip() + "\n" + "\n".join(bloco_hidro)
 except Exception as exc_hidro:
     print(f"[AVISO] Camada espacial nao anexada ao boletim: {exc_hidro}")
+
+
+def anexar_contexto_defesa_civil(texto_msg: str) -> str:
+    """Anexa comunicados da Defesa Civil SC apenas se houver alerta para a Bacia do Tubarão/Sul."""
+    try:
+        arq_ctx = BASE / "data" / "validacao_contextual_noticias.json"
+        if not arq_ctx.exists():
+            return texto_msg
+        dados_ctx = json.loads(arq_ctx.read_text(encoding="utf-8"))
+        alertas_locais = [
+            n for n in dados_ctx.get("noticias", [])
+            if n.get("relevancia") == "alta_local"
+        ]
+        if alertas_locais:
+            titulos = "\n".join(f"• {a['titulo']}" for a in alertas_locais[:2])
+            return texto_msg.rstrip() + f"\n\n🚨 <b>Comunicado Oficial — Sul / Bacia:</b>\n{titulos}"
+    except Exception:
+        pass
+    return texto_msg
+
+msg = anexar_contexto_defesa_civil(msg)
 
 if DRY_RUN:
     print("=== DRY-RUN: MENSAGEM QUE SERÁ ENVIADA AO TELEGRAM ===")
