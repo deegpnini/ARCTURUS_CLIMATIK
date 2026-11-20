@@ -920,15 +920,16 @@ def serve_layout():
         dbc.Col([
             html.Hr(className="my-4"),
             html.Div([
-                html.H3("📹 A.C. Vision — Central de Monitoramento Visual (25 Câmeras 24h)", className="text-info"),
+                html.H3(f"📹 A.C. Vision — Central Estadual de Monitoramento Visual ({len(carregar_cameras_ativas())} Câmeras 24h)", className="text-info"),
                 html.P("Clique em qualquer ponto roxo no mapa acima ou filtre por macrorregião abaixo:", className="text-muted small"),
                 dbc.ButtonGroup([
-                    dbc.Button("🌐 Todas (25)", id="btn-cam-todas", color="info", size="sm"),
-                    dbc.Button("🌊 Bacia do Tubarão (7)", id="btn-cam-bacia", color="outline-info", size="sm"),
-                    dbc.Button("🏖️ Sul SC (3)", id="btn-cam-sul", color="outline-warning", size="sm"),
-                    dbc.Button("⛰️ Serra SC (1)", id="btn-cam-serra", color="outline-success", size="sm"),
-                    dbc.Button("🌴 Litoral SC (13)", id="btn-cam-litoral", color="outline-primary", size="sm"),
-                    dbc.Button("🏞️ Vale/Norte (1)", id="btn-cam-outra", color="outline-secondary", size="sm"),
+                    dbc.Button(f"🌐 Todas ({len(carregar_cameras_ativas())})", id="btn-cam-todas", color="info", size="sm"),
+                    dbc.Button(f"🌊 Bacia do Tubarão ({sum(1 for c in carregar_cameras_ativas() if c.get('regiao_arcturus')=='BACIA_TUBARAO')})", id="btn-cam-bacia", color="outline-info", size="sm"),
+                    dbc.Button(f"🏖️ Sul SC ({sum(1 for c in carregar_cameras_ativas() if c.get('regiao_arcturus')=='SUL_SC')})", id="btn-cam-sul", color="outline-warning", size="sm"),
+                    dbc.Button(f"⛰️ Serra SC ({sum(1 for c in carregar_cameras_ativas() if c.get('regiao_arcturus')=='SERRA_SC')})", id="btn-cam-serra", color="outline-success", size="sm"),
+                    dbc.Button(f"🌴 Litoral SC ({sum(1 for c in carregar_cameras_ativas() if c.get('regiao_arcturus')=='LITORAL_SC')})", id="btn-cam-litoral", color="outline-primary", size="sm"),
+                    dbc.Button(f"🏞️ Vale/Norte ({sum(1 for c in carregar_cameras_ativas() if c.get('regiao_arcturus')=='VALE_ITAJAI_NORTE')})", id="btn-cam-outra", color="outline-secondary", size="sm"),
+                    dbc.Button(f"🌾 Oeste SC ({sum(1 for c in carregar_cameras_ativas() if c.get('regiao_arcturus')=='OESTE_SC')})", id="btn-cam-oeste", color="outline-light", size="sm"),
                 ], className="mb-3 flex-wrap"),
                 html.Div(id="grade-cameras-ao-vivo", children=renderizar_grade_cameras("TODAS")),
             ], id="secao-ac-vision", className="mt-2 mb-4"),
@@ -1180,10 +1181,11 @@ def abrir_modal_camera_mapa(click_data):
         Input("btn-cam-serra", "n_clicks"),
         Input("btn-cam-litoral", "n_clicks"),
         Input("btn-cam-outra", "n_clicks"),
+        Input("btn-cam-oeste", "n_clicks"),
     ],
     prevent_initial_call=True,
 )
-def filtrar_cameras_vision(n_todas, n_bacia, n_sul, n_serra, n_litoral, n_outra):
+def filtrar_cameras_vision(n_todas, n_bacia, n_sul, n_serra, n_litoral, n_outra, n_oeste):
     ctx = dash.callback_context
     if not ctx.triggered:
         return renderizar_grade_cameras("TODAS")
@@ -1195,6 +1197,7 @@ def filtrar_cameras_vision(n_todas, n_bacia, n_sul, n_serra, n_litoral, n_outra)
         "btn-cam-serra": "SERRA_SC",
         "btn-cam-litoral": "LITORAL_SC",
         "btn-cam-outra": "VALE_ITAJAI_NORTE",
+        "btn-cam-oeste": "OESTE_SC",
     }
     return renderizar_grade_cameras(mapa_filtro.get(btn_id, "TODAS"))
 
