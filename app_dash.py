@@ -920,6 +920,8 @@ def serve_layout():
         dbc.Col([
             html.Hr(className="my-4"),
             html.Div([
+
+
                 html.H3(f"📹 A.C. Vision — Central Estadual de Monitoramento Visual ({len(carregar_cameras_ativas())} Câmeras 24h)", className="text-info"),
                 html.P("Clique em qualquer ponto roxo no mapa acima ou filtre por macrorregião abaixo:", className="text-muted small"),
                 dbc.ButtonGroup([
@@ -971,7 +973,9 @@ def serve_layout():
                 ]),
                 html.Div(
                     [
-                        html.H3("Mapa de Inundação — Tubarão, Maio/2019"),
+                        html.H3(
+# [Câmeras movidas para baixo do gráfico]
+"Mapa de Inundação — Tubarão, Maio/2019"),
                         html.Img(
                             src="/assets/mapa_inundacao_tubarao_2019_satelite.png",
                             alt="Mapa de inundação de Tubarão em maio de 2019",
