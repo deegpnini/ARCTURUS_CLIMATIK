@@ -108,6 +108,14 @@ try:
     coleta_ok, falha_coleta = estado_coleta_defesacivil(status_coleta)
     if not coleta_ok:
         dc_status = falha_coleta
+    # Se chuva_defesacivil_realtime.json existe e e recente (< 90 min), prioriza o dado valido
+    if dc_file.exists():
+        _dc_tmp = json.loads(dc_file.read_text(encoding="utf-8"))
+        _ts_dc = _dc_tmp.get("timestamp_coleta")
+        if _ts_dc and (_dc_tmp.get("total_estacoes") or 0) > 0:
+            _idade_min = (datetime.now() - datetime.fromisoformat(_ts_dc)).total_seconds() / 60.0
+            if 0 <= _idade_min <= 90:
+                coleta_ok = True
 except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
     print(f"[AVISO] Status da coleta Defesa Civil inválido: {exc}")
     coleta_ok = False
