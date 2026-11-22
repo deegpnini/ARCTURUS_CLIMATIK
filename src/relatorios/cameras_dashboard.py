@@ -19,8 +19,14 @@ def carregar_cameras_ativas():
         return []
     try:
         dados = json.loads(p.read_text(encoding="utf-8"))
-        ativas = [c for c in dados if c.get("status") == "ATIVA"]
-        return sorted(ativas, key=lambda x: (x.get("prioridade", 9), x.get("id", "")))
+        if isinstance(dados, dict):
+            lista = dados.get("cameras", [])
+        elif isinstance(dados, list):
+            lista = dados
+        else:
+            return []
+        ativas = [c for c in lista if isinstance(c, dict) and c.get("status") == "ATIVA"]
+        return sorted(ativas, key=lambda x: (int(x.get("prioridade", 9)), 0 if x.get("id") == "cam_000" else 1, x.get("id", "")))
     except Exception:
         return []
 
@@ -34,6 +40,30 @@ def buscar_camera_por_id(cam_id: str):
             return c
     return None
 
+def _is_web_oficial(cam: dict) -> bool:
+    return cam.get("fonte") == "web_oficial" or bool(cam.get("url_web"))
+
+def _painel_web_oficial(cam: dict, altura: str = "210px"):
+    url_web = cam.get("url_web") or "https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico"
+    return html.Div(
+        [
+            html.Div("🌊 MONITORAMENTO OFICIAL — RÉGUA ERAB (RIO TUBARÃO)", className="text-info fw-bold small mb-2"),
+            html.P(
+                "Transmissão e telemetria oficial da calha principal hospedadas no portal da Tubarão Saneamento.",
+                className="text-light small mb-3",
+            ),
+            html.A(
+                "📷 Abrir Câmera & Régua Ao Vivo (Portal Oficial)",
+                href=url_web,
+                target="_blank",
+                rel="noopener noreferrer",
+                className="btn btn-info btn-sm fw-bold w-100",
+            ),
+        ],
+        className="p-3 bg-black rounded border border-info mb-2",
+        style={"minHeight": altura, "display": "flex", "flexDirection": "column", "justifyContent": "center"},
+    )
+
 def renderizar_player_selecionado(cam: dict | None = None):
     if not cam:
         cams = carregar_cameras_ativas()
@@ -41,10 +71,23 @@ def renderizar_player_selecionado(cam: dict | None = None):
     if not cam:
         return html.Div()
 
-    vid = extrair_video_id(cam.get("url_youtube", ""))
+    eh_web = _is_web_oficial(cam)
+    vid = "" if eh_web else extrair_video_id(cam.get("url_youtube", ""))
     reg = cam.get("regiao_arcturus", "BACIA_TUBARAO")
     reg_nome, reg_cor = REGIOES_LABEL.get(reg, (reg, "info"))
-    url = cam.get("url_youtube", "#")
+    url = cam.get("url_web") if eh_web else cam.get("url_youtube", "#")
+    texto_botao = "🔗 Abrir portal oficial da Tubarão Saneamento" if eh_web else "🔗 Abrir transmissão em tela cheia no YouTube"
+
+    if eh_web:
+        media_component = _painel_web_oficial(cam, altura="260px")
+    elif vid:
+        media_component = html.Iframe(
+            src=f"https://www.youtube.com/embed/{vid}?autoplay=1&mute=1&rel=0",
+            style={"width": "100%", "height": "300px", "border": "1px solid #A855F7", "borderRadius": "8px"},
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+        )
+    else:
+        media_component = html.Div("Stream indisponível", className="text-muted")
 
     return dbc.Card(
         dbc.CardBody([
@@ -59,19 +102,14 @@ def renderizar_player_selecionado(cam: dict | None = None):
                     html.P(cam.get("titulo_stream", ""), className="text-white small mb-1"),
                     html.P(cam.get("notas", ""), className="text-muted small mb-2"),
                     html.A(
-                        "🔗 Abrir transmissão em tela cheia no YouTube",
+                        texto_botao,
                         href=url,
                         target="_blank",
+                        rel="noopener noreferrer",
                         className="btn btn-sm btn-outline-info",
                     ),
                 ], xs=12, lg=5, className="mb-3 mb-lg-0 d-flex flex-column justify-content-center"),
-                dbc.Col([
-                    html.Iframe(
-                        src=f"https://www.youtube.com/embed/{vid}?autoplay=1&mute=1&rel=0",
-                        style={"width": "100%", "height": "300px", "border": "1px solid #A855F7", "borderRadius": "8px"},
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-                    ) if vid else html.Div("Stream indisponível", className="text-muted"),
-                ], xs=12, lg=7),
+                dbc.Col([media_component], xs=12, lg=7),
             ]),
         ]),
         className="bg-dark border-info shadow mt-3 mb-3",
@@ -87,14 +125,18 @@ def renderizar_grade_cameras(filtro_regiao: str = "TODAS"):
 
     cards = []
     for c in cams:
-        vid = extrair_video_id(c.get("url_youtube", ""))
+        eh_web = _is_web_oficial(c)
+        vid = "" if eh_web else extrair_video_id(c.get("url_youtube", ""))
         reg = c.get("regiao_arcturus", "BACIA_TUBARAO")
         reg_nome, reg_cor = REGIOES_LABEL.get(reg, (reg, "secondary"))
         prio = c.get("prioridade", 4)
-        url = c.get("url_youtube", "#")
+        url = c.get("url_web") if eh_web else c.get("url_youtube", "#")
+        texto_botao = "🔗 Abrir portal oficial da Tubarão Saneamento" if eh_web else "🔗 Abrir em tela cheia no YouTube"
 
-        player_box = (
-            html.Div(
+        if eh_web:
+            player_box = _painel_web_oficial(c, altura="210px")
+        elif vid:
+            player_box = html.Div(
                 html.Iframe(
                     src=f"https://www.youtube.com/embed/{vid}?autoplay=0&mute=1&rel=0",
                     style={"width": "100%", "height": "210px", "border": "0", "borderRadius": "6px"},
@@ -102,29 +144,29 @@ def renderizar_grade_cameras(filtro_regiao: str = "TODAS"):
                 ),
                 className="mb-2",
             )
-            if vid
-            else html.Div("Stream indisponível", className="text-muted small mb-2")
-        )
+        else:
+            player_box = html.Div("Stream indisponível", className="text-muted small mb-2")
 
         card = dbc.Col(
             dbc.Card(
                 dbc.CardBody([
                     html.Div([
-                        dbc.Badge(f"{c.get('id', '').upper()} • P{prio}", color="dark", className="me-1 border border-secondary"),
+                        dbc.Badge(f"{c.get('id', '').upper()} • P{prio}", color="dark", className="me-1 border border-info" if eh_web else "me-1 border border-secondary"),
                         dbc.Badge(reg_nome, color=reg_cor, className="me-1"),
-                        dbc.Badge("● AO VIVO", color="danger", className="float-end"),
+                        dbc.Badge("● OFICIAL" if eh_web else "● AO VIVO", color="info" if eh_web else "danger", className="float-end"),
                     ], className="mb-2"),
                     html.H6(f"{c.get('municipio', '')} — {c.get('canal', '')}", className="text-white fw-bold mb-1"),
                     player_box,
                     html.P(c.get("notas", ""), className="text-muted small mb-2", style={"minHeight": "38px"}),
                     html.A(
-                        "🔗 Abrir em tela cheia no YouTube",
+                        texto_botao,
                         href=url,
                         target="_blank",
-                        className="btn btn-sm btn-outline-info w-100",
+                        rel="noopener noreferrer",
+                        className="btn btn-sm btn-info fw-bold w-100" if eh_web else "btn btn-sm btn-outline-info w-100",
                     ),
                 ]),
-                className="bg-dark border-secondary shadow-sm h-100",
+                className="bg-dark border-info shadow h-100" if eh_web else "bg-dark border-secondary shadow-sm h-100",
             ),
             xs=12, md=6, lg=4, className="mb-3",
         )

@@ -1,10 +1,27 @@
 {
   "cameras": [
     {
+      "id": "cam_000",
+      "fonte": "web_oficial",
+      "canal": "Tubarão Saneamento (Oficial)",
+      "titulo_stream": "Câmera Ao Vivo ERAB — Régua Oficial do Rio Tubarão (Tubarão Saneamento)",
+      "url_youtube": "",
+      "url_web": "https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico",
+      "municipio": "Tubarão",
+      "regiao_arcturus": "BACIA_TUBARAO",
+      "tipo": "rio",
+      "status": "ATIVA",
+      "validado_em": "2026-11-22T11:52:28-03:00",
+      "prioridade": 0,
+      "lat": -28.4785,
+      "lon": -49.0068,
+      "notas": "Câmera oficial ao vivo da régua telemétrica ERAB no site da Tubarão Saneamento."
+    },
+    {
       "id": "cam_001",
       "fonte": "youtube",
       "canal": "Se-Connect",
-      "titulo_stream": "AO VIVO | TUBARÃO SC | IMAGENS AO VIVO 24H | SE-CONNECT INTERNET",
+      "titulo_stream": "AO VIVO | TUBARÃO SC 🇧🇷 | IMAGENS AO VIVO 24H | SANTA CATARINA | SE-CONNECT INTERNET 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=JPaidGpj90U",
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
@@ -20,7 +37,7 @@
       "id": "cam_017",
       "fonte": "youtube",
       "canal": "Se-Connect",
-      "titulo_stream": "AO VIVO | TRANSITO BR101 – LAGUNA SC | SE-CONNECT AGORA LAGUNA",
+      "titulo_stream": "AO VIVO | TRANSITO BR101 – LAGUNA SC 🇧🇷 | IMAGENS AO VIVO 24H | SE-CONNECT AGORA LAGUNA 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=ISZoq3J9IEE",
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
@@ -36,7 +53,7 @@
       "id": "cam_018",
       "fonte": "youtube",
       "canal": "Se-Connect",
-      "titulo_stream": "AO VIVO | BR101 SENTIDO SUL/NORTE – TUBARAO PARA LAGUNA SC",
+      "titulo_stream": "AO VIVO | BR101 SENTIDO SUL/NORTE – TUBARAO PARA LAGUNA SC | SE-CONNECT AGORA LAGUNA 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=d4FqKkJbAck",
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
@@ -52,7 +69,7 @@
       "id": "cam_019",
       "fonte": "youtube",
       "canal": "Se-Connect",
-      "titulo_stream": "AO VIVO | CENTRO DE LAGUNA SC | Laguna Business Center",
+      "titulo_stream": "AO VIVO | CENTRO DE LAGUNA SC | Parceria Laguna Business Center  IMAGENS AO VIVO 24H  | SE-CONNECT 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=4e9mp4lLQpE",
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
@@ -73,12 +90,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "cidade",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 1,
       "lat": -28.486,
       "lon": -48.775,
-      "notas": "Câmera urbana I em Laguna, transmissão 24h."
+      "notas": "Câmera urbana I em Laguna, transmissão 24h.",
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_021",
@@ -89,18 +107,19 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "cidade",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 1,
       "lat": -28.4902,
       "lon": -48.7712,
-      "notas": "Câmera urbana II em Laguna, transmissão 24h."
+      "notas": "Câmera urbana II em Laguna, transmissão 24h.",
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_022",
       "fonte": "youtube",
       "canal": "Turma do Papai Beto",
-      "titulo_stream": "SERRA DO RIO DO RASTRO AO VIVO 24 HORAS - Rota dos Tropeiros",
+      "titulo_stream": "SERRA DO RIO DO RASTRO AO VIVO 24 HORAS - Rota dos Tropeiros 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=qafVtFHM37U",
       "municipio": "Lauro Müller",
       "regiao_arcturus": "BACIA_TUBARAO",
@@ -116,7 +135,7 @@
       "id": "cam_002",
       "fonte": "youtube",
       "canal": "Vejaomar",
-      "titulo_stream": "Balsa Rio Araranguá | Câmera Ao Vivo - Monitoramento Vejaomar 24h",
+      "titulo_stream": "Balsa Rio Araranguá | Câmera Ao Vivo - Monitoramento Vejaomar 24horas por dia 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=VAXy1eQpaow",
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
@@ -132,7 +151,7 @@
       "id": "cam_003",
       "fonte": "youtube",
       "canal": "Vejaomar",
-      "titulo_stream": "Balneário Rincão | Câmera Ao Vivo - Monitoramento Vejaomar 24h",
+      "titulo_stream": "Balneário Rincão | Câmera Ao Vivo - Monitoramento Vejaomar 24horas por dia 2026-11-22 11:32",
       "url_youtube": "https://www.youtube.com/watch?v=Ghb1EcQAPNU",
       "municipio": "Balneário Rincão",
       "regiao_arcturus": "SUL_SC",
@@ -148,7 +167,7 @@
       "id": "cam_004",
       "fonte": "youtube",
       "canal": "Vejaomar",
-      "titulo_stream": "Arroio do Silva | Câmera Ao Vivo - Monitoramento Vejaomar 24h",
+      "titulo_stream": "Arroio do Silva | Câmera Ao Vivo - Monitoramento Vejaomar 24horas por dia 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=LJ2Y9OX_AHo",
       "municipio": "Balneário Arroio do Silva",
       "regiao_arcturus": "SUL_SC",
@@ -164,7 +183,7 @@
       "id": "cam_015",
       "fonte": "youtube",
       "canal": "Vejaomar",
-      "titulo_stream": "Ao vivo | São Joaquim | Live 24horas Vejaomar",
+      "titulo_stream": "Ao vivo | São Joaquim | Live 24horas Vejaomar #aovivo 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=RrvxoLZ-U40",
       "municipio": "São Joaquim",
       "regiao_arcturus": "SERRA_SC",
@@ -185,18 +204,19 @@
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "transito",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.8986,
       "lon": -48.6989,
-      "notas": "Ponto estratégico de acesso à BR-101 Sul e Rod. Jorge Lacerda, ~221k visualizações."
+      "notas": "Ponto estratégico de acesso à BR-101 Sul e Rod. Jorge Lacerda, ~221k visualizações.",
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_006",
       "fonte": "youtube",
       "canal": "ConexãoDCTV - Oficial",
-      "titulo_stream": "ITAJAÍ SC AO VIVO | PRAIA BRAVA – QUIOSQUE ESTRELA DO MAR",
+      "titulo_stream": "ITAJAÍ SC AO VIVO | PRAIA BRAVA – QUIOSQUE ESTRELA DO MAR | CONEXÃODCTV 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=yHbiTryu8WI",
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
@@ -212,7 +232,7 @@
       "id": "cam_007",
       "fonte": "youtube",
       "canal": "Maaxcam Ao Vivo",
-      "titulo_stream": "Mix de câmeras de Florianópolis",
+      "titulo_stream": "Mix de câmeras de Florianópolis 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=6Z72ptU1NyY",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
@@ -228,7 +248,7 @@
       "id": "cam_008",
       "fonte": "youtube",
       "canal": "Maaxcam Ao Vivo",
-      "titulo_stream": "Câmera ao vivo Florianópolis - Campeche",
+      "titulo_stream": "Câmera ao vivo Florianópolis - Campeche - Graffi Hostel & Bar 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=rdCrFl1VlUQ",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
@@ -244,7 +264,7 @@
       "id": "cam_009",
       "fonte": "youtube",
       "canal": "Maaxcam Ao Vivo",
-      "titulo_stream": "Câmera ao Vivo Florianópolis - Praia dos Ingleses",
+      "titulo_stream": "Câmera ao Vivo Florianópolis - Praia dos Ingleses - Beach House Bistro&Lounge 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=00Tl3MSaodY",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
@@ -260,7 +280,7 @@
       "id": "cam_010",
       "fonte": "youtube",
       "canal": "Barra da Lagoa Online",
-      "titulo_stream": "Barra da Lagoa - Florianópolis - SC - AO VIVO 1",
+      "titulo_stream": "Barra da Lagoa - Florianópolis - Santa Catarina - Brasil - AO VIVO 1 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=41Lnv1Ws3fw",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
@@ -276,7 +296,7 @@
       "id": "cam_011",
       "fonte": "youtube",
       "canal": "CLIMA BC ONLINE",
-      "titulo_stream": "Balneário Camboriú ao vivo - Central",
+      "titulo_stream": "Balneário Camboriú ao vivo - Central 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=5gMcVYyLihQ",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
@@ -292,7 +312,7 @@
       "id": "cam_012",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=XQ9MBlM0kCU",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
@@ -308,7 +328,7 @@
       "id": "cam_013",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Brasil",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Brasil 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=ZMcmtGYYg5E",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
@@ -324,7 +344,7 @@
       "id": "cam_014",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica - SC",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica - SC 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=5XtbLHjjIyU",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
@@ -345,44 +365,47 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.9739,
       "lon": -48.6331,
-      "notas": "Barra Norte / Pontal Norte de Balneário Camboriú (Hotel Marambaia), >720k visualizações acumuladas."
+      "notas": "Barra Norte / Pontal Norte de Balneário Camboriú (Hotel Marambaia), >720k visualizações acumuladas.",
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_024",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica (Setor II)",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=ynTJYajvUAc",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -27.0015,
       "lon": -48.6245,
-      "notas": "Setor adicional da Av. Atlântica em Balneário Camboriú, transmissão 24h."
+      "notas": "Setor adicional da Av. Atlântica em Balneário Camboriú, transmissão 24h.",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_025",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Panorama Centro",
+      "titulo_stream": "Balneário Camboriú ao vivo 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=d7bTNRe8zCU",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "cidade",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.9906,
       "lon": -48.6348,
-      "notas": "Panorama urbano do centro de Balneário Camboriú, transmissão 24h."
+      "notas": "Panorama urbano do centro de Balneário Camboriú, transmissão 24h.",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_026",
@@ -393,12 +416,13 @@
       "municipio": "Blumenau",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 4,
       "lat": -26.9189,
       "lon": -49.0658,
-      "notas": "Contexto visual direto do nível e correnteza do Rio Itajaí-Açu na Praça JK, >134k visualizações."
+      "notas": "Contexto visual direto do nível e correnteza do Rio Itajaí-Açu na Praça JK, >134k visualizações.",
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_027",
@@ -409,44 +433,47 @@
       "municipio": "Criciúma",
       "regiao_arcturus": "SUL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:47:37-03:00",
       "prioridade": 2,
       "lat": -28.6841,
       "lon": -49.3763,
-      "notas": "Stream público ao vivo 24h validado automaticamente em Criciúma (Federação Catarinense de Futsal)."
+      "notas": "Stream público ao vivo 24h validado automaticamente em Criciúma (Federação Catarinense de Futsal).",
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_028",
       "fonte": "youtube",
       "canal": "ConexãoDCTV - Oficial",
-      "titulo_stream": "BALNEÁRIO CAMBORIÚ SC AO VIVO | PRAIA DE LARANJEIRAS – CASA DO CAMARÃO | CONEXÃODCTV 2026-11-19 20:47",
+      "titulo_stream": "BALNEÁRIO CAMBORIÚ SC AO VIVO | PRAIA DE LARANJEIRAS – CASA DO CAMARÃO | CONEXÃODCTV 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=lFlovxrE9Og",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:48:00-03:00",
       "prioridade": 3,
       "lat": -26.997,
       "lon": -48.6349,
-      "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (ConexãoDCTV - Oficial)."
+      "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (ConexãoDCTV - Oficial).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_029",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - CENTRAL 2026-11-19 20:49",
+      "titulo_stream": "Balneário Camboriú ao vivo - CENTRAL 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=JHRTugb-sQU",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:49:21-03:00",
       "prioridade": 3,
       "lat": -26.9948,
       "lon": -48.6327,
-      "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (CLIMA BC Brazil)."
+      "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (CLIMA BC Brazil).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_030",
@@ -457,60 +484,64 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:49:21-03:00",
       "prioridade": 3,
       "lat": -26.9926,
       "lon": -48.6305,
-      "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (ConexãoDCTV - Oficial)."
+      "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (ConexãoDCTV - Oficial).",
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_031",
       "fonte": "youtube",
       "canal": "Barra da Lagoa Online",
-      "titulo_stream": "Barra da Lagoa - Florianópolis - Santa Catarina - Brasil - AO VIVO 3 2026-11-19 20:49",
+      "titulo_stream": "Barra da Lagoa - Florianópolis - Santa Catarina - Brasil - AO VIVO 3 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=h3H9zKDR6LM",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:49:21-03:00",
       "prioridade": 3,
       "lat": -27.5913,
       "lon": -48.5634,
-      "notas": "Stream público ao vivo 24h validado automaticamente em Florianópolis (Barra da Lagoa Online)."
+      "notas": "Stream público ao vivo 24h validado automaticamente em Florianópolis (Barra da Lagoa Online).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_032",
       "fonte": "youtube",
       "canal": "Maaxcam Ao Vivo",
-      "titulo_stream": "Câmera AO VIVO Ponte Hercilio Luz - Florianópolis - Porto 1922 Cafés Especiais 2026-11-19 20:51",
+      "titulo_stream": "Câmera AO VIVO Ponte Hercilio Luz - Florianópolis - Porto 1922 Cafés Especiais 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=aAYoeHSIeYI",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:52:12-03:00",
       "prioridade": 3,
       "lat": -27.6015,
       "lon": -48.5736,
-      "notas": "Stream público ao vivo 24h em Florianópolis (Maaxcam Ao Vivo)."
+      "notas": "Stream público ao vivo 24h em Florianópolis (Maaxcam Ao Vivo).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_033",
       "fonte": "youtube",
       "canal": "Maaxcam Ao Vivo",
-      "titulo_stream": "Praia da Lagoinha do Norte- Florianópolis - Restaurante Canto da Lagoinha / Cachoeira do bom jesus. 2026-11-19 20:52",
+      "titulo_stream": "Praia da Lagoinha do Norte- Florianópolis - Restaurante Canto da Lagoinha / Cachoeira do bom jesus. 2026-11-22 11:33",
       "url_youtube": "https://www.youtube.com/watch?v=MQDs8aq_Bu0",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:52:12-03:00",
       "prioridade": 3,
       "lat": -27.5995,
       "lon": -48.5676,
-      "notas": "Stream público ao vivo 24h em Florianópolis (Maaxcam Ao Vivo)."
+      "notas": "Stream público ao vivo 24h em Florianópolis (Maaxcam Ao Vivo).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_034",
@@ -521,34 +552,36 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:52:35-03:00",
       "prioridade": 3,
       "lat": -26.9966,
       "lon": -48.6265,
-      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC)."
+      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC).",
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_035",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo -  Avenida Atlântica 2026-11-19 20:52",
+      "titulo_stream": "Balneário Camboriú ao vivo -  Avenida Atlântica 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=R-OLN-xAVoA",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:52:35-03:00",
       "prioridade": 3,
       "lat": -26.9946,
       "lon": -48.6385,
-      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil)."
+      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_036",
       "fonte": "youtube",
       "canal": "ConexãoDCTV - Oficial",
-      "titulo_stream": "ITAJAÍ SC AO VIVO | PORTO DE ITAJAÍ – 2K – FASTSIGNAL | CONEXÃODCTV 2026-11-19 20:52",
+      "titulo_stream": "ITAJAÍ SC AO VIVO | PORTO DE ITAJAÍ – 2K – FASTSIGNAL | CONEXÃODCTV 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=4K8oA0cYkwQ",
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
@@ -564,17 +597,18 @@
       "id": "cam_037",
       "fonte": "youtube",
       "canal": "ConexãoDCTV - Oficial",
-      "titulo_stream": "🔴 AO VIVO | Estrada da Rainha – Subida e Movimento em Balneário Camboriú SC | ConexãoDCTV + Roda FG 2026-11-19 20:52",
+      "titulo_stream": "🔴 AO VIVO | Estrada da Rainha – Subida e Movimento em Balneário Camboriú SC | ConexãoDCTV + Roda FG 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=vrF9aUslyFo",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:52:56-03:00",
       "prioridade": 3,
       "lat": -26.9906,
       "lon": -48.6265,
-      "notas": "Stream público ao vivo 24h em Balneário Camboriú (ConexãoDCTV - Oficial)."
+      "notas": "Stream público ao vivo 24h em Balneário Camboriú (ConexãoDCTV - Oficial).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_038",
@@ -585,12 +619,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "clima",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:53:41-03:00",
       "prioridade": 1,
       "lat": -28.4785,
       "lon": -48.7888,
-      "notas": "Stream público ao vivo 24h em Laguna (Se-Connect)."
+      "notas": "Stream público ao vivo 24h em Laguna (Se-Connect).",
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_039",
@@ -601,34 +636,36 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:53:41-03:00",
       "prioridade": 1,
       "lat": -28.4653,
       "lon": -49.0164,
-      "notas": "Stream público ao vivo 24h em Tubarão (Se-Connect)."
+      "notas": "Stream público ao vivo 24h em Tubarão (Se-Connect).",
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_040",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica 2026-11-19 20:55",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=pkHBcvRuyaA",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:55:29-03:00",
       "prioridade": 3,
       "lat": -26.9846,
       "lon": -48.6265,
-      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil)."
+      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_041",
       "fonte": "youtube",
       "canal": "ConexãoDCTV - Oficial",
-      "titulo_stream": "ITAJAÍ SC AO VIVO | BR-101 – SENTIDO NORTE – BORRACHARIA 101 | CONEXÃODCTV 2026-11-19 20:55",
+      "titulo_stream": "ITAJAÍ SC AO VIVO | BR-101 – SENTIDO NORTE – BORRACHARIA 101 | CONEXÃODCTV 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=5MulSmMXY2o",
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
@@ -644,33 +681,35 @@
       "id": "cam_042",
       "fonte": "youtube",
       "canal": "CLIMA BC Brazil",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica (Restaurante Pau da VIOLA) 2026-11-19 20:56",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica (Restaurante Pau da VIOLA) 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=nZHYewijJQ0",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:56:10-03:00",
       "prioridade": 3,
       "lat": -26.9986,
       "lon": -48.6325,
-      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil)."
+      "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_043",
       "fonte": "youtube",
       "canal": "ConexãoDCTV - Oficial",
-      "titulo_stream": "🔴 AO VIVO | Av. Brasil com Rua 51 🌴 Balneário Camboriú SC | ConexãoDCTV + Unifique 2026-11-19 20:56",
+      "titulo_stream": "🔴 AO VIVO | Av. Brasil com Rua 51 🌴 Balneário Camboriú SC | ConexãoDCTV + Unifique 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=Jm3LOE5cqY4",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:56:10-03:00",
       "prioridade": 3,
       "lat": -26.9966,
       "lon": -48.6265,
-      "notas": "Stream público ao vivo 24h em Balneário Camboriú (ConexãoDCTV - Oficial)."
+      "notas": "Stream público ao vivo 24h em Balneário Camboriú (ConexãoDCTV - Oficial).",
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_044",
@@ -681,18 +720,19 @@
       "municipio": "Chapecó",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "transito",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:00:49-03:00",
       "prioridade": 4,
       "lat": -27.1024,
       "lon": -52.6232,
-      "notas": "Stream público ao vivo 24h em Chapecó (Portal Chapecó)."
+      "notas": "Stream público ao vivo 24h em Chapecó (Portal Chapecó).",
+      "motivo_inativacao": "video_privado"
     },
     {
       "id": "cam_045",
       "fonte": "youtube",
       "canal": "Jaraguá do Sul",
-      "titulo_stream": "camera ao vivo Jaraguá do Sul",
+      "titulo_stream": "Rua José Marangoni - Vila Nova / Jaraguá do Sul - Câmera 2 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=XZrqwye5Hwk",
       "municipio": "jaraguá",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
@@ -711,10 +751,11 @@
       "municipio": "chapecó",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:13:04-03:00",
       "prioridade": 3,
-      "notas": "descoberta em varredura cirúrgica (camera ao vivo Chapecó)"
+      "notas": "descoberta em varredura cirúrgica (camera ao vivo Chapecó)",
+      "motivo_inativacao": "video_privado"
     },
     {
       "id": "cam_047",
@@ -725,16 +766,17 @@
       "municipio": "chapecó",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:13:04-03:00",
       "prioridade": 3,
-      "notas": "descoberta em varredura cirúrgica (camera ao vivo Chapecó)"
+      "notas": "descoberta em varredura cirúrgica (camera ao vivo Chapecó)",
+      "motivo_inativacao": "video_privado"
     },
     {
       "id": "cam_048",
       "fonte": "youtube",
       "canal": "Xanxerê",
-      "titulo_stream": "camera ao vivo Xanxerê",
+      "titulo_stream": "Xanxerê AO VIVO - Canal Ideal 2026-11-22 11:34",
       "url_youtube": "https://www.youtube.com/watch?v=Cnx9hGXpP0w",
       "municipio": "xanxerê",
       "regiao_arcturus": "OESTE_SC",
@@ -753,12 +795,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_050",
@@ -769,12 +812,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_051",
@@ -785,12 +829,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_052",
@@ -801,12 +846,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_053",
@@ -817,12 +863,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_054",
@@ -833,12 +880,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_055",
@@ -849,12 +897,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_056",
@@ -865,12 +914,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_057",
@@ -881,12 +931,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_058",
@@ -897,12 +948,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_059",
@@ -913,12 +965,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_060",
@@ -929,12 +982,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_061",
@@ -945,12 +999,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_062",
@@ -961,12 +1016,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_063",
@@ -977,12 +1033,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_064",
@@ -993,12 +1050,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_065",
@@ -1009,12 +1067,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_066",
@@ -1025,12 +1084,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_067",
@@ -1041,12 +1101,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_068",
@@ -1057,12 +1118,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_069",
@@ -1073,12 +1135,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_070",
@@ -1089,12 +1152,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_071",
@@ -1105,12 +1169,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_072",
@@ -1121,12 +1186,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_073",
@@ -1137,12 +1203,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_074",
@@ -1153,12 +1220,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_075",
@@ -1169,12 +1237,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_076",
@@ -1185,12 +1254,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_077",
@@ -1201,12 +1271,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_078",
@@ -1217,12 +1288,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_079",
@@ -1233,12 +1305,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_080",
@@ -1249,12 +1322,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_081",
@@ -1265,12 +1339,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_082",
@@ -1281,12 +1356,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_083",
@@ -1297,12 +1373,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_084",
@@ -1313,12 +1390,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_085",
@@ -1329,12 +1407,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_086",
@@ -1345,28 +1424,30 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_087",
       "fonte": "youtube",
       "canal": "Balneário Camboriú ao vivo",
-      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica",
+      "titulo_stream": "Balneário Camboriú ao vivo - Avenida Atlântica 2026-11-22 11:36",
       "url_youtube": "https://www.youtube.com/watch?v=SJKMDU0nEHI",
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_088",
@@ -1377,12 +1458,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_089",
@@ -1393,12 +1475,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_090",
@@ -1409,12 +1492,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_091",
@@ -1425,12 +1509,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_092",
@@ -1441,12 +1526,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_093",
@@ -1457,12 +1543,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_094",
@@ -1473,12 +1560,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_095",
@@ -1489,12 +1577,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_096",
@@ -1505,12 +1594,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_097",
@@ -1521,12 +1611,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_098",
@@ -1537,12 +1628,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_099",
@@ -1553,12 +1645,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_100",
@@ -1569,12 +1662,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_101",
@@ -1585,12 +1679,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_102",
@@ -1601,12 +1696,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_103",
@@ -1617,12 +1713,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_104",
@@ -1633,12 +1730,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_105",
@@ -1649,12 +1747,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_106",
@@ -1665,12 +1764,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_107",
@@ -1681,12 +1781,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
-      "lng": -48.6352
+      "lng": -48.6352,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_109",
@@ -1697,12 +1798,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_110",
@@ -1713,12 +1815,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_111",
@@ -1729,12 +1832,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_112",
@@ -1745,12 +1849,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_115",
@@ -1761,12 +1866,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_119",
@@ -1777,12 +1883,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_120",
@@ -1793,12 +1900,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_121",
@@ -1809,12 +1917,13 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_125",
@@ -1825,18 +1934,19 @@
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
-      "lng": -49.0069
+      "lng": -49.0069,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_126",
       "fonte": "youtube",
       "canal": "LAGUNA AO VIVO",
-      "titulo_stream": "LAGUNA AO VIVO - AGORA LAGUNA E SECONNECT",
+      "titulo_stream": "LAGUNA AO VIVO - AGORA LAGUNA E SECONNECT 2026-11-22 11:38",
       "url_youtube": "https://www.youtube.com/watch?v=Ai5hgR5Vm7c",
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
@@ -1857,12 +1967,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_128",
@@ -1873,12 +1984,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_129",
@@ -1889,12 +2001,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_130",
@@ -1905,12 +2018,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_131",
@@ -1921,12 +2035,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_132",
@@ -1937,12 +2052,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_133",
@@ -1953,12 +2069,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_134",
@@ -1969,12 +2086,13 @@
       "municipio": "Laguna",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
-      "lng": -48.7808
+      "lng": -48.7808,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_136",
@@ -1985,12 +2103,13 @@
       "municipio": "Criciúma",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Criciúma)",
       "lat": -28.6775,
-      "lng": -49.3694
+      "lng": -49.3694,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_140",
@@ -2001,12 +2120,13 @@
       "municipio": "Criciúma",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Criciúma)",
       "lat": -28.6775,
-      "lng": -49.3694
+      "lng": -49.3694,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_145",
@@ -2017,12 +2137,13 @@
       "municipio": "Criciúma",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Criciúma)",
       "lat": -28.6775,
-      "lng": -49.3694
+      "lng": -49.3694,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_149",
@@ -2033,76 +2154,81 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_150",
       "fonte": "youtube",
       "canal": "🔴Morro São João / Sentido Novo Hamburgo Leste",
-      "titulo_stream": "🔴Morro São João / Sentido Novo Hamburgo Leste - AO VIVO 24H【2026】",
+      "titulo_stream": "🔴Morro São João / Sentido Novo Hamburgo Leste - AO VIVO 24H【2026】 2026-11-22 11:39",
       "url_youtube": "https://www.youtube.com/watch?v=Wzf-N63kOEg",
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_151",
       "fonte": "youtube",
       "canal": "Ponte do Bananal",
-      "titulo_stream": "Ponte do Bananal - Ao Vivo 24h",
+      "titulo_stream": "Ponte do Bananal - Ao Vivo 24h 2026-11-22 11:39",
       "url_youtube": "https://www.youtube.com/watch?v=R1OSBfhaGOA",
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
     },
     {
       "id": "cam_153",
       "fonte": "youtube",
       "canal": "🔴Rio Caí",
-      "titulo_stream": "🔴Rio Caí - Montenegro / Ponte Tio Manduca \"rio abaixo\" - AO VIVO 24H【2026】",
+      "titulo_stream": "🔴Rio Caí - Montenegro / Ponte Tio Manduca \"rio abaixo\" - AO VIVO 24H【2026】 2026-11-22 11:39",
       "url_youtube": "https://www.youtube.com/watch?v=7i_RXH2tDW0",
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_155",
       "fonte": "youtube",
       "canal": "🔴Rio Caí",
-      "titulo_stream": "🔴Rio Caí - Montenegro / \"rio abaixo\" - AO VIVO 24H【2026】",
+      "titulo_stream": "🔴Rio Caí - Montenegro / \"rio abaixo\" - AO VIVO 24H【2026】 2026-11-22 11:39",
       "url_youtube": "https://www.youtube.com/watch?v=MPvf9sJtg7A",
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_156",
@@ -2113,28 +2239,30 @@
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_158",
       "fonte": "youtube",
       "canal": "🔴Rio Caí",
-      "titulo_stream": "🔴Rio Caí - Montenegro / \"rio acima\" - AO VIVO 24H【2026】",
+      "titulo_stream": "🔴Rio Caí - Montenegro / \"rio acima\" - AO VIVO 24H【2026】 2026-11-22 11:39",
       "url_youtube": "https://www.youtube.com/watch?v=aEcqkd4puUw",
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_159",
@@ -2145,12 +2273,13 @@
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_162",
@@ -2161,12 +2290,13 @@
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -26.9078,
-      "lng": -48.6619
+      "lng": -48.6619,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_164",
@@ -2177,12 +2307,13 @@
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_165",
@@ -2193,28 +2324,30 @@
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
-      "lng": -49.4858
+      "lng": -49.4858,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_166",
       "fonte": "youtube",
       "canal": "Câmera ao vivo Jurerê Internacional",
-      "titulo_stream": "Câmera ao vivo Jurerê Internacional - Restaurante Caravela",
+      "titulo_stream": "Câmera ao vivo Jurerê Internacional - Restaurante Caravela 2026-11-22 11:39",
       "url_youtube": "https://www.youtube.com/watch?v=wCMacsxZqLI",
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
     },
     {
       "id": "cam_168",
@@ -2225,12 +2358,13 @@
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_169",
@@ -2241,12 +2375,13 @@
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_170",
@@ -2257,12 +2392,13 @@
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_171",
@@ -2273,12 +2409,13 @@
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_172",
@@ -2289,12 +2426,13 @@
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_173",
@@ -2305,60 +2443,64 @@
       "municipio": "Garopaba",
       "regiao_arcturus": "SUL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
-      "lng": -48.6194
+      "lng": -48.6194,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_174",
       "fonte": "youtube",
       "canal": "Câmera Ao Vivo BR-101 KM 210",
-      "titulo_stream": "Câmera Ao Vivo BR-101 KM 210 - Sentido Sul",
+      "titulo_stream": "Câmera Ao Vivo BR-101 KM 210 - Sentido Sul 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=re7Nmf_CjxQ",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
     },
     {
       "id": "cam_175",
       "fonte": "youtube",
       "canal": "Acompanhe imagens ao vivo de São José do Norte",
-      "titulo_stream": "Acompanhe imagens ao vivo de São José do Norte - RS pelas câmeras espalhadas pela cidade e interior",
+      "titulo_stream": "Acompanhe imagens ao vivo de São José do Norte - RS pelas câmeras espalhadas pela cidade e interior 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=DXCqdSn5ctI",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_176",
       "fonte": "youtube",
       "canal": "Câmera Ao Vivo BR-101 KM 210",
-      "titulo_stream": "Câmera Ao Vivo BR-101 KM 210 - Sentido Norte",
+      "titulo_stream": "Câmera Ao Vivo BR-101 KM 210 - Sentido Norte 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=Vzbkn1GFaSE",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
     },
     {
       "id": "cam_177",
@@ -2369,12 +2511,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_179",
@@ -2385,60 +2528,64 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_181",
       "fonte": "youtube",
       "canal": "🔴 Brazil Now (24/7 Live Cameras)",
-      "titulo_stream": "🔴 Brazil Now (24/7 Live Cameras)",
+      "titulo_stream": "🔴 Brazil Now (24/7 Live Cameras) 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=-Xtz0Jo5Ln8",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_182",
       "fonte": "youtube",
       "canal": "Santuário Nacional AO VIVO",
-      "titulo_stream": "Santuário Nacional AO VIVO - Você em constante Oração na Casa da Mãe",
+      "titulo_stream": "Santuário Nacional AO VIVO - Você em constante Oração na Casa da Mãe 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=juUt-rN5CVo",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_184",
       "fonte": "youtube",
       "canal": "AO VIVO 24H OCIAN PRAIA GRANDE CÂMERAS",
-      "titulo_stream": "AO VIVO 24H OCIAN PRAIA GRANDE CÂMERAS",
+      "titulo_stream": "AO VIVO 24H OCIAN PRAIA GRANDE CÂMERAS 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=N_UQicZLqv8",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_185",
@@ -2449,12 +2596,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_186",
@@ -2465,12 +2613,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_187",
@@ -2481,12 +2630,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_188",
@@ -2497,12 +2647,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "video_privado"
     },
     {
       "id": "cam_190",
@@ -2513,44 +2664,47 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_191",
       "fonte": "youtube",
       "canal": "Iconic SXM Airport LIVE 24/7 • Sint Maarten Maho Beach",
-      "titulo_stream": "Iconic SXM Airport LIVE 24/7 • Sint Maarten Maho Beach",
+      "titulo_stream": "Iconic SXM Airport LIVE 24/7 • Sint Maarten Maho Beach 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=2IQmpCXbOmM",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_192",
       "fonte": "youtube",
       "canal": "San Diego Web Cam Live (Rotating/Switched Feed) 4K",
-      "titulo_stream": "San Diego Web Cam Live (Rotating/Switched Feed) 4K",
+      "titulo_stream": "San Diego Web Cam Live (Rotating/Switched Feed) 4K 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=edz0ux7JClE",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_193",
@@ -2561,12 +2715,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_194",
@@ -2577,28 +2732,30 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_195",
       "fonte": "youtube",
       "canal": "AO VIVO PRAIA GRANDE   ",
-      "titulo_stream": "AO VIVO PRAIA GRANDE    - BOQUEIRÃO GUILHERMINA- CÂMERA",
+      "titulo_stream": "AO VIVO PRAIA GRANDE    - BOQUEIRÃO GUILHERMINA- CÂMERA 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=v8EHx_ixEKU",
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_197",
@@ -2609,12 +2766,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_198",
@@ -2625,12 +2783,13 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_199",
@@ -2641,28 +2800,30 @@
       "municipio": "São José",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
-      "lng": -48.6366
+      "lng": -48.6366,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_200",
       "fonte": "youtube",
       "canal": "Câmera ao Vivo Florianópolis",
-      "titulo_stream": "Câmera ao Vivo Florianópolis - Barra da lagoa",
+      "titulo_stream": "Câmera ao Vivo Florianópolis - Barra da lagoa 2026-11-22 11:40",
       "url_youtube": "https://www.youtube.com/watch?v=BuaUxHlGGXA",
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.5954,
-      "lng": -48.548
+      "lng": -48.548,
+      "motivo_inativacao": "limite_max_4_por_cidade"
     },
     {
       "id": "cam_201",
@@ -2673,12 +2834,13 @@
       "municipio": "Palhoça",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
-      "lng": -48.6699
+      "lng": -48.6699,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_202",
@@ -2689,12 +2851,13 @@
       "municipio": "Palhoça",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
-      "lng": -48.6699
+      "lng": -48.6699,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_203",
@@ -2705,12 +2868,13 @@
       "municipio": "Palhoça",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
-      "lng": -48.6699
+      "lng": -48.6699,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_204",
@@ -2721,12 +2885,13 @@
       "municipio": "Palhoça",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
-      "lng": -48.6699
+      "lng": -48.6699,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_205",
@@ -2737,12 +2902,13 @@
       "municipio": "Palhoça",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
-      "lng": -48.6699
+      "lng": -48.6699,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_206",
@@ -2753,12 +2919,13 @@
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Biguaçu)",
       "lat": -27.5954,
-      "lng": -48.548
+      "lng": -48.548,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_207",
@@ -2769,12 +2936,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_210",
@@ -2785,12 +2953,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_211",
@@ -2801,12 +2970,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_212",
@@ -2817,12 +2987,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_213",
@@ -2833,12 +3004,13 @@
       "municipio": "Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.0254,
-      "lng": -48.6536
+      "lng": -48.6536,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_214",
@@ -2849,12 +3021,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_215",
@@ -2865,12 +3038,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_216",
@@ -2881,12 +3055,13 @@
       "municipio": "Tijucas",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
-      "lng": -48.6347
+      "lng": -48.6347,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_218",
@@ -2897,12 +3072,13 @@
       "municipio": "Brusque",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Brusque)",
       "lat": -27.0978,
-      "lng": -48.9148
+      "lng": -48.9148,
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_226",
@@ -2913,12 +3089,13 @@
       "municipio": "Brusque",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Brusque)",
       "lat": -27.0978,
-      "lng": -48.9148
+      "lng": -48.9148,
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_234",
@@ -2929,12 +3106,13 @@
       "municipio": "Rio Do Sul",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Rio do Sul)",
       "lat": -27.2136,
-      "lng": -49.6429
+      "lng": -49.6429,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_239",
@@ -2945,12 +3123,13 @@
       "municipio": "Rio Do Sul",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Rio do Sul)",
       "lat": -27.2136,
-      "lng": -49.6429
+      "lng": -49.6429,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_240",
@@ -2961,12 +3140,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_242",
@@ -2977,12 +3157,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_246",
@@ -2993,12 +3174,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_247",
@@ -3009,12 +3191,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_249",
@@ -3025,28 +3208,30 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_253",
       "fonte": "youtube",
       "canal": "Oslo LIVE",
-      "titulo_stream": "Oslo LIVE",
+      "titulo_stream": "Oslo LIVE 2026-11-22 11:41",
       "url_youtube": "https://www.youtube.com/watch?v=faKBmRq0lYg",
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_254",
@@ -3057,12 +3242,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_255",
@@ -3073,12 +3259,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_256",
@@ -3089,12 +3276,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_257",
@@ -3105,12 +3293,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_260",
@@ -3121,12 +3310,13 @@
       "municipio": "Lages",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
-      "lng": -50.3261
+      "lng": -50.3261,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_261",
@@ -3137,12 +3327,13 @@
       "municipio": "Caçador",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
-      "lng": -51.015
+      "lng": -51.015,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_262",
@@ -3153,28 +3344,30 @@
       "municipio": "Caçador",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
-      "lng": -51.015
+      "lng": -51.015,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_263",
       "fonte": "youtube",
       "canal": "🔴 LIVE Severe Weather Coverage",
-      "titulo_stream": "🔴 LIVE Severe Weather Coverage - Live Storm Chasers And Tornado Warnings...",
+      "titulo_stream": "🔴 LIVE Severe Weather Coverage - Live Storm Chasers And Tornado Warnings... 2026-11-22 11:41",
       "url_youtube": "https://www.youtube.com/watch?v=sgJ14rQRUgQ",
       "municipio": "Caçador",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
-      "lng": -51.015
+      "lng": -51.015,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_264",
@@ -3185,12 +3378,13 @@
       "municipio": "Caçador",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
-      "lng": -51.015
+      "lng": -51.015,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_265",
@@ -3201,12 +3395,13 @@
       "municipio": "Caçador",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
-      "lng": -51.015
+      "lng": -51.015,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_267",
@@ -3217,12 +3412,13 @@
       "municipio": "Caçador",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
-      "lng": -51.015
+      "lng": -51.015,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_270",
@@ -3233,12 +3429,13 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_272",
@@ -3249,12 +3446,13 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_273",
@@ -3265,12 +3463,13 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_274",
@@ -3281,12 +3480,13 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_275",
@@ -3297,12 +3497,13 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_276",
@@ -3313,12 +3514,13 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_278",
@@ -3329,28 +3531,30 @@
       "municipio": "Videira",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
-      "lng": -51.1519
+      "lng": -51.1519,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_280",
       "fonte": "youtube",
       "canal": "🔴 4k Venice Italy Live Cam",
-      "titulo_stream": "🔴 4k Venice Italy Live Cam - Rialto Bridge Live Streaming from Palazzo Bembo - Live Webcam - ライブカメラ",
+      "titulo_stream": "🔴 4k Venice Italy Live Cam - Rialto Bridge Live Streaming from Palazzo Bembo - Live Webcam - ライブカメラ 2026-11-22 11:41",
       "url_youtube": "https://www.youtube.com/watch?v=nviU2HYj-Jc",
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "fora_de_santa_catarina"
     },
     {
       "id": "cam_281",
@@ -3361,12 +3565,13 @@
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_282",
@@ -3377,12 +3582,13 @@
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_283",
@@ -3393,12 +3599,13 @@
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_287",
@@ -3409,12 +3616,13 @@
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_294",
@@ -3425,12 +3633,13 @@
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_295",
@@ -3441,12 +3650,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "filtro_esporte_ou_evento"
     },
     {
       "id": "cam_297",
@@ -3457,12 +3667,13 @@
       "municipio": "Concórdia",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
-      "lng": -52.0278
+      "lng": -52.0278,
+      "motivo_inativacao": "url_invalida"
     },
     {
       "id": "cam_303",
@@ -3473,12 +3684,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_304",
@@ -3489,12 +3701,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_305",
@@ -3505,12 +3718,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_306",
@@ -3521,12 +3735,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_307",
@@ -3537,12 +3752,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_308",
@@ -3553,12 +3769,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_309",
@@ -3569,12 +3786,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_310",
@@ -3585,12 +3803,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_311",
@@ -3601,12 +3820,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_313",
@@ -3617,12 +3837,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_314",
@@ -3633,12 +3854,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_315",
@@ -3649,12 +3871,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_316",
@@ -3665,12 +3888,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_317",
@@ -3681,12 +3905,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_318",
@@ -3697,12 +3922,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_319",
@@ -3713,12 +3939,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_320",
@@ -3729,12 +3956,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_321",
@@ -3745,12 +3973,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_322",
@@ -3761,12 +3990,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_323",
@@ -3777,12 +4007,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_324",
@@ -3793,12 +4024,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_325",
@@ -3809,12 +4041,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_326",
@@ -3825,12 +4058,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "erro_ytdlp"
     },
     {
       "id": "cam_327",
@@ -3841,12 +4075,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_328",
@@ -3857,12 +4092,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_329",
@@ -3873,12 +4109,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_330",
@@ -3889,12 +4126,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_331",
@@ -3905,12 +4143,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_332",
@@ -3921,12 +4160,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_333",
@@ -3937,12 +4177,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_334",
@@ -3953,12 +4194,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_335",
@@ -3969,12 +4211,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_336",
@@ -3985,12 +4228,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_337",
@@ -4001,12 +4245,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_338",
@@ -4017,12 +4262,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_339",
@@ -4033,12 +4279,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_340",
@@ -4049,12 +4296,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     },
     {
       "id": "cam_341",
@@ -4065,12 +4313,13 @@
       "municipio": "Joaçaba",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:31:08-03:00",
       "prioridade": 3,
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
-      "lng": -51.5044
+      "lng": -51.5044,
+      "motivo_inativacao": "nao_esta_ao_vivo"
     }
   ],
   "ultima_atualizacao": "2026-11-19T21:34:50-03:00"

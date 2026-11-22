@@ -793,7 +793,7 @@ def serve_layout():
             html.Hr(),
             dbc.Nav([
                 dbc.NavLink("📊 A.C. Monitor", href="/", active="exact", className="text-white"),
-                dbc.NavLink("📹 A.C. Vision (25 Câmeras)", href="#secao-ac-vision", external_link=True, className="text-info fw-bold"),
+                dbc.NavLink(f"📹 A.C. Vision ({len(carregar_cameras_ativas())} Câmeras)", href="#secao-ac-vision", external_link=True, className="text-info fw-bold"),
                 dbc.Button(
                     "🗺️ A.C. Geo (Mapa 2019)",
                     id="btn-mapa-geo",
