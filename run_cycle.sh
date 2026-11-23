@@ -36,6 +36,9 @@ bash "$BASE_DIR/cron_motor.sh" &&
 # 3.2 Contorno de jusante: maré e vento costeiro em Laguna (remanso lagunar)
 "$PYTHON" "$BASE_DIR/src/coleta/coletar_mare_laguna.py" >> "$BASE_DIR/logs/mare_laguna.log" 2>&1 || true
 
+# 3.3 Coleta prospectiva pareada (forecast_runs + forecast_predictions: persistencia vs v8 vs fisica_3bracos v1.0)
+"$PYTHON" "$BASE_DIR/src/modelo/executar_rodada_prospectiva.py" >> "$BASE_DIR/logs/prospectivo.log" 2>&1 || true
+
 # 3.5 Validação contextual com comunicados oficiais (Defesa Civil SC / imprensa regional)
 "$PYTHON" "$BASE_DIR/validar_contexto_noticias.py" >> "$BASE_DIR/logs/contexto_noticias.log" 2>&1 || true
 
