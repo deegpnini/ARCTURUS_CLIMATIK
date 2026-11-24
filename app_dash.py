@@ -58,14 +58,24 @@ def ler_dados():
                 cota_val = f"{json.load(f).get('cota_cm', 0):.1f} cm"
         except: pass
 
+    chuva_val, chuva_sub = "sem dado", "Ensemble ausente"
     if FILE_ENSEMBLE.exists():
         try:
+            from datetime import datetime as _dt
             with open(FILE_ENSEMBLE, "r") as f:
                 ens = json.load(f)
-                chuva_val = f"{ens.get('pior_caso_48h_mm', 0):.1f} mm"
-                diferenca = ens.get('diferenca_mm', 0)
-                chuva_sub = f"Δ Incerteza: {diferenca:.1f} mm"
-        except: pass
+            idade_h = (_dt.now() - _dt.fromisoformat(ens["timestamp_coleta"])).total_seconds() / 3600
+            pior = ens.get("pior_caso_72h_mm")
+            div = ens.get("divergencia_total_mm")
+            if idade_h > 12:
+                chuva_sub = f"Ensemble desatualizado ({idade_h / 24:.1f} d)"
+            elif pior is None:
+                chuva_sub = "Ensemble sem pior caso"
+            else:
+                chuva_val = f"{pior:.1f} mm"
+                chuva_sub = f"Δ divergência entre modelos: {div:.1f} mm" if div is not None else "divergência indisponível"
+        except Exception:
+            chuva_sub = "Ensemble ilegível ou sem timestamp"
 
     if FILE_SIMULACAO.exists():
         try:
@@ -863,7 +873,7 @@ def serve_layout():
                         html.H3(_k0["sombra_val"], id="v11c-cota-amanha", className="text-warning"),
                         html.P(_k0["sombra_sub"], id="v11c-delta", className="card-text"),
                     ], className="card-body"), width=3),
-                    dbc.Col(criar_card("Chuva Prevista (48h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
+                    dbc.Col(criar_card("Chuva Prevista (72h Pior Caso)", "chuva-val", "chuva-sub"), width=3),
                     dbc.Col(
                         html.Div([
                             criar_card(
@@ -1108,11 +1118,16 @@ def atualizar_painel(n_clicks, n_intervals):
             import json
             with open("data/chuva_ensemble_consolidada.json", "r") as f:
                 chuva = json.load(f)
-                chuva_pior = chuva.get("pior_caso_48h_mm", 0)
+            chuva_pior = chuva.get("pior_caso_72h_mm")
+            from datetime import datetime as _dt
+            _ts = chuva.get("timestamp_coleta")
+            if chuva_pior is not None and (_ts is None or (_dt.now() - _dt.fromisoformat(_ts)).total_seconds() > 12 * 3600):
+                chuva_pior = None
                 
             if variacao > 2:
                 direcao = f"subiu {variacao:.1f} cm"
-                causa = f"provavelmente influenciado pela chuva prevista de {chuva_pior} mm"
+                causa = (f"provavelmente influenciado pela chuva prevista de {chuva_pior} mm"
+                         if chuva_pior is not None else "sem dado de chuva prevista atualizado")
             elif variacao < -2:
                 direcao = f"baixou {abs(variacao):.1f} cm"
                 causa = "devido à estiagem nas cabeceiras"

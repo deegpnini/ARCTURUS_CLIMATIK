@@ -8,7 +8,8 @@ import html
 import json
 import re
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -35,6 +36,23 @@ MUNICIPIOS_BACIA_SUL = [
 ]
 
 
+def publicacao_recente(data: str, agora=None) -> bool:
+    """Aceita somente datas RFC válidas entre agora e as últimas 12 horas."""
+    if not data:
+        return False
+    try:
+        publicada = parsedate_to_datetime(data)
+        if publicada.tzinfo is None:
+            publicada = publicada.replace(tzinfo=timezone.utc)
+        agora = agora or datetime.now(timezone.utc)
+        if agora.tzinfo is None:
+            agora = agora.replace(tzinfo=timezone.utc)
+        idade = agora.astimezone(timezone.utc) - publicada.astimezone(timezone.utc)
+        return timedelta(0) <= idade <= timedelta(hours=12)
+    except (TypeError, ValueError, OverflowError):
+        return False
+
+
 def limpar_texto_rss(raw: str) -> str:
     sem_tags = re.sub(r"<[^>]+>", "", raw)
     return html.unescape(sem_tags).strip()
@@ -53,6 +71,10 @@ def buscar_noticias_rss(url: str, nome_fonte: str) -> list[dict]:
             link = re.search(r"<link>(.*?)</link>", item, re.DOTALL)
             data = re.search(r"<pubDate>(.*?)</pubDate>", item, re.DOTALL)
             if not titulo:
+                continue
+
+            data_publicacao = data.group(1).strip() if data else ""
+            if not publicacao_recente(data_publicacao):
                 continue
 
             titulo_limpo = limpar_texto_rss(titulo.group(1))
@@ -84,12 +106,13 @@ def buscar_noticias_defesa_civil() -> list[dict]:
             titulo = re.search(r"<title>(.*?)</title>", item, re.DOTALL)
             link = re.search(r"<link>(.*?)</link>", item, re.DOTALL)
             data = re.search(r"<pubDate>(.*?)</pubDate>", item, re.DOTALL)
-            if titulo:
+            data_publicacao = data.group(1).strip() if data else ""
+            if titulo and publicacao_recente(data_publicacao):
                 noticias.append({
                     "fonte": "Defesa Civil SC",
                     "titulo": limpar_texto_rss(titulo.group(1)),
                     "link": link.group(1).strip() if link else "",
-                    "data": data.group(1).strip() if data else "",
+                    "data": data_publicacao,
                 })
         return noticias
     except Exception as e:

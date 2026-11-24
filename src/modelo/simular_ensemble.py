@@ -22,12 +22,28 @@ features = manifesto["features"]
 
 # 3. Carregar cota atual
 with open(BASE / "tubarao_saneamento_dados.json") as f:
-    cota = json.load(f).get("cota_cm", 65.0)
+    cota = json.load(f).get("cota_cm")
 
 # 4. Carregar Ensemble (chuva prevista)
 with open(BASE / "data" / "chuva_ensemble_consolidada.json") as f:
     ens = json.load(f)
-chuva_pior = ens.get("pior_caso_48h_mm", 0.0)
+chuva_pior = ens.get("pior_caso_48h_mm")
+
+if cota is None or chuva_pior is None:
+    print("SEM DADO: cota ou pior_caso_48h_mm ausente; probabilidade não calculada.")
+    # Gravar JSON com "sem dado" (para o health_check ver o arquivo fresco)
+    import json
+    from datetime import datetime
+    from pathlib import Path
+    BASE = Path(__file__).resolve().parents[2]
+    saida = BASE / "data" / "simulacao_probabilidade_atual.json"
+    saida.write_text(json.dumps({
+        "timestamp": datetime.now().isoformat(),
+        "status": "SEM_DADO",
+        "motivo": "cota ou pior_caso_48h_mm ausente",
+        "prob_media": None,
+    }, indent=2), encoding="utf-8")
+    raise SystemExit(0)
 
 # 5. Montar features (sem coluna constante; chuva nas colunas certas)
 # Como não temos a chuva observada diária, usamos o Ensemble como proxy para as features de chuva.

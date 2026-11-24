@@ -154,6 +154,22 @@ def formatar_resumo_previsao(
     return "\n".join(linhas)
 
 
+def buscar_alertas_inmet():
+    """Busca alertas oficiais do INMET para a região da bacia."""
+    import requests
+    try:
+        url = "https://apiprevmet3.inmet.gov.br/avisos"
+        r = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            dados = r.json()
+            alertas = [a for a in dados if "SC" in str(a.get("estados", ""))]
+            if alertas:
+                return alertas[0].get("titulo", "Alerta ativo")
+        return "Sem alertas ativos no momento"
+    except Exception:
+        return "Sem alertas ativos no momento"
+
+
 def formatar_boletim(dados: dict) -> str:
     """Renderiza o resumo e detalhes expansíveis em HTML do Telegram."""
     agora: datetime = dados["agora"]
@@ -170,7 +186,13 @@ def formatar_boletim(dados: dict) -> str:
         "caindo": "⬇️",
     }.get(_normalizar(tendencia), "➡️")
 
+        # Bloco de alertas oficiais
+    alerta_inmet = buscar_alertas_inmet()
     resumo = [
+        "⚠️ <b>ALERTAS OFICIAIS (INMET / DEFESA CIVIL)</b>",
+        f"• INMET: {escape(alerta_inmet)}",
+        f"• Defesa Civil: {escape(str(dados.get('status_defesacivil', 'Sem alerta')))}",
+        "",
         "🌊 <b>ARCTURUS · Rio Tubarão</b>",
         f"🗓 {agora:%d/%m/%Y} · {agora:%H:%M}",
         "",
@@ -187,7 +209,7 @@ def formatar_boletim(dados: dict) -> str:
             else ""
         ),
         f"🌊 <b>Rio: {rio_icone} {rio_nivel}</b> · "
-        f"{_numero(dados['cota_cm'], 0)} cm",
+        f"{_numero(dados['cota_cm'], 0)} cm ({_numero(dados['cota_cm']/100, 2)} m)",
         f"{seta} <b>Tendência:</b> {escape(tendencia)}",
         "",
         "ℹ️ <i>Boletim informativo. Projeções em modo sombra "
@@ -215,7 +237,7 @@ def formatar_boletim(dados: dict) -> str:
             )
         )
         detalhes.append(
-            "🔭 <b>Projeção experimental · modo sombra</b>\n"
+            "🔭 <b>Projeção experimental · modo sombra</b> (elevação consequência da chuva prevista na cabeceira/médio curso)\n"
             f"{partes}\n"
             "<i>Probabilidade de cheia: indisponível "
             "(modelo em validação).</i>"
