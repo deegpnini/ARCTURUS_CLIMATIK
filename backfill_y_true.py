@@ -17,13 +17,35 @@ from src.relatorios.postgres_db import get_postgres_connection
 LOG = logging.getLogger("backfill_y_true")
 HORIZONS = {"1h": timedelta(hours=1), "3h": timedelta(hours=3), "6h": timedelta(hours=6)}
 TOLERANCE_ORIGEM = pd.Timedelta(minutes=15)
-TOLERANCE_ALVO = pd.Timedelta(minutes=8)
+TOLERANCE_ALVO = pd.Timedelta(minutes=20)  # ERAB entrega a cada 15 min; 20 min cobre intervalo + folga
 
 
 def backfill(connection_factory=get_postgres_connection):
     connection = connection_factory()
     updated = 0
     try:
+        # Limpeza: marca como inválidas predições órfãs (ts_alvo > 7 dias, sem leitura)
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                UPDATE predicoes_shadow
+                SET valido = false
+                WHERE y_true IS NULL
+                  AND valido = true
+                  AND stale = false
+                  AND COALESCE(ts_predicao, timestamp) + (
+                      CASE horizonte
+                          WHEN '1h' THEN INTERVAL '1 hour'
+                          WHEN '3h' THEN INTERVAL '3 hours'
+                          WHEN '6h' THEN INTERVAL '6 hours'
+                      END
+                  ) < NOW() - INTERVAL '7 days'
+            """)
+            orfaos = cursor.rowcount
+            if orfaos > 0:
+                connection.commit()
+                print(f"[CLEANUP] {orfaos} predições órfãs marcadas como inválidas (>7 dias sem leitura)")
+            else:
+                print("[CLEANUP] Nenhuma predição órfã encontrada")
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT timestamp, cota_cm
@@ -45,6 +67,13 @@ def backfill(connection_factory=get_postgres_connection):
                   AND stale = false
                   AND valido = true
                   AND y_score IS NOT NULL
+                  AND COALESCE(ts_predicao, timestamp) + (
+                      CASE horizonte
+                          WHEN '1h' THEN INTERVAL '1 hour'
+                          WHEN '3h' THEN INTERVAL '3 hours'
+                          WHEN '6h' THEN INTERVAL '6 hours'
+                      END
+                  ) <= NOW()
                 ORDER BY ts_emissao
             """)
             pendentes = cursor.fetchall()
@@ -85,6 +114,7 @@ def backfill(connection_factory=get_postgres_connection):
                     (merge_futuro["ts_leitura_alvo"] - merge_futuro["timestamp_alvo"]).dt.total_seconds() / 60.0
                 )
 
+                merge_futuro = merge_futuro[merge_futuro["ts_leitura_alvo"] > merge_futuro["timestamp_origem"]]
                 validos = merge_futuro.dropna(subset=["y_true", "ts_leitura_origem", "ts_leitura_alvo"])
 
                 for _, row in validos.iterrows():
