@@ -79,11 +79,22 @@ def ler_dados():
 
     if FILE_SIMULACAO.exists():
         try:
-            with open(FILE_SIMULACAO, "r") as f:
+            with open(FILE_SIMULACAO, "r", encoding="utf-8") as f:
                 sim = json.load(f)
-                prob_val = 'INDISPONÍVEL'
-                prob_sub = 'Estimativa em revisão. Use Defesa Civil / Epagri-Ciram / INMET'
-        except: pass
+            if isinstance(sim, dict) and sim.get("prob_media") is not None:
+                prob_pct = float(sim["prob_media"]) * 100.0
+                limiar_val = sim.get("limiar")
+                alerta_flag = bool(sim.get("alerta", False))
+                prob_val = f"{prob_pct:.2f}%".replace(".", ",")
+                limiar_txt = f"{float(limiar_val) * 100.0:.2f}%".replace(".", ",") if limiar_val is not None else "N/D"
+                status_txt = "🚨 Acima do limiar" if alerta_flag else "Abaixo do limiar"
+                prob_sub = f"{status_txt} ({limiar_txt}) · Simulação/Sombra (não oficial)"
+            else:
+                prob_val = "sem dado"
+                prob_sub = "Simulação sem prob_media válida"
+        except Exception:
+            prob_val = "sem dado"
+            prob_sub = "Falha ao ler simulação de probabilidade"
 
     # --- LEITURA DO HEALTH CHECK ---
     try:
@@ -209,24 +220,34 @@ def ler_ultimos_incidentes(n=5):
 
 
 def calcular_score_operacional():
-    """Calcula o score de 0 a 100 baseado no health_check.json."""
+    """Calcula o score de 0 a 100 baseado no health_check.json (com fallback para componentes)."""
     try:
-        with open("data/health_check.json", "r") as f:
+        with open("data/health_check.json", "r", encoding="utf-8") as f:
             health = json.load(f)
         score = 0
-        if health.get("status") == "OK":
+        status = health.get("status") or health.get("sensor_erab", {}).get("status", "")
+        if "ONLINE" in str(status) or status == "OK":
             score += 50
-        idade = float(health["idade_min"])
+        idade = health.get("idade_min")
+        if idade is None:
+            idade = health.get("sensor_erab", {}).get("idade_min", 0)
+        try:
+            idade = float(idade)
+        except (TypeError, ValueError):
+            idade = 0.0
         if idade < 20:
             score += 25
-        vz_cm_h = float(health["vz_cm_h"])
+        vz_cm_h = health.get("vz_cm_h", 0)
+        try:
+            vz_cm_h = float(vz_cm_h)
+        except (TypeError, ValueError):
+            vz_cm_h = 0.0
         if vz_cm_h < 12:
             score += 25
         return score
     except Exception:
         logging.exception("Não foi possível calcular o score operacional.")
         return 0
-
 def gerar_resumo_executivo(cota, vz, az, regime):
     """Gera uma frase em linguagem natural a partir dos números."""
     if regime == "EXTREMO":

@@ -27,10 +27,10 @@ with open(BASE / "tubarao_saneamento_dados.json") as f:
 # 4. Carregar Ensemble (chuva prevista)
 with open(BASE / "data" / "chuva_ensemble_consolidada.json") as f:
     ens = json.load(f)
-chuva_pior = ens.get("pior_caso_48h_mm")
+chuva_pior = ens.get("pior_caso_72h_mm")
 
 if cota is None or chuva_pior is None:
-    print("SEM DADO: cota ou pior_caso_48h_mm ausente; probabilidade não calculada.")
+    print("SEM DADO: cota ou pior_caso_72h_mm ausente; probabilidade não calculada.")
     # Gravar JSON com "sem dado" (para o health_check ver o arquivo fresco)
     import json
     from datetime import datetime
@@ -40,7 +40,7 @@ if cota is None or chuva_pior is None:
     saida.write_text(json.dumps({
         "timestamp": datetime.now().isoformat(),
         "status": "SEM_DADO",
-        "motivo": "cota ou pior_caso_48h_mm ausente",
+        "motivo": "cota ou pior_caso_72h_mm ausente",
         "prob_media": None,
     }, indent=2), encoding="utf-8")
     raise SystemExit(0)
