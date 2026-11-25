@@ -44,24 +44,20 @@ def _is_web_oficial(cam: dict) -> bool:
     return cam.get("fonte") == "web_oficial" or bool(cam.get("url_web"))
 
 def _painel_web_oficial(cam: dict, altura: str = "210px"):
-    url_web = cam.get("url_web") or "https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico"
+    embed_url = cam.get("url_embed") or "https://rtsp.me/embed/G24fSDZB/"
     return html.Div(
-        [
-            html.Div("🌊 MONITORAMENTO OFICIAL — RÉGUA ERAB (RIO TUBARÃO)", className="text-info fw-bold small mb-2"),
-            html.P(
-                "Transmissão e telemetria oficial da calha principal hospedadas no portal da Tubarão Saneamento.",
-                className="text-light small mb-3",
-            ),
-            html.A(
-                "📷 Abrir Câmera & Régua Ao Vivo (Portal Oficial)",
-                href=url_web,
-                target="_blank",
-                rel="noopener noreferrer",
-                className="btn btn-info btn-sm fw-bold w-100",
-            ),
-        ],
-        className="p-3 bg-black rounded border border-info mb-2",
-        style={"minHeight": altura, "display": "flex", "flexDirection": "column", "justifyContent": "center"},
+        html.Iframe(
+            src=embed_url,
+            style={
+                "width": "100%",
+                "height": altura,
+                "border": "1px solid #0dcaf0",
+                "borderRadius": "6px",
+                "backgroundColor": "#000",
+            },
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture",
+        ),
+        className="mb-2",
     )
 
 def renderizar_player_selecionado(cam: dict | None = None):

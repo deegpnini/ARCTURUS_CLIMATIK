@@ -7,15 +7,15 @@
       "titulo_stream": "Câmera Ao Vivo ERAB — Régua Oficial do Rio Tubarão (Tubarão Saneamento)",
       "url_youtube": "",
       "url_web": "https://tubaraosaneamento.com.br/nivelriotubarao_termometro/get_historico",
+      "url_embed": "https://player.jmvstream.com/ipcam/7rSFrSCMnSByULnM3w3tveRI3tYx9M",
       "municipio": "Tubarão",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "rio",
       "status": "ATIVA",
-      "validado_em": "2026-11-22T11:52:28-03:00",
       "prioridade": 0,
       "lat": -28.4785,
       "lon": -49.0068,
-      "notas": "Câmera oficial ao vivo da régua telemétrica ERAB no site da Tubarão Saneamento."
+      "notas": "Ponto zero oficial de monitoramento visual da calha do Rio Tubarão (ERAB)."
     },
     {
       "id": "cam_001",
@@ -96,7 +96,7 @@
       "lat": -28.486,
       "lon": -48.775,
       "notas": "Câmera urbana I em Laguna, transmissão 24h.",
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "video_indisponivel_ou_vod_encerrado"
     },
     {
       "id": "cam_021",
@@ -113,7 +113,7 @@
       "lat": -28.4902,
       "lon": -48.7712,
       "notas": "Câmera urbana II em Laguna, transmissão 24h.",
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "video_indisponivel_ou_vod_encerrado"
     },
     {
       "id": "cam_022",
@@ -140,12 +140,13 @@
       "municipio": "Araranguá",
       "regiao_arcturus": "SUL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 2,
       "lat": -28.9356,
       "lon": -49.4858,
-      "notas": "Monitoramento 24h sobre o Rio Araranguá (travessia da balsa), ~76k visualizações acumuladas."
+      "notas": "Monitoramento 24h sobre o Rio Araranguá (travessia da balsa), ~76k visualizações acumuladas.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_003",
@@ -156,12 +157,13 @@
       "municipio": "Balneário Rincão",
       "regiao_arcturus": "SUL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 2,
       "lat": -28.8339,
       "lon": -49.2361,
-      "notas": "Orla/plataforma de pesca no litoral sul de SC, ~123k visualizações acumuladas."
+      "notas": "Orla/plataforma de pesca no litoral sul de SC, ~123k visualizações acumuladas.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_004",
@@ -172,12 +174,13 @@
       "municipio": "Balneário Arroio do Silva",
       "regiao_arcturus": "SUL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 2,
       "lat": -28.9839,
       "lon": -49.4128,
-      "notas": "Monitoramento costeiro 24h no extremo sul catarinense."
+      "notas": "Monitoramento costeiro 24h no extremo sul catarinense.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_015",
@@ -188,12 +191,13 @@
       "municipio": "São Joaquim",
       "regiao_arcturus": "SERRA_SC",
       "tipo": "clima",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 2,
       "lat": -28.2939,
       "lon": -49.9317,
-      "notas": "Planalto Serrano Catarinense, monitoramento visual 24h de frentes frias, geada, neve e nebulosidade."
+      "notas": "Planalto Serrano Catarinense, monitoramento visual 24h de frentes frias, geada, neve e nebulosidade.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_005",
@@ -210,7 +214,7 @@
       "lat": -26.8986,
       "lon": -48.6989,
       "notas": "Ponto estratégico de acesso à BR-101 Sul e Rod. Jorge Lacerda, ~221k visualizações.",
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_006",
@@ -221,12 +225,13 @@
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.9442,
       "lon": -48.6319,
-      "notas": "Orla da Praia Brava, ~168k visualizações acumuladas."
+      "notas": "Orla da Praia Brava, ~168k visualizações acumuladas.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_007",
@@ -237,12 +242,13 @@
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "cidade",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -27.5935,
       "lon": -48.5656,
-      "notas": "Multiplex 24h: Aeroporto (Carianos), Beira-Mar Norte/Ponte Hercílio Luz, Praia Mole, Santinho e Mirante Lagoa."
+      "notas": "Multiplex 24h: Aeroporto (Carianos), Beira-Mar Norte/Ponte Hercílio Luz, Praia Mole, Santinho e Mirante Lagoa.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_008",
@@ -253,12 +259,13 @@
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -27.6806,
       "lon": -48.4814,
-      "notas": "Sul da Ilha de Santa Catarina (Praia do Campeche), transmissão 24h."
+      "notas": "Sul da Ilha de Santa Catarina (Praia do Campeche), transmissão 24h.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_009",
@@ -269,12 +276,13 @@
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -27.4369,
       "lon": -48.3936,
-      "notas": "Norte da Ilha (Praia dos Ingleses), transmissão contínua."
+      "notas": "Norte da Ilha (Praia dos Ingleses), transmissão contínua.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_010",
@@ -285,12 +293,13 @@
       "municipio": "Florianópolis",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -27.5736,
       "lon": -48.4253,
-      "notas": "Canal e praia da Barra da Lagoa, transmissão 24h estável."
+      "notas": "Canal e praia da Barra da Lagoa, transmissão 24h estável.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_011",
@@ -301,12 +310,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.9926,
       "lon": -48.6305,
-      "notas": "Praia Central de Balneário Camboriú, transmissão 24h."
+      "notas": "Praia Central de Balneário Camboriú, transmissão 24h.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_012",
@@ -317,12 +327,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.9885,
       "lon": -48.6321,
-      "notas": "Orla da Avenida Atlântica, ~126k visualizações acumuladas."
+      "notas": "Orla da Avenida Atlântica, ~126k visualizações acumuladas.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_013",
@@ -333,12 +344,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "transito",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.9912,
       "lon": -48.6348,
-      "notas": "Corredor viário central da Avenida Brasil, ~93k visualizações."
+      "notas": "Corredor viário central da Avenida Brasil, ~93k visualizações.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_014",
@@ -349,12 +361,13 @@
       "municipio": "Balneário Camboriú",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "praia",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:21:00-03:00",
       "prioridade": 3,
       "lat": -26.996,
       "lon": -48.6289,
-      "notas": "Ângulo complementar da Avenida Atlântica / faixa de areia."
+      "notas": "Ângulo complementar da Avenida Atlântica / faixa de areia.",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_023",
@@ -371,7 +384,7 @@
       "lat": -26.9739,
       "lon": -48.6331,
       "notas": "Barra Norte / Pontal Norte de Balneário Camboriú (Hotel Marambaia), >720k visualizações acumuladas.",
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_024",
@@ -388,7 +401,7 @@
       "lat": -27.0015,
       "lon": -48.6245,
       "notas": "Setor adicional da Av. Atlântica em Balneário Camboriú, transmissão 24h.",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_025",
@@ -405,7 +418,7 @@
       "lat": -26.9906,
       "lon": -48.6348,
       "notas": "Panorama urbano do centro de Balneário Camboriú, transmissão 24h.",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_026",
@@ -422,7 +435,7 @@
       "lat": -26.9189,
       "lon": -49.0658,
       "notas": "Contexto visual direto do nível e correnteza do Rio Itajaí-Açu na Praça JK, >134k visualizações.",
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_027",
@@ -439,7 +452,7 @@
       "lat": -28.6841,
       "lon": -49.3763,
       "notas": "Stream público ao vivo 24h validado automaticamente em Criciúma (Federação Catarinense de Futsal).",
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_028",
@@ -456,7 +469,7 @@
       "lat": -26.997,
       "lon": -48.6349,
       "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (ConexãoDCTV - Oficial).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_029",
@@ -473,7 +486,7 @@
       "lat": -26.9948,
       "lon": -48.6327,
       "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (CLIMA BC Brazil).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_030",
@@ -490,7 +503,7 @@
       "lat": -26.9926,
       "lon": -48.6305,
       "notas": "Stream público ao vivo 24h validado automaticamente em Balneário Camboriú (ConexãoDCTV - Oficial).",
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_031",
@@ -507,7 +520,7 @@
       "lat": -27.5913,
       "lon": -48.5634,
       "notas": "Stream público ao vivo 24h validado automaticamente em Florianópolis (Barra da Lagoa Online).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_032",
@@ -524,7 +537,7 @@
       "lat": -27.6015,
       "lon": -48.5736,
       "notas": "Stream público ao vivo 24h em Florianópolis (Maaxcam Ao Vivo).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_033",
@@ -541,7 +554,7 @@
       "lat": -27.5995,
       "lon": -48.5676,
       "notas": "Stream público ao vivo 24h em Florianópolis (Maaxcam Ao Vivo).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_034",
@@ -558,7 +571,7 @@
       "lat": -26.9966,
       "lon": -48.6265,
       "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC).",
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_035",
@@ -575,7 +588,7 @@
       "lat": -26.9946,
       "lon": -48.6385,
       "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_036",
@@ -586,12 +599,13 @@
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "rio",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:52:56-03:00",
       "prioridade": 3,
       "lat": -26.9078,
       "lon": -48.6639,
-      "notas": "Stream público ao vivo 24h em Itajaí (ConexãoDCTV - Oficial)."
+      "notas": "Stream público ao vivo 24h em Itajaí (ConexãoDCTV - Oficial).",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_037",
@@ -608,7 +622,7 @@
       "lat": -26.9906,
       "lon": -48.6265,
       "notas": "Stream público ao vivo 24h em Balneário Camboriú (ConexãoDCTV - Oficial).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_038",
@@ -625,7 +639,7 @@
       "lat": -28.4785,
       "lon": -48.7888,
       "notas": "Stream público ao vivo 24h em Laguna (Se-Connect).",
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "video_indisponivel_ou_vod_encerrado"
     },
     {
       "id": "cam_039",
@@ -642,7 +656,7 @@
       "lat": -28.4653,
       "lon": -49.0164,
       "notas": "Stream público ao vivo 24h em Tubarão (Se-Connect).",
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_040",
@@ -659,7 +673,7 @@
       "lat": -26.9846,
       "lon": -48.6265,
       "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_041",
@@ -670,12 +684,13 @@
       "municipio": "Itajaí",
       "regiao_arcturus": "LITORAL_SC",
       "tipo": "transito",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T20:55:29-03:00",
       "prioridade": 3,
       "lat": -26.9158,
       "lon": -48.6699,
-      "notas": "Stream público ao vivo 24h em Itajaí (ConexãoDCTV - Oficial)."
+      "notas": "Stream público ao vivo 24h em Itajaí (ConexãoDCTV - Oficial).",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_042",
@@ -692,7 +707,7 @@
       "lat": -26.9986,
       "lon": -48.6325,
       "notas": "Stream público ao vivo 24h em Balneário Camboriú (CLIMA BC Brazil).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_043",
@@ -709,7 +724,7 @@
       "lat": -26.9966,
       "lon": -48.6265,
       "notas": "Stream público ao vivo 24h em Balneário Camboriú (ConexãoDCTV - Oficial).",
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_044",
@@ -726,7 +741,7 @@
       "lat": -27.1024,
       "lon": -52.6232,
       "notas": "Stream público ao vivo 24h em Chapecó (Portal Chapecó).",
-      "motivo_inativacao": "video_privado"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_045",
@@ -737,10 +752,11 @@
       "municipio": "jaraguá",
       "regiao_arcturus": "VALE_ITAJAI_NORTE",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:13:04-03:00",
       "prioridade": 3,
-      "notas": "descoberta em varredura cirúrgica (camera ao vivo Jaraguá do Sul)"
+      "notas": "descoberta em varredura cirúrgica (camera ao vivo Jaraguá do Sul)",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_046",
@@ -755,7 +771,7 @@
       "validado_em": "2026-11-19T21:13:04-03:00",
       "prioridade": 3,
       "notas": "descoberta em varredura cirúrgica (camera ao vivo Chapecó)",
-      "motivo_inativacao": "video_privado"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_047",
@@ -770,7 +786,7 @@
       "validado_em": "2026-11-19T21:13:04-03:00",
       "prioridade": 3,
       "notas": "descoberta em varredura cirúrgica (camera ao vivo Chapecó)",
-      "motivo_inativacao": "video_privado"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_048",
@@ -781,10 +797,11 @@
       "municipio": "xanxerê",
       "regiao_arcturus": "OESTE_SC",
       "tipo": "camera",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-19T21:13:04-03:00",
       "prioridade": 3,
-      "notas": "descoberta em varredura cirúrgica (camera ao vivo Xanxerê)"
+      "notas": "descoberta em varredura cirúrgica (camera ao vivo Xanxerê)",
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_049",
@@ -801,7 +818,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_050",
@@ -818,7 +835,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_051",
@@ -835,7 +852,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_052",
@@ -852,7 +869,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_053",
@@ -869,7 +886,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_054",
@@ -886,7 +903,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_055",
@@ -903,7 +920,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_056",
@@ -920,7 +937,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_057",
@@ -937,7 +954,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_058",
@@ -954,7 +971,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_059",
@@ -971,7 +988,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_060",
@@ -988,7 +1005,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_061",
@@ -1005,7 +1022,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_062",
@@ -1022,7 +1039,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_063",
@@ -1039,7 +1056,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_064",
@@ -1056,7 +1073,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_065",
@@ -1073,7 +1090,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_066",
@@ -1090,7 +1107,7 @@
       "notas": "busca expandida (Conexão DCTV Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_067",
@@ -1107,7 +1124,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_068",
@@ -1124,7 +1141,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_069",
@@ -1141,7 +1158,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_070",
@@ -1158,7 +1175,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_071",
@@ -1175,7 +1192,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_072",
@@ -1192,7 +1209,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_073",
@@ -1209,7 +1226,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_074",
@@ -1226,7 +1243,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_075",
@@ -1243,7 +1260,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_076",
@@ -1260,7 +1277,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_077",
@@ -1277,7 +1294,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_078",
@@ -1294,7 +1311,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_079",
@@ -1311,7 +1328,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_080",
@@ -1328,7 +1345,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_081",
@@ -1345,7 +1362,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_082",
@@ -1362,7 +1379,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_083",
@@ -1379,7 +1396,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_084",
@@ -1396,7 +1413,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_085",
@@ -1413,7 +1430,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_086",
@@ -1430,7 +1447,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_087",
@@ -1447,7 +1464,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_088",
@@ -1464,7 +1481,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_089",
@@ -1481,7 +1498,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_090",
@@ -1498,7 +1515,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_091",
@@ -1515,7 +1532,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_092",
@@ -1532,7 +1549,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_093",
@@ -1549,7 +1566,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_094",
@@ -1566,7 +1583,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_095",
@@ -1583,7 +1600,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_096",
@@ -1600,7 +1617,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_097",
@@ -1617,7 +1634,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_098",
@@ -1634,7 +1651,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_099",
@@ -1651,7 +1668,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_100",
@@ -1668,7 +1685,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_101",
@@ -1685,7 +1702,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_102",
@@ -1702,7 +1719,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_103",
@@ -1719,7 +1736,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_104",
@@ -1736,7 +1753,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_105",
@@ -1753,7 +1770,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_106",
@@ -1770,7 +1787,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_107",
@@ -1787,7 +1804,7 @@
       "notas": "busca expandida (CLIMA BC Balneário Camboriú ao vivo)",
       "lat": -26.9906,
       "lng": -48.6352,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_109",
@@ -1804,7 +1821,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_110",
@@ -1821,7 +1838,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_111",
@@ -1838,7 +1855,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_112",
@@ -1855,7 +1872,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_115",
@@ -1872,7 +1889,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_119",
@@ -1889,7 +1906,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_120",
@@ -1906,7 +1923,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_121",
@@ -1923,7 +1940,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_125",
@@ -1940,7 +1957,7 @@
       "notas": "busca expandida (Se-Connect Tubarão ao vivo)",
       "lat": -28.4667,
       "lng": -49.0069,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia"
     },
     {
       "id": "cam_126",
@@ -1973,7 +1990,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_128",
@@ -1990,7 +2007,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "video_indisponivel_ou_vod_encerrado"
     },
     {
       "id": "cam_129",
@@ -2007,7 +2024,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,contexto_incompativel"
     },
     {
       "id": "cam_130",
@@ -2024,7 +2041,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_131",
@@ -2041,7 +2058,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_132",
@@ -2058,7 +2075,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia,titulo_generico"
     },
     {
       "id": "cam_133",
@@ -2075,7 +2092,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia"
     },
     {
       "id": "cam_134",
@@ -2092,7 +2109,7 @@
       "notas": "busca expandida (Se-Connect Laguna ao vivo)",
       "lat": -28.4825,
       "lng": -48.7808,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "url_invalida_ou_vazia"
     },
     {
       "id": "cam_136",
@@ -2109,7 +2126,7 @@
       "notas": "busca expandida (câmera ao vivo Criciúma)",
       "lat": -28.6775,
       "lng": -49.3694,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_140",
@@ -2126,7 +2143,7 @@
       "notas": "busca expandida (câmera ao vivo Criciúma)",
       "lat": -28.6775,
       "lng": -49.3694,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_145",
@@ -2143,7 +2160,7 @@
       "notas": "busca expandida (câmera ao vivo Criciúma)",
       "lat": -28.6775,
       "lng": -49.3694,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_149",
@@ -2160,7 +2177,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_150",
@@ -2177,7 +2194,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_151",
@@ -2194,7 +2211,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_153",
@@ -2211,7 +2228,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_155",
@@ -2228,7 +2245,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_156",
@@ -2245,7 +2262,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_158",
@@ -2262,7 +2279,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_159",
@@ -2279,7 +2296,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_162",
@@ -2296,7 +2313,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -26.9078,
       "lng": -48.6619,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_164",
@@ -2313,7 +2330,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_165",
@@ -2330,7 +2347,7 @@
       "notas": "busca expandida (câmera ao vivo Araranguá)",
       "lat": -28.9344,
       "lng": -49.4858,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_166",
@@ -2347,7 +2364,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_168",
@@ -2364,7 +2381,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_169",
@@ -2381,7 +2398,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_170",
@@ -2398,7 +2415,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_171",
@@ -2415,7 +2432,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_172",
@@ -2432,7 +2449,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_173",
@@ -2449,7 +2466,7 @@
       "notas": "busca expandida (câmera ao vivo Garopaba)",
       "lat": -28.0247,
       "lng": -48.6194,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_174",
@@ -2466,7 +2483,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_175",
@@ -2483,7 +2500,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_176",
@@ -2500,7 +2517,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "municipio_nao_confirmado_no_titulo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_177",
@@ -2517,7 +2534,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_179",
@@ -2534,7 +2551,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_181",
@@ -2551,7 +2568,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_182",
@@ -2568,7 +2585,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_184",
@@ -2585,7 +2602,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_185",
@@ -2602,7 +2619,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_186",
@@ -2619,7 +2636,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_187",
@@ -2636,7 +2653,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_188",
@@ -2653,7 +2670,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "video_privado"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_190",
@@ -2670,7 +2687,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_191",
@@ -2687,7 +2704,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_192",
@@ -2704,7 +2721,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_193",
@@ -2721,7 +2738,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_194",
@@ -2738,7 +2755,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_195",
@@ -2755,7 +2772,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_197",
@@ -2772,7 +2789,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_198",
@@ -2789,7 +2806,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_199",
@@ -2806,7 +2823,7 @@
       "notas": "busca expandida (câmera ao vivo São José SC)",
       "lat": -27.6136,
       "lng": -48.6366,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_200",
@@ -2823,7 +2840,7 @@
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.5954,
       "lng": -48.548,
-      "motivo_inativacao": "limite_max_4_por_cidade"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_201",
@@ -2840,7 +2857,7 @@
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
       "lng": -48.6699,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_202",
@@ -2857,7 +2874,7 @@
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
       "lng": -48.6699,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_203",
@@ -2874,7 +2891,7 @@
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
       "lng": -48.6699,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_204",
@@ -2891,7 +2908,7 @@
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
       "lng": -48.6699,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_205",
@@ -2908,7 +2925,7 @@
       "notas": "busca expandida (câmera ao vivo Palhoça)",
       "lat": -27.6455,
       "lng": -48.6699,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_206",
@@ -2925,7 +2942,7 @@
       "notas": "busca expandida (câmera ao vivo Biguaçu)",
       "lat": -27.5954,
       "lng": -48.548,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_207",
@@ -2942,7 +2959,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_210",
@@ -2959,7 +2976,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_211",
@@ -2976,7 +2993,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_212",
@@ -2993,7 +3010,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_213",
@@ -3010,7 +3027,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.0254,
       "lng": -48.6536,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_214",
@@ -3027,7 +3044,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_215",
@@ -3044,7 +3061,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_216",
@@ -3061,7 +3078,7 @@
       "notas": "busca expandida (câmera ao vivo Tijucas)",
       "lat": -27.2422,
       "lng": -48.6347,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_218",
@@ -3078,7 +3095,7 @@
       "notas": "busca expandida (câmera ao vivo Brusque)",
       "lat": -27.0978,
       "lng": -48.9148,
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_226",
@@ -3095,7 +3112,7 @@
       "notas": "busca expandida (câmera ao vivo Brusque)",
       "lat": -27.0978,
       "lng": -48.9148,
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_234",
@@ -3112,7 +3129,7 @@
       "notas": "busca expandida (câmera ao vivo Rio do Sul)",
       "lat": -27.2136,
       "lng": -49.6429,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_239",
@@ -3129,7 +3146,7 @@
       "notas": "busca expandida (câmera ao vivo Rio do Sul)",
       "lat": -27.2136,
       "lng": -49.6429,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_240",
@@ -3146,7 +3163,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_242",
@@ -3163,7 +3180,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_246",
@@ -3180,7 +3197,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_247",
@@ -3197,7 +3214,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_249",
@@ -3214,7 +3231,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_253",
@@ -3231,7 +3248,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_254",
@@ -3248,7 +3265,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_255",
@@ -3265,7 +3282,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_256",
@@ -3282,7 +3299,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_257",
@@ -3299,7 +3316,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_260",
@@ -3316,7 +3333,7 @@
       "notas": "busca expandida (câmera ao vivo Lages)",
       "lat": -27.8156,
       "lng": -50.3261,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_261",
@@ -3333,7 +3350,7 @@
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
       "lng": -51.015,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_262",
@@ -3350,7 +3367,7 @@
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
       "lng": -51.015,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_263",
@@ -3367,7 +3384,7 @@
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
       "lng": -51.015,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_264",
@@ -3384,7 +3401,7 @@
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
       "lng": -51.015,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_265",
@@ -3401,7 +3418,7 @@
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
       "lng": -51.015,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_267",
@@ -3418,7 +3435,7 @@
       "notas": "busca expandida (câmera ao vivo Caçador)",
       "lat": -26.7753,
       "lng": -51.015,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_270",
@@ -3435,7 +3452,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_272",
@@ -3452,7 +3469,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_273",
@@ -3469,7 +3486,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_274",
@@ -3486,7 +3503,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_275",
@@ -3503,7 +3520,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_276",
@@ -3520,7 +3537,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_278",
@@ -3537,7 +3554,7 @@
       "notas": "busca expandida (câmera ao vivo Videira)",
       "lat": -27.0089,
       "lng": -51.1519,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_280",
@@ -3554,7 +3571,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "fora_de_santa_catarina"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_281",
@@ -3571,7 +3588,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_282",
@@ -3588,7 +3605,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_283",
@@ -3605,7 +3622,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_287",
@@ -3622,7 +3639,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_294",
@@ -3639,7 +3656,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_295",
@@ -3656,7 +3673,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "filtro_esporte_ou_evento"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_297",
@@ -3673,7 +3690,7 @@
       "notas": "busca expandida (câmera ao vivo Concórdia)",
       "lat": -27.2342,
       "lng": -52.0278,
-      "motivo_inativacao": "url_invalida"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_303",
@@ -3690,7 +3707,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_304",
@@ -3707,7 +3724,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_305",
@@ -3724,7 +3741,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_306",
@@ -3741,7 +3758,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_307",
@@ -3758,7 +3775,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_308",
@@ -3775,7 +3792,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_309",
@@ -3792,7 +3809,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_310",
@@ -3809,7 +3826,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_311",
@@ -3826,7 +3843,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_313",
@@ -3843,7 +3860,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_314",
@@ -3860,7 +3877,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_315",
@@ -3877,7 +3894,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_316",
@@ -3894,7 +3911,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_317",
@@ -3911,7 +3928,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_318",
@@ -3928,7 +3945,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_319",
@@ -3945,7 +3962,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_320",
@@ -3962,7 +3979,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_321",
@@ -3979,7 +3996,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_322",
@@ -3996,7 +4013,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_323",
@@ -4013,7 +4030,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_324",
@@ -4030,7 +4047,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_325",
@@ -4047,7 +4064,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_326",
@@ -4064,7 +4081,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "erro_ytdlp"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_327",
@@ -4081,7 +4098,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_328",
@@ -4098,7 +4115,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_329",
@@ -4115,7 +4132,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_330",
@@ -4132,7 +4149,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_331",
@@ -4149,7 +4166,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_332",
@@ -4166,7 +4183,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_333",
@@ -4183,7 +4200,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_334",
@@ -4200,7 +4217,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_335",
@@ -4217,7 +4234,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_336",
@@ -4234,7 +4251,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_337",
@@ -4251,7 +4268,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_338",
@@ -4268,7 +4285,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_339",
@@ -4285,7 +4302,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_340",
@@ -4302,7 +4319,7 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
     },
     {
       "id": "cam_341",
@@ -4319,7 +4336,35 @@
       "notas": "busca expandida (câmera ao vivo Joaçaba)",
       "lat": -27.1781,
       "lng": -51.5044,
-      "motivo_inativacao": "nao_esta_ao_vivo"
+      "motivo_inativacao": "fora_bacia_ou_filtro"
+    },
+    {
+      "id": "cam_342",
+      "fonte": "youtube",
+      "canal": "Turma do Papai Beto",
+      "titulo_stream": "SERRA DO RIO DO RASTRO AO VIVO - SC 390",
+      "url_youtube": "https://www.youtube.com/watch?v=8Ol6QKOY_8U",
+      "municipio": "Lauro Müller",
+      "regiao_arcturus": "BACIA_TUBARAO",
+      "tipo": "clima",
+      "status": "ATIVA",
+      "validado_em": "2026-11-25T11:29:09-03:00",
+      "prioridade": 1,
+      "notas": "Cabeceira / Serra do Rio do Rastro (SC-390) — varredura bacia 2026-11-25."
+    },
+    {
+      "id": "cam_343",
+      "fonte": "youtube",
+      "canal": "Turma do Papai Beto",
+      "titulo_stream": "SERRA DO RIO DO RASTRO 24 HORAS",
+      "url_youtube": "https://www.youtube.com/watch?v=csYy4mLWt9M",
+      "municipio": "Lauro Müller",
+      "regiao_arcturus": "BACIA_TUBARAO",
+      "tipo": "clima",
+      "status": "ATIVA",
+      "validado_em": "2026-11-25T11:29:09-03:00",
+      "prioridade": 1,
+      "notas": "Cabeceira / Serra do Rio do Rastro 24h — varredura bacia 2026-11-25."
     }
   ],
   "ultima_atualizacao": "2026-11-19T21:34:50-03:00"
