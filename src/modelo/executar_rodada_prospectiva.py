@@ -173,7 +173,15 @@ def _coletar_snapshot_unificado(conn) -> dict:
         idade_min = round((ts_origem.to_pydatetime() - mtime).total_seconds() / 60.0, 2)
         chuva_meta["idade_arquivo_min"] = idade_min
         chuva_meta["mtime_arquivo"] = mtime.isoformat()
-        chuva_meta["stale_chuva"] = bool(idade_min > 360.0)
+        from datetime import timedelta as _td
+        _ref_slot = ts_origem.to_pydatetime() - _td(minutes=10)
+        _slots_cand = [
+            (_ref_slot - _td(days=d)).replace(hour=h, minute=5, second=0, microsecond=0)
+            for d in (0, 1) for h in (0, 6, 12, 18)
+        ]
+        _slot_esperado = max(c for c in _slots_cand if c <= _ref_slot)
+        chuva_meta["slot_esperado"] = _slot_esperado.isoformat()
+        chuva_meta["stale_chuva"] = bool(mtime < _slot_esperado)
 
         df_r = pd.read_csv(RAIN_CSV, index_col=0, parse_dates=True)
         df_r.index = pd.to_datetime(df_r.index, errors="coerce")
@@ -332,6 +340,7 @@ def _calcular_fisica_v1(snapshot: dict, h_str: str) -> tuple[float, dict, str]:
             "ponderacao": ch["ponderacao_espacial"],
             "idade_arquivo_min": ch["idade_arquivo_min"],
             "stale_chuva": ch["stale_chuva"],
+            "slot_esperado": ch.get("slot_esperado"),
         },
         "parametros_congelados": p,
     })
