@@ -332,3 +332,4 @@ logs/*.jsonl
 
 # Rascunhos locais usados durante a reorganizacao
 scripts/local_tmp/
+*.bak_*
