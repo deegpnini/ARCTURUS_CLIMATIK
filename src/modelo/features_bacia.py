@@ -50,9 +50,9 @@ def calcular_features_bacia(data_alvo) -> dict:
 
         data_alvo = pd.Timestamp(data_alvo)
         if df.index.max() > data_alvo:
-            LOGGER.warning(
-                "Possível leakage na chuva: última linha %s > origem %s; "
-                "linhas futuras serão ignoradas.",
+            LOGGER.debug(
+                "CSV de chuva tem timestamps futuros (última linha %s > origem %s). "
+                "Filtro <= data_alvo já remove o futuro; não é vazamento.",
                 df.index.max(), data_alvo,
             )
 

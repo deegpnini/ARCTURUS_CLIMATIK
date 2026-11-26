@@ -16,14 +16,14 @@ def test_future_rainfall_rows_are_logged_and_excluded(tmp_path, monkeypatch, cap
     ).to_csv(rainfall_path, index=False)
     monkeypatch.setattr(features_bacia, "ARQUIVO_BACIA", rainfall_path)
 
-    with caplog.at_level(logging.WARNING):
+    with caplog.at_level(logging.DEBUG):
         result = features_bacia.calcular_features_bacia(
             pd.Timestamp("2026-10-31 12:00:00")
         )
 
     assert result["bacia_3h"] == 9.0
-    assert "Possível leakage na chuva" in caplog.text
-    assert "linhas futuras serão ignoradas" in caplog.text
+    assert "CSV de chuva tem timestamps futuros" in caplog.text
+    assert "Filtro <= data_alvo já remove o futuro" in caplog.text
 
 
 def test_nan_rainfall_is_reported_without_replacing_with_zero(
