@@ -42,6 +42,26 @@ BASE = Path(__file__).resolve().parent
 DB_URL = os.environ.get("DATABASE_URL", "postgresql:///arcturus")
 
 
+def obter_previsao_fisica():
+    """Lê as últimas previsões da fisica_3bracos em forecast_predictions."""
+    from src.relatorios.postgres_db import get_postgres_connection
+    conn = get_postgres_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT horizonte, y_pred_delta_cm
+        FROM forecast_predictions
+        WHERE model_name = 'fisica_3bracos'
+          AND valido = true
+          AND ts_origem > NOW() - INTERVAL '30 minutes'
+        ORDER BY ts_origem DESC, horizonte
+        LIMIT 3
+    """)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return {h: float(y) for h, y in rows if y is not None}
+
+
 def _numero(valor, casas=1):
     return f"{valor:.{casas}f}".replace(".", ",")
 
@@ -370,6 +390,21 @@ if tempo_file.exists():
         previsao_html = "☁️ <b>Previsão meteorológica indisponível.</b>"
 
 tendencia = "subindo" if variacao > 0.5 else "caindo" if variacao < -0.5 else "estável"
+# Adiciona a linha extra da física (se disponível)
+try:
+    fisica = obter_previsao_fisica()
+    if fisica:
+        linha_fisica = "\n\n🧪 <b>Projeção experimental · física 3 braços</b>\n"
+        linha_fisica += " | ".join(
+            f"{h}: {fisica.get(h, 0):+.0f} cm"
+            for h in ["1h", "3h", "6h"]
+            if h in fisica
+        )
+        linha_fisica += "\n<i>(modelo em validação, não é alerta oficial)</i>"
+        msg += linha_fisica
+except Exception:
+    pass
+
 msg = formatar_boletim(
     {
         "agora": ts_atual,
