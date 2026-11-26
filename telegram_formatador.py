@@ -298,32 +298,44 @@ def formatar_boletim(dados: dict) -> str:
         return resumo_sem_detalhes
 
 
-def enviar_com_fallback(post, url: str, chat_id: str, mensagem: str):
-    """Tenta HTML e reenvia como texto simples se as entidades forem rejeitadas."""
+def enviar_com_fallback(post, url: str, chat_id: str, mensagem: str, max_tentativas: int = 3):
+    """Tenta HTML e reenvia como texto simples se as entidades forem rejeitadas.
+    Adiciona retry com backoff exponencial para timeouts transitórios."""
+    import time
     parametros = {
         "chat_id": chat_id,
         "text": mensagem,
         "parse_mode": "HTML",
         "disable_web_page_preview": "true",
     }
-    resposta = post(url, data=parametros, timeout=20)
-    if resposta.status_code != 400:
-        return resposta, False
+    ultima_excecao = None
+    for tentativa in range(max_tentativas):
+        try:
+            resposta = post(url, data=parametros, timeout=30)
+            if resposta.status_code != 400:
+                return resposta, False
 
-    try:
-        descricao = str(resposta.json().get("description", "")).lower()
-    except (ValueError, AttributeError):
-        return resposta, False
+            try:
+                descricao = str(resposta.json().get("description", "")).lower()
+            except (ValueError, AttributeError):
+                return resposta, False
 
-    erro_html = (
-        "can't parse entities" in descricao
-        or "unsupported start tag" in descricao
-        or "unsupported entity" in descricao
-    )
-    if not erro_html:
-        return resposta, False
+            erro_html = (
+                "can't parse entities" in descricao
+                or "unsupported start tag" in descricao
+                or "unsupported entity" in descricao
+            )
+            if not erro_html:
+                return resposta, False
 
-    texto_simples = unescape(re.sub(r"</?[^>]+>", "", mensagem))
-    parametros.pop("parse_mode")
-    parametros["text"] = texto_simples
-    return post(url, data=parametros, timeout=20), True
+            texto_simples = unescape(re.sub(r"</?[^>]+>", "", mensagem))
+            parametros.pop("parse_mode", None)
+            parametros["text"] = texto_simples
+            return post(url, data=parametros, timeout=30), True
+        except Exception as exc:
+            ultima_excecao = exc
+            if tentativa < max_tentativas - 1:
+                time.sleep(2 ** tentativa)
+    if ultima_excecao is not None:
+        raise ultima_excecao
+    return None, False
