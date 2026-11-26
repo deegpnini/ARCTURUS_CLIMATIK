@@ -57,6 +57,15 @@ log_timeout $? coletar_mare_laguna
 timeout -k 30 240 "$PYTHON" "$BASE_DIR/src/modelo/executar_rodada_prospectiva.py" 9>&- >> "$BASE_DIR/logs/prospectivo.log" 2>&1
 log_timeout $? executar_rodada_prospectiva
 
+# 3.4 Comparacao condicional em modo sombra (nao envia Telegram nem altera o boletim oficial)
+if timeout -k 30 240 "$PYTHON" "$BASE_DIR/boletim_sombra.py" 9>&- >> "$BASE_DIR/logs/boletim_sombra.log" 2>&1; then
+    :
+else
+    rc=$?
+    log_timeout "$rc" boletim_sombra
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] AVISO: boletim_sombra terminou com rc=$rc; modo oficial nao foi alterado" >> "$BASE_DIR/logs/ciclo_completo.log"
+fi
+
 # 3.5 Validação contextual com comunicados oficiais (Defesa Civil SC / imprensa regional)
 timeout -k 30 240 "$PYTHON" "$BASE_DIR/validar_contexto_noticias.py" 9>&- >> "$BASE_DIR/logs/contexto_noticias.log" 2>&1
 log_timeout $? validar_contexto_noticias
