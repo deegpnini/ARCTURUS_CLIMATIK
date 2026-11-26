@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 from html import escape
 import math
 from pathlib import Path
+from src.relatorios.verificador_dashboard import carregar_verificacao
 from telegram_formatador import (
     avaliar_frescor_telemetria,
     estado_coleta_defesacivil,
@@ -383,6 +384,19 @@ msg = formatar_boletim(
         "previsao_html": previsao_html,
     }
 )
+
+# Adiciona taxa de acerto do verificador após o boletim ser formatado
+try:
+    verificacao = carregar_verificacao()
+    if verificacao and verificacao.get("resumo"):
+        msg_verif = "\n\n📊 <b>Verificador de Previsões</b>\n"
+        for h in ["1h", "3h", "6h"]:
+            r = verificacao["resumo"].get(h)
+            if r:
+                msg_verif += f"• {h}: {r['taxa_acerto_aproximado']}% acerto (MAE {r['mae_cm']} cm)\n"
+        msg += msg_verif
+except Exception:
+    pass
 
 # --- 6.5) Camada Hidrológica: Risco Urbano vs. Fluvial + Eixo dos 3 Braços ---
 try:

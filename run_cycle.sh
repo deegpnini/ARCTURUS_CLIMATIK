@@ -42,6 +42,14 @@ timeout -k 30 240 "$PYTHON" "$BASE_DIR/src/relatorios/gravar_postgres.py" 9>&-
 log_timeout $? gravar_postgres
 timeout -k 30 240 "$PYTHON" "$BASE_DIR/model_runner.py" 9>&-
 log_timeout $? model_runner
+
+# 3.1) Ensemble de especialistas: calcula probabilidade de cheia
+timeout -k 30 240 "$PYTHON" "$BASE_DIR/src/modelo/ensemble_especialistas.py" 9>&- >> "$BASE_DIR/logs/ensemble.log" 2>&1
+log_timeout $? ensemble_especialistas
+
+# 3.2) Verificador de previsões: compara previsões vencidas com a cota real
+timeout -k 30 240 "$PYTHON" "$BASE_DIR/verificador_previsoes.py" 9>&- >> "$BASE_DIR/logs/verificador.log" 2>&1
+log_timeout $? verificador_previsoes
 timeout -k 30 240 "$PYTHON" "$BASE_DIR/backfill_y_true.py" 9>&-
 log_timeout $? backfill_y_true
 
