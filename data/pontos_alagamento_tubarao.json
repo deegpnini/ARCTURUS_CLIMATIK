@@ -14,7 +14,9 @@
     ],
     "latitude": -28.4812,
     "longitude": -49.0205,
-    "fonte": "Plano de Contingência Tubarão 2024/2025 e Inquérito MPSC 2026"
+    "fonte": "Plano de Contingência Tubarão 2024/2025 e Inquérito MPSC 2026",
+    "classificacao": "URBANO",
+    "sistema_hidrologico": "Sistema 1 — Drenagem Urbana"
   },
   {
     "id": "VILA_MOEMA",
@@ -31,7 +33,9 @@
     ],
     "latitude": -28.4775,
     "longitude": -49.0085,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "URBANO",
+    "sistema_hidrologico": "Sistema 1 — Drenagem Urbana"
   },
   {
     "id": "CENTRO",
@@ -48,7 +52,9 @@
     ],
     "latitude": -28.4718,
     "longitude": -49.0069,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "URBANO",
+    "sistema_hidrologico": "Sistema 1 — Drenagem Urbana"
   },
   {
     "id": "OFICINAS",
@@ -65,7 +71,9 @@
     ],
     "latitude": -28.4865,
     "longitude": -48.9995,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "URBANO",
+    "sistema_hidrologico": "Sistema 1 — Drenagem Urbana"
   },
   {
     "id": "PASSAGEM",
@@ -82,7 +90,9 @@
     ],
     "latitude": -28.4622,
     "longitude": -48.996,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "FLUVIAL",
+    "sistema_hidrologico": "Sistema 2 — Calha Fluvial / Remanso"
   },
   {
     "id": "SAO_MARTINHO",
@@ -98,7 +108,9 @@
     ],
     "latitude": -28.4485,
     "longitude": -49.0185,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "FLUVIAL",
+    "sistema_hidrologico": "Sistema 2 — Calha Fluvial / Remanso"
   },
   {
     "id": "GUARDA",
@@ -114,7 +126,9 @@
     ],
     "latitude": -28.4455,
     "longitude": -49.0645,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "FLUVIAL",
+    "sistema_hidrologico": "Sistema 2 — Calha Fluvial / Remanso"
   },
   {
     "id": "CONGONHAS",
@@ -130,6 +144,8 @@
     ],
     "latitude": -28.5145,
     "longitude": -49.015,
-    "fonte": "Plano de Contingência Tubarão 2024/2025"
+    "fonte": "Plano de Contingência Tubarão 2024/2025",
+    "classificacao": "FLUVIAL",
+    "sistema_hidrologico": "Sistema 2 — Calha Fluvial / Remanso"
   }
 ]

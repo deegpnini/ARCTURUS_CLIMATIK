@@ -44,12 +44,15 @@ def avaliar_contexto_vulnerabilidade(
     fluvial_ativo = cota_erab_cm >= 250.0
 
     locais_urbanos = [
-        p["nome"] for p in pontos if p.get("tipo") == "drenagem_urbana"
+        p["nome"]
+        for p in pontos
+        if p.get("classificacao") == "URBANO" or p.get("tipo") == "drenagem_urbana"
     ]
     locais_fluviais = [
         p["nome"]
         for p in pontos
-        if p.get("tipo") in ("cheia_fluvial", "confluencia_e_montante", "planicie_e_remanso")
+        if p.get("classificacao") == "FLUVIAL"
+        or p.get("tipo") in ("cheia_fluvial", "confluencia_e_montante", "planicie_e_remanso")
     ]
 
     return {
