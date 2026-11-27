@@ -31,5 +31,29 @@
   "n_features": 27,
   "versao": "v8_final",
   "invernadinha_removida": true,
-  "alvo_por_tempo": true
+  "alvo_por_tempo": true,
+  "corte_treino": {
+    "treino_fim_exclusivo": "2025-01-01",
+    "validacao_fim_exclusivo": "2025-07-01",
+    "teste_inicio_inclusivo": "2025-07-01",
+    "script_origem": "src/modelo/retreinar_v8_final.py"
+  },
+  "artefatos_binarios": {
+    "1h": {
+      "arquivo": "modelos/modelo_delta_1h_v8_final.txt",
+      "sha256": "cb4486233220f472d934f9e0c0f0bedb697576713d53bc7c1da4ddee606cff74",
+      "mtime": "2026-11-08T14:12:38.946564-03:00"
+    },
+    "3h": {
+      "arquivo": "modelos/modelo_delta_3h_v8_final.txt",
+      "sha256": "d9106c179676a62da0cd26265b8f826ce82f76832e40b177bf672a4c48e6ce58",
+      "mtime": "2026-11-08T14:12:38.950564-03:00"
+    },
+    "6h": {
+      "arquivo": "modelos/modelo_delta_6h_v8_final.txt",
+      "sha256": "da1e9310a33c7c727a6d3a66550ee865bcea7e69eca9bee7d9a8c9d8f4eefef7",
+      "mtime": "2026-11-08T14:12:38.950564-03:00"
+    }
+  },
+  "auditado_em": "2026-11-26T21:33:55.879684-03:00"
 }

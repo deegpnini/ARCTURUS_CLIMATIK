@@ -219,11 +219,137 @@ def avaliar_sombra_v11c(conn, df_curto: pd.DataFrame) -> tuple[pd.DataFrame, lis
     return valid_24, resumo
 
 
+
+
+def _metricas_episodios_limiar(df_h: pd.DataFrame, col_pred: str, limiar: float) -> dict:
+    """Agrupa cruzamentos em episodios independentes (gap > 6h) e calcula POD, FAR e antecedencia."""
+    d = df_h.sort_values("ts_origem").copy()
+    d["cota_obs_alvo"] = d["cota_origem_cm"] + d["observado"]
+    d["cota_pred_alvo"] = d["cota_origem_cm"] + d[col_pred]
+    d["cruzou_real"] = (d["cota_origem_cm"] < limiar) & (d["cota_obs_alvo"] >= limiar)
+    d["disparou_pred"] = (d["cota_origem_cm"] < limiar) & (d["cota_pred_alvo"] >= limiar)
+
+    reais = d[d["cruzou_real"]].copy()
+    if reais.empty:
+        n_ep = 0
+    else:
+        reais["ep_id"] = (reais["ts_alvo"].diff() > pd.Timedelta(hours=6)).cumsum()
+        n_ep = int(reais["ep_id"].nunique())
+
+    detectados = 0
+    antecedencias_h = []
+    janelas_reais = []
+    if n_ep > 0:
+        for _, grp in reais.groupby("ep_id"):
+            t_ini_cruz = grp["ts_alvo"].min()
+            t_fim_cruz = grp["ts_alvo"].max()
+            janelas_reais.append((t_ini_cruz - pd.Timedelta(hours=6), t_fim_cruz))
+            cand = d[
+                d["disparou_pred"]
+                & (d["ts_origem"] <= t_ini_cruz)
+                & (d["ts_alvo"] >= t_ini_cruz - pd.Timedelta(hours=1))
+            ]
+            if not cand.empty:
+                detectados += 1
+                primeiro_alerta = cand["ts_origem"].min()
+                ant_h = max(0.0, (t_ini_cruz - primeiro_alerta).total_seconds() / 3600.0)
+                antecedencias_h.append(ant_h)
+
+    preds = d[d["disparou_pred"]].copy()
+    falsos_alarmes = 0
+    if not preds.empty:
+        preds["fa_id"] = (preds["ts_origem"].diff() > pd.Timedelta(hours=6)).cumsum()
+        for _, grp in preds.groupby("fa_id"):
+            t_p0, t_p1 = grp["ts_origem"].min(), grp["ts_alvo"].max()
+            bateu_real = any(not (t_p1 < r0 or t_p0 > r1) for r0, r1 in janelas_reais)
+            if not bateu_real:
+                falsos_alarmes += 1
+
+    pod = round(100.0 * detectados / n_ep, 1) if n_ep > 0 else np.nan
+    total_alertas = detectados + falsos_alarmes
+    far = round(100.0 * falsos_alarmes / total_alertas, 1) if total_alertas > 0 else 0.0
+    ant_med = round(float(np.mean(antecedencias_h)), 2) if antecedencias_h else np.nan
+    return {
+        "episodios_reais": n_ep,
+        "detectados": detectados,
+        "pod_pct": pod,
+        "falsos_alarmes": falsos_alarmes,
+        "far_pct": far,
+        "antecedencia_media_h": ant_med,
+    }
+
+
+def avaliar_alertas_por_episodio(conn, df_curto: pd.DataFrame) -> pd.DataFrame:
+    linhas = []
+    # 1. Serie longa do v8_final_bacia (predicoes_shadow deduplicada por slot de 15 min)
+    df_v8 = pd.read_sql(
+        """
+        SELECT DISTINCT ON (date_trunc('minute', timestamp) - ((extract(minute FROM timestamp)::int % 15) * interval '1 minute'), horizonte)
+               timestamp AS ts_origem,
+               horizonte,
+               cota_atual AS cota_origem_cm,
+               y_score AS previsto_v8,
+               y_true AS observado
+        FROM predicoes_shadow
+        WHERE model_version = 'v8_final_bacia'
+          AND valido AND NOT stale
+          AND y_true IS NOT NULL
+          AND cota_atual IS NOT NULL
+          AND COALESCE(desvio_alvo_min, 0) <= 10
+        ORDER BY date_trunc('minute', timestamp) - ((extract(minute FROM timestamp)::int % 15) * interval '1 minute'),
+                 horizonte,
+                 COALESCE(ts_predicao, timestamp) DESC;
+        """,
+        conn,
+    )
+    if not df_v8.empty:
+        df_v8["ts_origem"] = pd.to_datetime(df_v8["ts_origem"])
+        horas_map = {"1h": 1, "3h": 3, "6h": 6}
+        for h, nh in horas_map.items():
+            sub = df_v8[df_v8["horizonte"] == h].copy()
+            if sub.empty:
+                continue
+            sub["ts_alvo"] = sub["ts_origem"] + pd.to_timedelta(nh, unit="h")
+            for lim in (150.0, 200.0, 250.0):
+                m = _metricas_episodios_limiar(sub, "previsto_v8", lim)
+                linhas.append({
+                    "serie": "SERIE_LONGA_V8_02NOV_26NOV",
+                    "horizonte": h,
+                    "modelo": "v8_final_bacia",
+                    "limiar_cm": int(lim),
+                    **m,
+                })
+
+    # 2. Bancada pareada recente (forecast_predictions)
+    if not df_curto.empty:
+        for h in ("1h", "3h", "6h"):
+            sub = df_curto[df_curto["horizonte"] == h].copy()
+            if sub.empty:
+                continue
+            for nome_m, col_p in [
+                ("persistencia", "previsto_persistencia"),
+                ("v8_final_bacia", "previsto_v8"),
+                ("fisica_3bracos", "previsto_fisica"),
+            ]:
+                for lim in (150.0, 200.0):
+                    m = _metricas_episodios_limiar(sub, col_p, lim)
+                    linhas.append({
+                        "serie": "BANCADA_PAREADA_23NOV_26NOV",
+                        "horizonte": h,
+                        "modelo": nome_m,
+                        "limiar_cm": int(lim),
+                        **m,
+                    })
+
+    return pd.DataFrame(linhas)
+
+
 def main() -> None:
     conn = get_postgres_connection()
     try:
         df_curto, res_curto = avaliar_pareado_curto(conn)
         df_24h, res_24h = avaliar_sombra_v11c(conn, df_curto)
+        df_alertas = avaliar_alertas_por_episodio(conn, df_curto)
     finally:
         conn.close()
 
@@ -231,6 +357,7 @@ def main() -> None:
 
     Path("data").mkdir(exist_ok=True)
     df_resumo.to_csv("data/avaliacao_modelos.csv", index=False)
+    df_alertas.to_csv("data/avaliacao_alertas_episodios.csv", index=False)
     df_curto.to_parquet("data/resultado_modelos.parquet", index=False)
     if not df_24h.empty:
         df_24h.to_parquet("data/resultado_modelos_v11c_24h.parquet", index=False)
@@ -281,6 +408,15 @@ def main() -> None:
             "## Tabela Completa (`data/avaliacao_modelos.csv`)",
             "",
             md_tab,
+            "",
+            "## Antecipação de Cruzamento de Limiares por Episódio (`data/avaliacao_alertas_episodios.csv`)",
+            "",
+            "| " + " | ".join(df_alertas.columns) + " |",
+            "| " + " | ".join(["---"] * len(df_alertas.columns)) + " |",
+            *[
+                "| " + " | ".join(str(v) for v in row) + " |"
+                for row in df_alertas.itertuples(index=False)
+            ],
             "",
         ]
     )
