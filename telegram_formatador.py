@@ -242,6 +242,11 @@ def formatar_boletim(dados: dict) -> str:
             "<i>Probabilidade de cheia: indisponível "
             "(modelo em validação).</i>"
         )
+    else:
+        detalhes.append(
+            "🔭 <b>Projeção experimental · modo sombra</b>\n"
+            "<i>Previsão indisponível neste ciclo.</i>"
+        )
 
     estacoes = dados.get("estacoes") or []
     if estacoes:

@@ -150,8 +150,9 @@ def ultima_chuva_observada(ts_origem, caminho=RAIN_CSV):
     if chuva.empty:
         return None
     if chuva.index.max() > ts_origem:
-        LOGGER.warning(
-            "Possível leakage no CSV de chuva: máximo=%s, ts_origem=%s. Dados posteriores à origem não serão considerados.",
+        LOGGER.debug(
+            "CSV de chuva tem timestamps futuros (máximo=%s, ts_origem=%s). "
+            "Filtro <= ts_origem já remove o futuro; não é vazamento.",
             chuva.index.max(), ts_origem
         )
     elegiveis = chuva.index[chuva.index <= ts_origem]

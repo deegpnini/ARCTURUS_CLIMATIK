@@ -101,11 +101,13 @@ variacao = (cota_atual - cota_anterior) if cota_anterior is not None else 0.0
 
 # --- 2) Previsão (última predição) ---
 cur.execute("""
-    SELECT horizonte, y_score FROM predicoes_shadow
-    WHERE timestamp > NOW() - INTERVAL '20 minutes'
+    SELECT DISTINCT ON (horizonte) horizonte, y_score
+    FROM predicoes_shadow
+    WHERE model_version = 'v8_final_bacia'
+      AND valido = true
       AND stale = false
-    ORDER BY timestamp DESC, horizonte
-    LIMIT 3
+      AND COALESCE(ts_predicao, timestamp) > NOW() - INTERVAL '20 minutes'
+    ORDER BY horizonte, COALESCE(ts_predicao, timestamp) DESC
 """)
 previsoes = {h: y for h, y in cur.fetchall()}
 cur.close()
