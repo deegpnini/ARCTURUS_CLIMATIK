@@ -4347,10 +4347,11 @@
       "municipio": "Lauro Müller",
       "regiao_arcturus": "BACIA_TUBARAO",
       "tipo": "clima",
-      "status": "ATIVA",
+      "status": "INATIVA",
       "validado_em": "2026-11-25T11:29:09-03:00",
       "prioridade": 1,
-      "notas": "Cabeceira / Serra do Rio do Rastro (SC-390) — varredura bacia 2026-11-25."
+      "notas": "Cabeceira / Serra do Rio do Rastro (SC-390) — varredura bacia 2026-11-25.",
+      "motivo_inativacao": "retransmissao_gravada_vod_horario_divergente"
     },
     {
       "id": "cam_343",

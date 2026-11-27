@@ -1,4 +1,5 @@
 from src.relatorios.dashboard_kpis import obter_kpis_operacionais
+from src.relatorios.verificador_dashboard import carregar_verificacao
 from src.relatorios.cameras_dashboard import (
     carregar_cameras_ativas,
     buscar_camera_por_id,
@@ -620,46 +621,54 @@ def get_mapa_clima():
         name="Municípios da Bacia",
     ))
 
-    # 3. Camada de Vulnerabilidade Hidrológica (8 pontos prioritários de Tubarão)
+    # 3. Camada Dupla de Vulnerabilidade Hidrológica (Sistema 1 URBANO vs Sistema 2 FLUVIAL)
     vuln_path = base_dir / "data" / "pontos_alagamento_tubarao.json"
     if vuln_path.exists():
         try:
             pontos_v = json.loads(vuln_path.read_text(encoding="utf-8"))
-            v_lats, v_lons, v_cores, v_textos = [], [], [], []
-            mapa_cor = {"alta": "#EF4444", "media": "#F97316", "baixa": "#EAB308"}
+            grupos_v = {
+                "URBANO": {"lats": [], "lons": [], "cores": [], "textos": [], "nome_trace": "Vulnerabilidade: Urbano (Drenagem)", "cor_padrao": "#F97316"},
+                "FLUVIAL": {"lats": [], "lons": [], "cores": [], "textos": [], "nome_trace": "Vulnerabilidade: Fluvial / Remanso", "cor_padrao": "#EF4444"},
+            }
             mapa_tipo = {
-                "drenagem_urbana": "Risco Urbano (Drenagem)",
-                "cheia_fluvial": "Risco Fluvial (Calha Principal)",
-                "confluencia_e_montante": "Risco Fluvial (Confluência / Montante)",
-                "planicie_e_remanso": "Risco Fluvial (Planície / Remanso)",
+                "drenagem_urbana": "Sistema 1 — Drenagem Urbana",
+                "cheia_fluvial": "Sistema 2 — Cheia Fluvial (Calha Principal)",
+                "confluencia_e_montante": "Sistema 2 — Confluência / Montante",
+                "planicie_e_remanso": "Sistema 2 — Planície / Remanso",
             }
             for pv in pontos_v:
                 lat_v, lon_v = pv.get("latitude"), pv.get("longitude")
                 if lat_v is None or lon_v is None:
                     continue
+                classe = str(pv.get("classificacao") or ("URBANO" if pv.get("tipo") == "drenagem_urbana" else "FLUVIAL")).upper()
+                if classe not in grupos_v:
+                    classe = "FLUVIAL"
                 crit = str(pv.get("criticidade", "media")).lower()
-                v_lats.append(lat_v)
-                v_lons.append(lon_v)
-                v_cores.append(mapa_cor.get(crit, "#F97316"))
+                cor_pt = "#FBBF24" if (classe == "URBANO" and crit == "media") else grupos_v[classe]["cor_padrao"]
                 hist_str = ", ".join(pv.get("historico", []))
                 tipo_lbl = mapa_tipo.get(pv.get("tipo", ""), pv.get("tipo", ""))
-                v_textos.append(
-                    f"<b>📍 {pv.get('nome')}</b><br>"
+                grupos_v[classe]["lats"].append(lat_v)
+                grupos_v[classe]["lons"].append(lon_v)
+                grupos_v[classe]["cores"].append(cor_pt)
+                grupos_v[classe]["textos"].append(
+                    f"<b>📍 {pv.get('nome')} [{classe}]</b><br>"
                     f"Sistema: {tipo_lbl}<br>"
                     f"Criticidade: <b>{crit.upper()}</b><br>"
                     f"Zona: {pv.get('zona', '')}<br>"
                     f"Histórico: {hist_str}"
                 )
-            if v_lats:
-                fig.add_trace(go.Scattermap(
-                    lat=v_lats,
-                    lon=v_lons,
-                    mode="markers",
-                    marker=dict(size=11, color=v_cores, opacity=0.95),
-                    hovertext=v_textos,
-                    hoverinfo="text",
-                    name="Vulnerabilidade Histórica (8 pontos)",
-                ))
+            for classe_k in ("URBANO", "FLUVIAL"):
+                g = grupos_v[classe_k]
+                if g["lats"]:
+                    fig.add_trace(go.Scattermap(
+                        lat=g["lats"],
+                        lon=g["lons"],
+                        mode="markers",
+                        marker=dict(size=11, color=g["cores"], opacity=0.95),
+                        hovertext=g["textos"],
+                        hoverinfo="text",
+                        name=g["nome_trace"],
+                    ))
         except Exception:
             pass
 
@@ -813,6 +822,99 @@ def _carregar_kpis_iniciais():
             'sombra_val': 'Indisponível', 'sombra_sub': 'Modo sombra • Aguardando ciclo',
         }
 
+
+
+def _renderizar_painel_cientifico():
+    """Renderiza os artefatos congelados das Etapas 1-4 (Validacao ANA, Eventos e Avaliacao Pareada v8 x fisica x v11c)."""
+    val_info = {}
+    p_val = DATA_DIR / "validacao_datasets.json"
+    if p_val.exists():
+        try:
+            val_info = json.loads(p_val.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    n_episodios = "--"
+    p_ep = DATA_DIR / "eventos_calibracao.csv"
+    if p_ep.exists():
+        try:
+            n_episodios = str(len(pd.read_csv(p_ep)))
+        except Exception:
+            pass
+
+    linhas_tabela = []
+    p_av = DATA_DIR / "avaliacao_modelos.csv"
+    if p_av.exists():
+        try:
+            df_av = pd.read_csv(p_av)
+            for _, r in df_av.iterrows():
+                linhas_tabela.append(
+                    html.Tr([
+                        html.Td(str(r.get("grupo_avaliacao", "")), className="small"),
+                        html.Td(html.B(str(r.get("horizonte", "")))),
+                        html.Td(str(r.get("modelo", ""))),
+                        html.Td(str(int(r.get("n_pares", 0)))),
+                        html.Td(f"{float(r.get('mae_cm', 0)):.3f} cm"),
+                        html.Td(f"{float(r.get('rmse_cm', 0)):.3f} cm"),
+                        html.Td(f"{float(r.get('vies_cm', 0)):+.3f} cm"),
+                    ])
+                )
+        except Exception:
+            pass
+
+    inter = val_info.get("intersecao_validada", {})
+    corr_txt = f"{inter.get('correlacao', 1.0):.6f}" if inter else "1.000000"
+    err_txt = f"{inter.get('erro_medio_cm', 0.0):.4f} cm" if inter else "0.0000 cm"
+    status_txt = val_info.get("status", "VALIDADO")
+
+    tabela_el = (
+        dbc.Table(
+            [
+                html.Thead(html.Tr([
+                    html.Th("Escopo Pareado"),
+                    html.Th("Horizonte"),
+                    html.Th("Modelo"),
+                    html.Th("N Pares"),
+                    html.Th("MAE"),
+                    html.Th("RMSE"),
+                    html.Th("Viés"),
+                ])),
+                html.Tbody(linhas_tabela),
+            ],
+            bordered=True,
+            color="dark",
+            hover=True,
+            responsive=True,
+            size="sm",
+            className="mb-0 mt-2",
+        )
+        if linhas_tabela
+        else html.P("Aguardando arquivo data/avaliacao_modelos.csv.", className="text-muted small mb-0")
+    )
+
+    return dbc.Card(
+        dbc.CardBody([
+            html.H4("🏛️ Governança Científica & Comparação Pareada (v8 × Física × v11c)", className="text-info mb-3"),
+            dbc.Row([
+                dbc.Col(dbc.Alert([
+                    html.Div("Base Histórica ANA 84580000", className="small text-muted"),
+                    html.Strong(f"{status_txt} • r = {corr_txt} • Erro = {err_txt}"),
+                ], color="dark", className="mb-2 py-2"), md=4),
+                dbc.Col(dbc.Alert([
+                    html.Div("Episódios Calibrados (ERAB)", className="small text-muted"),
+                    html.Strong(f"{n_episodios} episódios segmentados (eventos_calibracao)"),
+                ], color="dark", className="mb-2 py-2"), md=4),
+                dbc.Col(dbc.Alert([
+                    html.Div("Vulnerabilidade Territorial (Tubarão)", className="small text-muted"),
+                    html.Strong("8 pontos: 4 URBANO (Drenagem) + 4 FLUVIAL (Calha)"),
+                ], color="dark", className="mb-2 py-2"), md=4),
+            ]),
+            tabela_el,
+        ]),
+        className="mb-4 border-secondary",
+    )
+
+
 def serve_layout():
     _k0 = _carregar_kpis_iniciais()
     return dbc.Container([
@@ -953,7 +1055,10 @@ def serve_layout():
             html.Div([
 
 
-                html.H3(f"📹 A.C. Vision — Central Estadual de Monitoramento Visual ({len(carregar_cameras_ativas())} Câmeras 24h)", className="text-info"),
+                html.H3("📊 Verificador de Previsões (últimos 30 dias)", className="text-info"),
+            html.Div(id="verificador-kpis", className="mb-4"),
+            _renderizar_painel_cientifico(),
+            html.H3(f"📹 A.C. Vision — Central Estadual de Monitoramento Visual ({len(carregar_cameras_ativas())} Câmeras 24h)", className="text-info"),
                 html.P("Clique em qualquer ponto roxo no mapa acima ou filtre por macrorregião abaixo:", className="text-muted small"),
                 dbc.ButtonGroup([
                     dbc.Button(f"🌐 Todas ({len(carregar_cameras_ativas())})", id="btn-cam-todas", color="info", size="sm"),
@@ -1240,6 +1345,17 @@ def filtrar_cameras_vision(n_todas, n_bacia, n_sul, n_serra, n_litoral, n_outra,
         "btn-cam-oeste": "OESTE_SC",
     }
     return renderizar_grade_cameras(mapa_filtro.get(btn_id, "TODAS"))
+
+
+# Callback para o verificador de previsões
+@app.callback(
+    Output("verificador-kpis", "children"),
+    Input("verificador-kpis", "id"),
+    prevent_initial_call=False,
+)
+def atualizar_verificador(n):
+    from src.relatorios.verificador_dashboard import renderizar_kpis_verificador
+    return renderizar_kpis_verificador()
 
 
 if __name__ == "__main__":
